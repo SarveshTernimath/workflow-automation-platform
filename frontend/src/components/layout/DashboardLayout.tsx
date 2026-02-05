@@ -25,6 +25,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         { name: "Ledger", icon: Cpu, path: "/requests" },
         { name: "Inventory", icon: Shield, path: "/workflows" },
         { name: "Alerts", icon: Bell, path: "/notifications" },
+        { name: "Admin Console", icon: Lock, path: "/admin/workflows" },
     ];
 
     return (
