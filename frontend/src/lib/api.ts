@@ -1,6 +1,17 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const getApiBaseUrl = () => {
+    const envUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (!envUrl) return 'http://localhost:8000/api/v1';
+
+    // If it already has the version prefix, return it
+    if (envUrl.includes('/api/v1')) return envUrl;
+
+    // Otherwise append it, ensuring no double slashes
+    return `${envUrl.replace(/\/$/, '')}/api/v1`;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const apiClient = axios.create({
     baseURL: API_BASE_URL,

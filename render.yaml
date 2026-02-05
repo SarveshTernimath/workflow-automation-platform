@@ -11,6 +11,7 @@ services:
           type: web
           name: antigravity-backend
           property: host
+    healthCheckPath: /
 
   # 🐍 Backend Service (FastAPI)
   - type: web
