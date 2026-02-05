@@ -1,0 +1,83 @@
+services:
+  # 🌐 Frontend Service (Next.js)
+  - type: web
+    name: antigravity-frontend
+    runtime: node
+    buildCommand: cd frontend && npm install && npm run build
+    startCommand: cd frontend && npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: antigravity-backend
+          property: host
+
+  # 🐍 Backend Service (FastAPI)
+  - type: web
+    name: antigravity-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: antigravity-db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: antigravity-redis
+          property: connectionString
+      - key: CELERY_RESULT_BACKEND
+        fromService:
+          type: redis
+          name: antigravity-redis
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENVIRONMENT
+        value: production
+
+  # 👷 Celery Worker
+  - type: worker
+    name: antigravity-worker
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A app.core.celery_app worker --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: antigravity-db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: antigravity-redis
+          property: connectionString
+
+  # ⏱️ Celery Beat (SLA Monitoring)
+  - type: worker
+    name: antigravity-beat
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A app.core.celery_app beat --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: antigravity-db
+          property: connectionString
+      - key: CELERY_BROKER_URL
+        fromService:
+          type: redis
+          name: antigravity-redis
+          property: connectionString
+
+# 🗄️ Database and Cache
+databases:
+  - name: antigravity-db
+    plan: free
+
+redis:
+  - name: antigravity-redis
+    plan: free
+    ipAllowList: [] # Only allow internal connections

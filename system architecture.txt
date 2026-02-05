@@ -1,0 +1,94 @@
+workflow-automation-platform/
+│
+├── app/                          # Main application package
+│   ├── __init__.py
+│   ├── main.py                   # FastAPI app entry point
+│   │
+│   ├── api/                      # API layer (routes/controllers)
+│   │   ├── __init__.py
+│   │   ├── deps.py               # Dependency injection (DB session, auth)
+│   │   ├── v1/                   # API versioning
+│   │   │   ├── __init__.py
+│   │   │   ├── endpoints/        # Route handlers
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── workflows.py  # Workflow CRUD APIs
+│   │   │   │   ├── requests.py   # Workflow request APIs
+│   │   │   │   ├── users.py      # User management
+│   │   │   │   ├── roles.py      # Role & permission APIs
+│   │   │   │   ├── audit.py      # Audit log APIs
+│   │   │   │   └── admin.py      # Admin & monitoring APIs
+│   │   │   └── router.py         # Aggregate all routes
+│   │
+│   ├── core/                     # Core configuration & utilities
+│   │   ├── __init__.py
+│   │   ├── config.py             # Settings (DB URL, secrets, env vars)
+│   │   ├── security.py           # Password hashing, JWT, auth utils
+│   │   └── exceptions.py         # Custom exception classes
+│   │
+│   ├── db/                       # Database layer
+│   │   ├── __init__.py
+│   │   ├── base.py               # Import all models (for Alembic)
+│   │   ├── session.py            # DB session management
+│   │   └── models/               # SQLAlchemy models
+│   │       ├── __init__.py
+│   │       ├── user.py           # User, Role, Permission models
+│   │       ├── workflow.py       # Workflow, WorkflowStep models
+│   │       ├── request.py        # WorkflowRequest, RequestStep models
+│   │       └── audit.py          # AuditLog model
+│   │
+│   ├── schemas/                  # Pydantic schemas (request/response)
+│   │   ├── __init__.py
+│   │   ├── user.py
+│   │   ├── workflow.py
+│   │   ├── request.py
+│   │   └── audit.py
+│   │
+│   ├── services/                 # Business logic layer
+│   │   ├── __init__.py
+│   │   ├── workflow_engine.py    # Core workflow execution logic
+│   │   ├── state_machine.py      # State transition validation
+│   │   ├── rbac.py               # Permission checking logic
+│   │   ├── sla_monitor.py        # SLA tracking & escalation
+│   │   ├── audit_service.py      # Audit log creation
+│   │   └── notification.py       # Email notification logic
+│   │
+│   ├── tasks/                    # Celery background tasks
+│   │   ├── __init__.py
+│   │   ├── celery_app.py         # Celery instance configuration
+│   │   ├── sla_tasks.py          # SLA monitoring tasks
+│   │   └── notification_tasks.py # Email sending tasks
+│   │
+│   └── middleware/               # Custom middleware
+│       ├── __init__.py
+│       ├── auth.py               # RBAC enforcement middleware
+│       └── logging.py            # Request/response logging
+│
+├── alembic/                      # Database migrations
+│   ├── versions/                 # Migration files
+│   ├── env.py
+│   └── alembic.ini
+│
+├── tests/                        # Test suite
+│   ├── __init__.py
+│   ├── conftest.py               # Pytest fixtures
+│   ├── unit/                     # Unit tests
+│   │   ├── test_state_machine.py
+│   │   ├── test_rbac.py
+│   │   └── test_workflow_engine.py
+│   └── integration/              # Integration tests
+│       ├── test_api_workflows.py
+│       └── test_api_requests.py
+│
+├── scripts/                      # Utility scripts
+│   ├── seed_data.py              # Load sample workflows & users
+│   ├── init_db.py                # Initialize database
+│   └── run_worker.py             # Start Celery worker
+│
+├── logs/                         # Application logs (gitignored)
+│
+├── .env.example                  # Environment variable template
+├── .env                          # Actual environment variables (gitignored)
+├── .gitignore
+├── requirements.txt              # Python dependencies
+├── README.md                     # Project documentation
+└── docker-compose.yml            # Docker setup (optional)

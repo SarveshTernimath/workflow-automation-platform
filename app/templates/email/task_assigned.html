@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .header { background-color: #f8f9fa; padding: 20px; text-align: center; }
+        .body { padding: 20px; font-family: sans-serif; line-height: 1.6; }
+        .footer { font-size: 12px; color: #6c757d; text-align: center; padding: 20px; }
+        .btn { background-color: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>New task assignment</h1>
+    </div>
+    <div class="body">
+        <p>Hello,</p>
+        <p>A new task has been assigned to you in the <strong>{{ workflow_name }}</strong>.</p>
+        <p><strong>Step:</strong> {{ step_name }}</p>
+        <p><strong>Request ID:</strong> {{ request_id }}</p>
+        <p><strong>Deadline:</strong> {{ deadline }}</p>
+        <br>
+        <p><a href="{{ action_url }}" class="btn">View request</a></p>
+    </div>
+    <div class="footer">
+        <p>This is an automated notification from Workflow Automation Platform.</p>
+    </div>
+</body>
+</html>
