@@ -38,6 +38,7 @@ services:
         generateValue: true
       - key: ENVIRONMENT
         value: production
+    healthCheckPath: /health
 
   # 👷 Celery Worker
   - type: worker
