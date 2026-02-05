@@ -29,7 +29,11 @@ export default function LoginPage() {
             });
 
             localStorage.setItem("access_token", response.data.access_token);
-            router.push("/dashboard");
+
+            // Artificial delay for premium feel and state persistence
+            setTimeout(() => {
+                router.push("/dashboard");
+            }, 500);
         } catch (err: any) {
             setError(err.response?.data?.detail || "Authentication failed. Access denied by Security Protocol.");
         } finally {

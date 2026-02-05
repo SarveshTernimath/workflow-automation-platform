@@ -65,11 +65,19 @@ export default function TasksPage() {
                 </div>
 
                 {tasks.length === 0 ? (
-                    <Card className="py-32 flex flex-col items-center justify-center glass-dark border-dashed border-white/10 shadow-2xl">
-                        <div className="p-6 rounded-3xl bg-slate-900 border border-white/5 mb-6 animate-pulse shadow-2xl">
+                    <Card className="py-32 flex flex-col items-center justify-center glass-dark border-dashed border-white/10 shadow-2xl rounded-[3rem]">
+                        <div className="p-8 rounded-3xl bg-slate-900 border border-white/5 mb-8 animate-pulse shadow-2xl">
                             <CheckCircle2 className="w-16 h-16 text-emerald-500/50" />
                         </div>
-                        <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-[10px]">Strategic queue clear. All operational nodes stable.</p>
+                        <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-[10px] mb-8">Strategic queue clear. All operational nodes stable.</p>
+
+                        <button
+                            onClick={() => router.push('/workflows')}
+                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-10 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center group"
+                        >
+                            <GitBranch className="w-4 h-4 mr-3" />
+                            Initialize New Strategy
+                        </button>
                     </Card>
                 ) : (
                     <div className="space-y-6">
