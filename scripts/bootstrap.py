@@ -44,10 +44,14 @@ def bootstrap():
                 email=admin_email,
                 username="admin",
                 full_name="Default Admin",
-                hashed_password=security.get_password_hash("admin123"), # CHANGE THIS PASSWORD
+                hashed_password=security.get_password_hash("admin123"),
                 is_active=True
             )
             admin_user.roles.append(role_objects["Admin"])
+            db.add(admin_user)
+        else:
+            print(f"Admin user ({admin_email}) exists. Updating password...")
+            admin_user.hashed_password = security.get_password_hash("admin123")
             db.add(admin_user)
 
         # 3. Create a Demo Workflow
