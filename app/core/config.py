@@ -54,11 +54,6 @@ class Settings(BaseSettings):
         """
         Validate critical settings after initialization.
         """
-        # Ensure SECRET_KEY is changed in production
-        if (
-            self.is_production
-            and self.SECRET_KEY == "your-secret-key-change-this-in-production"
-        ):
         # Render fixes: change postgres:// to postgresql://
         if self.DATABASE_URL.startswith("postgres://"):
             self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
