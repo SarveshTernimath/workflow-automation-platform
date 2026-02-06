@@ -54,13 +54,20 @@ def setup_exception_handlers(app: FastAPI):
 
     @app.exception_handler(Exception)
     async def general_exception_handler(request: Request, exc: Exception):
-        # In a real production app, you would log the stack trace here
-        # and perhaps use a more specific error message if not in DEBUG mode.
+        """
+        Final fallback for unexpected errors.
+        Ensures CORS headers are sent to prevent "Network Error" in frontend.
+        """
         return JSONResponse(
             status_code=500,
             content={
                 "error": "INTERNAL_SERVER_ERROR",
-                "detail": "An unexpected error occurred. Please contact support.",
+                "detail": "An unexpected error occurred.",
                 "type": "system_error",
+                "message": str(exc) if not settings.is_production else "Contact support."
             },
+            headers={
+                "Access-Control-Allow-Origin": request.headers.get("origin") or "*",
+                "Access-Control-Allow-Credentials": "true",
+            }
         )
