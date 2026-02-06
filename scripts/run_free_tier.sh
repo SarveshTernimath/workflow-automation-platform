@@ -1,6 +1,9 @@
 #!/bin/bash
 # run_free_tier.sh
 
+echo "🌱 Seeding Database..."
+python scripts/bootstrap.py
+
 echo "🚀 Starting Celery Worker (Background)..."
 celery -A app.core.celery_app worker --loglevel=info --concurrency=1 &
 

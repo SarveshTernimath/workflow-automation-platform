@@ -44,7 +44,7 @@ def bootstrap():
                 email=admin_email,
                 username="admin",
                 full_name="Default Admin",
-                hashed_password=security.get_password_hash("adminpassword123"), # CHANGE THIS PASSWORD
+                hashed_password=security.get_password_hash("admin123"), # CHANGE THIS PASSWORD
                 is_active=True
             )
             admin_user.roles.append(role_objects["Admin"])
