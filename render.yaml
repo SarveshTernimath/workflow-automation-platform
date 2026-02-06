@@ -74,6 +74,13 @@ services:
           name: antigravity-redis
           property: connectionString
 
+  # 🔴 Redis Cache
+  - type: redis
+    name: antigravity-redis
+    plan: free
+    ipAllowList: [] # Only allow internal connections
+
+
 # 🗄️ Database and Cache
 databases:
   - name: antigravity-db
