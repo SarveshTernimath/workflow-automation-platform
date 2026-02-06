@@ -26,7 +26,7 @@ def create_app() -> FastAPI:
     # in production, you would restrict this to specific origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_origin_regex="https://.*\.onrender\.com|http://localhost:.*",
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
