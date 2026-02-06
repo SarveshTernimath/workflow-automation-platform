@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, ArrowRight, Loader2, Shield, Eye, EyeOff, AlertCircle } from "lucide-react";
-import apiClient from "@/lib/api";
+import apiClient, { API_BASE_URL } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoginPage() {
@@ -35,7 +35,7 @@ export default function LoginPage() {
                 router.push("/dashboard");
             }, 500);
         } catch (err: any) {
-            setError(err.response?.data?.detail || err.message || "Authentication failed. Access denied by Security Protocol.");
+            setError(err.response?.data?.detail || err.message || `Network Error to ${API_BASE_URL}`);
         } finally {
             setLoading(false);
         }
@@ -80,7 +80,7 @@ export default function LoginPage() {
 
                 <form onSubmit={handleLogin} className="space-y-8">
                     <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Identity Matrix</label>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Identity Matrix</label>
                         <div className="relative group">
                             <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                             <input
@@ -95,7 +95,7 @@ export default function LoginPage() {
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Access Key</label>
+                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Access Key</label>
                         <div className="relative group">
                             <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                             <input
