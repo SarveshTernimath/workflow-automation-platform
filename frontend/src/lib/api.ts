@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const getApiBaseUrl = () => {
     const envUrl = process.env.NEXT_PUBLIC_API_URL;
-    if (!envUrl) return 'http://localhost:8000/api/v1';
+    // Fallback to the likely production URL if env var is missing
+    if (!envUrl) return 'https://antigravity-backend.onrender.com/api/v1';
 
     // If it already has the version prefix, return it
     if (envUrl.includes('/api/v1')) return envUrl;

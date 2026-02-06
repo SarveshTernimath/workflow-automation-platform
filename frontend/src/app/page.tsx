@@ -35,7 +35,7 @@ export default function LoginPage() {
                 router.push("/dashboard");
             }, 500);
         } catch (err: any) {
-            setError(err.response?.data?.detail || "Authentication failed. Access denied by Security Protocol.");
+            setError(err.response?.data?.detail || err.message || "Authentication failed. Access denied by Security Protocol.");
         } finally {
             setLoading(false);
         }
