@@ -79,8 +79,3 @@ databases:
   - name: antigravity-db
     plan: free
 
-  # 🔴 Redis Cache
-  - type: redis
-    name: antigravity-redis
-    plan: free
-    ipAllowList: [] # Only allow internal connections
