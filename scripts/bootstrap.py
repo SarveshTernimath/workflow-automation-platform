@@ -54,6 +54,24 @@ def bootstrap():
             admin_user.hashed_password = security.get_password_hash("admin123")
             db.add(admin_user)
 
+        # 3. Ensure a Manager User exists
+        manager_email = "manager@example.com"
+        manager_user = db.query(User).filter(User.email == manager_email).first()
+        if not manager_user:
+            print(f"Creating manager user ({manager_email})...")
+            manager_user = User(
+                email=manager_email,
+                username="manager",
+                full_name="Strategic Manager",
+                hashed_password=security.get_password_hash("manager123"),
+                is_active=True
+            )
+            manager_user.roles.append(role_objects["Manager"])
+            db.add(manager_user)
+        else:
+            manager_user.hashed_password = security.get_password_hash("manager123")
+            db.add(manager_user)
+
         # 3. Create a Demo Workflow
         demo_wf_name = "Operational Audit"
         demo_wf = db.query(Workflow).filter(Workflow.name == demo_wf_name).first()

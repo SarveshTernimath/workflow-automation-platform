@@ -63,6 +63,24 @@ def create_app() -> FastAPI:
             "version": "0.1.0",
         }
 
+    @app.get("/debug/db", tags=["Debug"])
+    async def debug_db():
+        """
+        Verify database connection and protocol.
+        """
+        try:
+            from sqlalchemy import text
+            from app.db.session import SessionLocal
+            db = SessionLocal()
+            db.execute(text("SELECT 1"))
+            db.close()
+            return {"status": "connected", "protocol": settings.DATABASE_URL.split(":")[0]}
+        except Exception as e:
+            return JSONResponse(
+                status_code=500,
+                content={"status": "error", "message": str(e), "url_masked": settings.DATABASE_URL.split("@")[-1]}
+            )
+
     return app
 
 
