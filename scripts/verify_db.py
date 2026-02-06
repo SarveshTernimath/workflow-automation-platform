@@ -8,8 +8,8 @@ def verify_db():
     try:
         print("Checking Database Connection... OK")
         
-        # Check Tables
-        tables = db.execute(text("SELECT name FROM sqlite_master WHERE type='table';")).fetchall()
+        # Check Tables for PostgreSQL
+        tables = db.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';")).fetchall()
         table_names = [t[0] for t in tables]
         required_tables = ['users', 'roles', 'permissions', 'workflows', 'workflow_steps']
         
