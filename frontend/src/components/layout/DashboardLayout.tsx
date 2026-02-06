@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, User, Cpu } from "lucide-react";
+import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, User, Cpu, Lock, LucideIcon } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -19,7 +19,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         router.push("/");
     };
 
-    const navItems = [
+    interface NavItem {
+        name: string;
+        icon: LucideIcon;
+        path: string;
+    }
+
+    const navItems: NavItem[] = [
         { name: "Overview", icon: LayoutDashboard, path: "/dashboard" },
         { name: "My Tasks", icon: GitBranch, path: "/tasks" },
         { name: "Ledger", icon: Cpu, path: "/requests" },
