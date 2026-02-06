@@ -35,7 +35,7 @@ export default function LoginPage() {
                 router.push("/dashboard");
             }, 500);
         } catch (err: any) {
-            setError(err.response?.data?.detail || err.message || `Network Error to ${API_BASE_URL}`);
+            setError(err.response?.data?.detail || err.message || `Connection failed to ${API_BASE_URL.replace('/api/v1', '')}. Please verify your Backend service is active.`);
         } finally {
             setLoading(false);
         }
@@ -80,14 +80,14 @@ export default function LoginPage() {
 
                 <form onSubmit={handleLogin} className="space-y-8">
                     <div className="space-y-3">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Identity Matrix</label>
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] ml-1 mb-3 block">Identity Matrix</label>
                         <div className="relative group">
-                            <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
+                            <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors z-20" />
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full bg-slate-900 border border-white/5 rounded-2xl py-5 pl-14 pr-5 text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/20 transition-all duration-500 text-lg font-medium"
+                                className="w-full bg-slate-900/50 border border-white/5 rounded-2xl py-6 pl-16 pr-6 text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/40 transition-all duration-500 text-lg font-medium"
                                 placeholder="name@enterprise.com"
                                 required
                             />
@@ -95,14 +95,14 @@ export default function LoginPage() {
                     </div>
 
                     <div className="space-y-3">
-                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1 mb-2 block">Access Key</label>
+                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] ml-1 mb-3 block">Access Key</label>
                         <div className="relative group">
-                            <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
+                            <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors z-20" />
                             <input
                                 type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-slate-900 border border-white/5 rounded-2xl py-5 pl-14 pr-14 text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/20 transition-all duration-500 text-lg"
+                                className="w-full bg-slate-900/50 border border-white/5 rounded-2xl py-6 pl-16 pr-16 text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500/40 transition-all duration-500 text-lg"
                                 placeholder="••••••••••••"
                                 required
                             />

@@ -41,7 +41,7 @@ def create_app() -> FastAPI:
             status_code=500,
             content={"detail": "Internal Server Error", "error": str(exc)},
             headers={
-                "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
+                "Access-Control-Allow-Origin": request.headers.get("origin") or "https://antigravtiy-frontend.onrender.com",
                 "Access-Control-Allow-Credentials": "true",
             }
         )

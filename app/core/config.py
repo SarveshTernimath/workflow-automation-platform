@@ -57,6 +57,11 @@ class Settings(BaseSettings):
         # Render fixes: change postgres:// to postgresql://
         if self.DATABASE_URL.startswith("postgres://"):
             self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
+        
+        # Force sslmode=require for Render production
+        if "onrender.com" in self.DATABASE_URL and "sslmode=" not in self.DATABASE_URL:
+            separator = "&" if "?" in self.DATABASE_URL else "?"
+            self.DATABASE_URL += f"{separator}sslmode=require"
 
         super().model_post_init(__context)
 
