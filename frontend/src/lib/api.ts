@@ -1,21 +1,7 @@
 import axios from 'axios';
 
 const getApiBaseUrl = () => {
-    const envUrl = process.env.NEXT_PUBLIC_API_URL;
-
-    // If we have an env var, use it (standard path)
-    if (envUrl) {
-        if (envUrl.includes('/api/v1')) return envUrl;
-        return `${envUrl.replace(/\/$/, '')}/api/v1`;
-    }
-
-    // Smart Fallback for Render: Detects backend by replacing '-frontend' with '-backend'
-    if (typeof window !== 'undefined' && window.location.hostname.endsWith('.onrender.com')) {
-        const backendHost = window.location.hostname.replace('-frontend.', '-backend.');
-        return `https://${backendHost}/api/v1`;
-    }
-
-    // Default fallback (using the specific subdomain from the user screenshot)
+    // FORCE the specific backend URL for the submission to ensure no typos break connectivity
     return 'https://antigravity-backend-8ytp.onrender.com/api/v1';
 };
 
