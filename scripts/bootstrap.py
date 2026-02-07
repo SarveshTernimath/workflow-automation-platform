@@ -122,27 +122,27 @@ def bootstrap():
 
         # 7. Create a Demo Workflow (Wrapped in try/except)
         try:
-        demo_wf_name = "Operational Audit"
-        demo_wf = db.query(Workflow).filter(Workflow.name == demo_wf_name).first()
-        if not demo_wf:
-            print(f"Creating '{demo_wf_name}' demo workflow...")
-            demo_wf = Workflow(
-                name=demo_wf_name,
-                description="Standard cross-departmental auditing protocol with multi-stage verification.",
-                created_by_id=admin_user.id
-            )
-            db.add(demo_wf)
-            db.flush()
+            demo_wf_name = "Operational Audit"
+            demo_wf = db.query(Workflow).filter(Workflow.name == demo_wf_name).first()
+            if not demo_wf:
+                print(f"Creating '{demo_wf_name}' demo workflow...")
+                demo_wf = Workflow(
+                    name=demo_wf_name,
+                    description="Standard cross-departmental auditing protocol with multi-stage verification.",
+                    created_by_id=admin_user.id
+                )
+                db.add(demo_wf)
+                db.flush()
 
-            # Add Steps
-            s1 = WorkflowStep(workflow_id=demo_wf.id, name="Initial Scan", description="Automated scanning of operational logs.", step_type="AUTOMATED", order=1)
-            s2 = WorkflowStep(workflow_id=demo_wf.id, name="Manual Verification", description="Human verification of signal anomalies.", step_type="MANUAL", order=2, assigned_role="Manager")
-            s3 = WorkflowStep(workflow_id=demo_wf.id, name="Strategic Approval", description="Final executive sign-off on discovery findings.", step_type="MANUAL", order=3, assigned_role="Admin")
-            
-            db.add_all([s1, s2, s3])
+                # Add Steps
+                s1 = WorkflowStep(workflow_id=demo_wf.id, name="Initial Scan", description="Automated scanning of operational logs.", step_type="AUTOMATED", order=1)
+                s2 = WorkflowStep(workflow_id=demo_wf.id, name="Manual Verification", description="Human verification of signal anomalies.", step_type="MANUAL", order=2, assigned_role="Manager")
+                s3 = WorkflowStep(workflow_id=demo_wf.id, name="Strategic Approval", description="Final executive sign-off on discovery findings.", step_type="MANUAL", order=3, assigned_role="Admin")
+                
+                db.add_all([s1, s2, s3])
 
-            db.commit()
-            print("Demo workflow created.")
+                db.commit()
+                print("Demo workflow created.")
         except Exception as e_wf:
             print(f"Warning: Failed to create demo workflow: {e_wf}")
             db.rollback() # Rollback only the workflow part
