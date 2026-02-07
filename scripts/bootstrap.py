@@ -10,11 +10,17 @@ from sqlalchemy.orm import Session
 # Add project root to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.db.session import SessionLocal
+from app.db.session import SessionLocal, engine
+from app.db.base import Base  # Import from base.py to ensure all models are loaded
 from app.db.models.user import User, Role
 from app.core import security
 
 def bootstrap():
+    # Create tables if they don't exist
+    print("Checking database schema...")
+    Base.metadata.create_all(bind=engine)
+    print("Schema check complete.")
+
     db = SessionLocal()
     from app.db.models.workflow import Workflow, WorkflowStep
     try:
