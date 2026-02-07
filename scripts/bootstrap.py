@@ -96,7 +96,32 @@ def bootstrap():
             std_user.hashed_password = security.get_password_hash("user123")
             db.add(std_user)
 
-        # 5. Create a Demo Workflow
+        # 5. COMMIT USERS NOW to ensure they exist even if workflows fail later
+        db.commit()
+        print("Users seeded and committed.")
+        
+        # 6. Ensure a Recovery User exists (Just in case)
+        recovery_email = "recovery@example.com"
+        rec_user = db.query(User).filter(User.email == recovery_email).first()
+        if not rec_user:
+            print(f"Creating recovery user ({recovery_email})...")
+            rec_user = User(
+                email=recovery_email,
+                username="recovery",
+                full_name="Emergency Access",
+                hashed_password=security.get_password_hash("recovery123"),
+                is_active=True
+            )
+            rec_user.roles.append(role_objects["Admin"])
+            db.add(rec_user)
+            db.commit()
+        else:
+            rec_user.hashed_password = security.get_password_hash("recovery123")
+            db.add(rec_user)
+            db.commit()
+
+        # 7. Create a Demo Workflow (Wrapped in try/except)
+        try:
         demo_wf_name = "Operational Audit"
         demo_wf = db.query(Workflow).filter(Workflow.name == demo_wf_name).first()
         if not demo_wf:
@@ -116,7 +141,12 @@ def bootstrap():
             
             db.add_all([s1, s2, s3])
 
-        db.commit()
+            db.commit()
+            print("Demo workflow created.")
+        except Exception as e_wf:
+            print(f"Warning: Failed to create demo workflow: {e_wf}")
+            db.rollback() # Rollback only the workflow part
+
         print("Bootstrap complete successfully.")
     except Exception as e:
         print(f"Error during bootstrap: {e}")
