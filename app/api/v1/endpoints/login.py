@@ -25,12 +25,19 @@ def login_access_token(
     # or utilizing a simple query.
     # In a full app, we might have crud.user.authenticate(db, email, password)
 
-    user = db.query(User).filter(User.email == form_data.username).first()
+    try:
+        user = db.query(User).filter(User.email == form_data.username).first()
 
-    if not user or not security.verify_password(
-        form_data.password, user.hashed_password
-    ):
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        if not user or not security.verify_password(
+            form_data.password, user.hashed_password
+        ):
+            raise HTTPException(status_code=400, detail="Incorrect email or password")
+    except HTTPException:
+        raise
+    except Exception as e:
+        import logging
+        logging.error(f"Login failed due to system error: {e}")
+        raise HTTPException(status_code=500, detail="System Error during login")
 
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")

@@ -22,7 +22,13 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # CORS Configuration
-    BACKEND_CORS_ORIGINS: List[str] = ["*"]
+    BACKEND_CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "https://antigravtiy-frontend.onrender.com",  # Typo variant
+        "https://antigravtiy-frontend.onrender.com/", 
+        "https://antigravity-frontend.onrender.com",  # Correct variant
+        "https://antigravity-frontend.onrender.com/",
+    ]
 
     # Celery Configuration
     CELERY_BROKER_URL: str = "redis://localhost:6379/0"

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from fastapi.responses import JSONResponse
@@ -23,11 +23,31 @@ def create_app() -> FastAPI:
     # Set up Logging middleware
     app.add_middleware(LoggingMiddleware)
 
-    # Set up CORS middleware
-    # support any render subdomain or local development
+    # CRITICAL: Add a middleware wrapper to catch ALL exceptions (even 500s)
+    # and ensure CORS headers are present. This prevents "Network Error" in browser.
+    @app.middleware("http")
+    async def add_cors_headers_on_error(request: Request, call_next):
+        try:
+            response = await call_next(request)
+            return response
+        except Exception as exc:
+            # Log the crash here if needed
+            print(f"CRASH: {exc}") 
+            return JSONResponse(
+                status_code=500,
+                content={"detail": "Internal Server Error", "error": str(exc)},
+                headers={
+                    "Access-Control-Allow-Origin": request.headers.get("origin") or "*",
+                    "Access-Control-Allow-Credentials": "true",
+                    "Access-Control-Allow-Methods": "*",
+                    "Access-Control-Allow-Headers": "*",
+                }
+            )
+
+    # Set up CORS middleware (Must be added AFTER the wrapper so it handles normal requests)
     app.add_middleware(
         CORSMiddleware,
-        allow_origin_regex="https://.*\.onrender\.com|http://localhost:.*",
+        allow_origins=settings.BACKEND_CORS_ORIGINS,
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
