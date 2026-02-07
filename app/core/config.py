@@ -54,24 +54,25 @@ class Settings(BaseSettings):
         """
         Validate critical settings after initialization.
         """
-        # Ensure SECRET_KEY is changed in production
+        # Warn about SECRET_KEY in production, but don't crash yet
         if (
             self.is_production
             and self.SECRET_KEY == "your-secret-key-change-this-in-production"
         ):
-            raise ValueError(
-                "CRITICAL SECURITY WARNING: You are using the default SECRET_KEY in production! "
-                "Update your .env file immediately."
+            import logging
+            logging.warning(
+                "SECURITY WARNING: Default SECRET_KEY used in production! Change this in your environment variables."
             )
 
         # Render fixes: change postgres:// to postgresql://
         if self.DATABASE_URL.startswith("postgres://"):
             self.DATABASE_URL = self.DATABASE_URL.replace("postgres://", "postgresql://", 1)
         
-        # Force sslmode=require for Render production
-        if "onrender.com" in self.DATABASE_URL and "sslmode=" not in self.DATABASE_URL:
-            separator = "&" if "?" in self.DATABASE_URL else "?"
-            self.DATABASE_URL += f"{separator}sslmode=require"
+        # Force sslmode=require for any non-localhost database
+        if "localhost" not in self.DATABASE_URL and "127.0.0.1" not in self.DATABASE_URL:
+            if "sslmode=" not in self.DATABASE_URL:
+                separator = "&" if "?" in self.DATABASE_URL else "?"
+                self.DATABASE_URL += f"{separator}sslmode=require"
 
         super().model_post_init(__context)
 

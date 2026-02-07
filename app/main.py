@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
+from fastapi.responses import JSONResponse
 from app.core.errors import setup_exception_handlers
 from app.api.v1.router import api_router
 from app.middleware.logging import LoggingMiddleware

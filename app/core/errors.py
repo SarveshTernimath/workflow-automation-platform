@@ -67,7 +67,7 @@ def setup_exception_handlers(app: FastAPI):
                 "message": str(exc) if not settings.is_production else "Contact support."
             },
             headers={
-                "Access-Control-Allow-Origin": request.headers.get("origin") or "*",
+                "Access-Control-Allow-Origin": request.headers.get("origin") or "https://antigravtiy-frontend.onrender.com",
                 "Access-Control-Allow-Credentials": "true",
             }
         )
