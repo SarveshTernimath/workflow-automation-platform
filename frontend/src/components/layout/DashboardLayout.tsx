@@ -76,11 +76,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="p-6 mt-auto">
                     <div className="flex items-center p-4 rounded-2xl glass border-white/5 mb-6 overflow-hidden hover:bg-white/10 transition-all cursor-pointer group shadow-xl">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-500 flex items-center justify-center text-white font-black mr-3 shrink-0 shadow-lg group-hover:rotate-12 transition-all duration-500">
-                            AD
+                            SY
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-black text-white truncate tracking-tight">System Admin</p>
-                            <p className="text-[10px] font-bold text-slate-500 truncate uppercase tracking-widest opacity-70">Privileged Access</p>
+                            <p className="text-sm font-black text-white truncate tracking-tight uppercase">Identity Node</p>
+                            <p className="text-[10px] font-bold text-slate-500 truncate uppercase tracking-widest opacity-70">Strategic Access</p>
                         </div>
                     </div>
                     <button
@@ -95,43 +95,45 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col min-w-0 bg-transparent relative h-screen overflow-hidden">
-                <header className="min-h-24 py-4 border-b border-white/5 flex flex-wrap items-center justify-between gap-6 px-6 sm:px-10 glass backdrop-blur-3xl z-30 shrink-0">
-                    <div className="flex flex-col">
-                        <div className="flex items-center space-x-2 text-[10px] text-slate-500 font-black uppercase tracking-widest opacity-50 mb-1">
-                            <Cpu className="w-3 h-3" />
-                            <span>System Path: {pathname.split('/')[1] || "root"}</span>
-                        </div>
-                        <h1 className="text-2xl font-black text-white tracking-tighter uppercase italic">
-                            {navItems.find(i => i.path === pathname)?.name || "Console"}
-                        </h1>
-                    </div>
-
-                    <div className="flex items-center space-x-3 sm:space-x-5">
-                        <div className="hidden xl:flex items-center space-x-6 mr-4 border-r border-white/10 pr-6">
-                            <div className="flex flex-col items-end whitespace-nowrap">
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Latency</span>
-                                <span className="text-xs font-bold text-emerald-400">12ms</span>
+                <header className="min-h-24 border-b border-white/5 glass backdrop-blur-3xl z-30 shrink-0 flex items-center">
+                    <div className="w-full max-w-7xl mx-auto px-12 lg:px-16 flex flex-wrap items-center justify-between gap-6">
+                        <div className="flex flex-col">
+                            <div className="flex items-center space-x-2 text-[10px] text-slate-500 font-black uppercase tracking-widest opacity-50 mb-1">
+                                <Cpu className="w-3 h-3" />
+                                <span>Core Path: {pathname.split('/')[1] || "root"}</span>
                             </div>
-                            <div className="flex flex-col items-end whitespace-nowrap">
-                                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Uptime</span>
-                                <span className="text-xs font-bold text-white">99.9%</span>
+                            <span className="text-2xl font-black text-white tracking-tighter uppercase italic">
+                                {navItems.find(i => i.path === pathname)?.name || "Console"}
+                            </span>
+                        </div>
+
+                        <div className="flex items-center space-x-3 sm:space-x-5">
+                            <div className="hidden xl:flex items-center space-x-6 mr-4 border-r border-white/10 pr-6">
+                                <div className="flex flex-col items-end whitespace-nowrap">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">Network Latency</span>
+                                    <span className="text-xs font-bold text-emerald-400">12ms</span>
+                                </div>
+                                <div className="flex flex-col items-end whitespace-nowrap">
+                                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest leading-none mb-1">System Uptime</span>
+                                    <span className="text-xs font-bold text-white">99.9%</span>
+                                </div>
                             </div>
+
+                            <div className="flex items-center px-3 sm:px-4 py-2 rounded-xl glass border-emerald-500/20 shrink-0">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_10px_#10b981]" />
+                                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] hidden xs:inline">Operational</span>
+                            </div>
+
+                            <button className="p-2 sm:p-3 rounded-xl glass border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all relative group shadow-lg shrink-0">
+                                <Bell className="w-4 h-4 sm:w-5 sm:h-5 group-hover:shake" />
+                                <span className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 h-1.5 bg-indigo-500 rounded-full glow-indigo shadow-[0_0_8px_rgba(99,102,241,1)]"></span>
+                            </button>
+
+                            <button className="flex items-center space-x-2 px-3 sm:px-5 py-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-300 font-black text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 shrink-0">
+                                <User className="w-4 h-4" />
+                                <span className="uppercase tracking-widest hidden sm:inline">User Identity</span>
+                            </button>
                         </div>
-
-                        <div className="flex items-center px-3 sm:px-4 py-2 rounded-xl glass border-emerald-500/20 shrink-0">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse shadow-[0_0_10px_#10b981]" />
-                            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] hidden xs:inline">Operational</span>
-                        </div>
-
-                        <button className="p-2 sm:p-3 rounded-xl glass border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all relative group shadow-lg shrink-0">
-                            <Bell className="w-4 h-4 sm:w-5 sm:h-5 group-hover:shake" />
-                            <span className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 h-1.5 bg-indigo-500 rounded-full glow-indigo shadow-[0_0_8px_rgba(99,102,241,1)]"></span>
-                        </button>
-
-                        <button className="flex items-center space-x-2 px-3 sm:px-5 py-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-300 font-black text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 shrink-0">
-                            <User className="w-4 h-4" />
-                            <span className="uppercase tracking-widest hidden sm:inline">Profile</span>
-                        </button>
                     </div>
                 </header>
 

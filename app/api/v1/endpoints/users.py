@@ -62,7 +62,7 @@ def create_user(
     return user
 
 
-@router.get("/me", response_model=UserSchema)
+@router.get("/me", response_model=UserWithRolesSchema)
 def read_user_me(
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),

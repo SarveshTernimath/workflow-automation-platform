@@ -95,6 +95,15 @@ body::before {
   .animate-premium {
     animation: premiumFade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 ::-webkit-scrollbar {
