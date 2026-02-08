@@ -130,7 +130,7 @@ export default function DashboardPage() {
                     </button>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8">
                     {statCards.map((stat) => (
                         <motion.div variants={item} key={stat.name}>
                             <Card className={`p-8 glass-dark group hover:-translate-y-2 transition-all duration-500 border border-white/5 hover:border-white/10 relative overflow-hidden shadow-2xl ${stat.glow}`}>

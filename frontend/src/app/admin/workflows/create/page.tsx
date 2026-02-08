@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardContent } from "@/components/ui/Card";
-import { Loader2, ArrowRight, ArrowLeft, Save, Plus, Trash2, Check, Shield, Lock } from "lucide-react";
+import { Loader2, ArrowRight, ArrowLeft, Save, Plus, Trash2, Check, Shield } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -101,8 +101,6 @@ export default function CreateWorkflowPage() {
     // --- Transitions Management logic (Simplified for Auto-Linking) ---
 
     // When moving to step 3, we auto-generate default linear transitions
-    // User can edit specialized branching later if we add that UI complexity
-    // For this MVP, we will auto-generate linear flow: Step 1 -> Step 2 -> ... -> End
     const generateDefaultTransitions = () => {
         const newTransitions: Transition[] = [];
         for (let i = 0; i < workflowSteps.length; i++) {
@@ -168,7 +166,19 @@ export default function CreateWorkflowPage() {
     };
 
     const nextStep = () => {
-        if (step === 2) generateDefaultTransitions();
+        if (step === 1) {
+            if (!name.trim()) {
+                alert("Protocol Identifier is required.");
+                return;
+            }
+        }
+        if (step === 2) {
+            if (workflowSteps.length === 0) {
+                alert("At least one execution node is required.");
+                return;
+            }
+            generateDefaultTransitions();
+        }
         setStep(step + 1);
     };
 
@@ -327,7 +337,6 @@ export default function CreateWorkflowPage() {
                         {step < 3 ? (
                             <button
                                 onClick={nextStep}
-                                disabled={step === 1 && !name}
                                 className="bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-indigo-500/20 flex items-center hover:scale-105 active:scale-95"
                             >
                                 Continue <ArrowRight className="w-3 h-3 ml-2" />
@@ -348,4 +357,3 @@ export default function CreateWorkflowPage() {
         </DashboardLayout>
     );
 }
-

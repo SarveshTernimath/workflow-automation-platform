@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Plus, Play, Info, MoreVertical, Loader2, Search } from "lucide-react";
+import { Card, CardHeader, CardContent } from "@/components/ui/Card";
+import { Plus, Play, Info, MoreVertical, Loader2 } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 
@@ -11,20 +11,25 @@ export default function WorkflowsPage() {
     const [workflows, setWorkflows] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [starting, setStarting] = useState<string | null>(null);
+    const [user, setUser] = useState<any>(null);
     const router = useRouter();
 
     useEffect(() => {
-        async function fetchWorkflows() {
+        async function fetchData() {
             try {
-                const res = await apiClient.get("/workflows/");
-                setWorkflows(res.data);
+                const [wfRes, userRes] = await Promise.all([
+                    apiClient.get("/workflows/"),
+                    apiClient.get("/users/me")
+                ]);
+                setWorkflows(wfRes.data);
+                setUser(userRes.data);
             } catch (err) {
-                console.error("Failed to fetch workflows", err);
+                console.error("Failed to fetch data", err);
             } finally {
                 setLoading(false);
             }
         }
-        fetchWorkflows();
+        fetchData();
     }, []);
 
     const handleStartWorkflow = async (workflowId: string) => {
@@ -41,6 +46,8 @@ export default function WorkflowsPage() {
             setStarting(null);
         }
     };
+
+    const isAdmin = user?.roles?.some((r: any) => r.name === "Admin");
 
     if (loading) return (
         <DashboardLayout>
@@ -62,10 +69,15 @@ export default function WorkflowsPage() {
                         <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Workflow Inventory</h1>
                         <p className="text-slate-400 text-lg font-medium max-w-xl">Manage and orchestrate enterprise-grade logic templates across your infrastructure.</p>
                     </div>
-                    <button className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:-translate-y-1 flex items-center group">
-                        <Plus className="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform duration-500" />
-                        Build New Strategy
-                    </button>
+                    {isAdmin && (
+                        <button
+                            onClick={() => router.push('/admin/workflows/create')}
+                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:-translate-y-1 flex items-center group"
+                        >
+                            <Plus className="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform duration-500" />
+                            Build New Strategy
+                        </button>
+                    )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -119,4 +131,3 @@ export default function WorkflowsPage() {
         </DashboardLayout>
     );
 }
-

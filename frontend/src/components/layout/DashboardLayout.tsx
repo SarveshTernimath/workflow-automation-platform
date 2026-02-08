@@ -4,7 +4,7 @@ import React from 'react';
 import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, User, Cpu, Lock, LucideIcon } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import apiClient from '@/lib/api';
 
 interface DashboardLayoutProps {
@@ -15,6 +15,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const router = useRouter();
     const pathname = usePathname();
     const [user, setUser] = React.useState<any>(null);
+    const [showProfile, setShowProfile] = React.useState(false);
 
     React.useEffect(() => {
         async function fetchUser() {
@@ -92,7 +93,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </nav>
 
                 <div className="p-6 mt-auto">
-                    <div className="flex items-center p-4 rounded-2xl glass border-white/5 mb-6 overflow-hidden hover:bg-white/10 transition-all cursor-pointer group shadow-xl">
+                    <div
+                        onClick={() => setShowProfile(true)}
+                        className="flex items-center p-4 rounded-2xl glass border-white/5 mb-6 overflow-hidden hover:bg-white/10 transition-all cursor-pointer group shadow-xl"
+                    >
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-500 flex items-center justify-center text-white font-black mr-3 shrink-0 shadow-lg group-hover:rotate-12 transition-all duration-500">
                             {user?.full_name?.substring(0, 2).toUpperCase() || "SY"}
                         </div>
@@ -118,7 +122,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             {/* Main Content Area */}
             <div className="flex-1 flex flex-col min-w-0 bg-transparent relative h-screen overflow-hidden">
                 <header className="min-h-24 border-b border-white/5 glass backdrop-blur-3xl z-30 shrink-0 flex items-center">
-                    <div className="w-full max-w-7xl mx-auto px-12 lg:px-16 flex flex-wrap items-center justify-between gap-6">
+                    <div className="w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-16 flex flex-wrap items-center justify-between gap-6">
                         <div className="flex flex-col">
                             <div className="flex items-center space-x-2 text-[10px] text-slate-500 font-black uppercase tracking-widest opacity-50 mb-1">
                                 <Cpu className="w-3 h-3" />
@@ -146,12 +150,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 <span className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em] hidden xs:inline">Operational</span>
                             </div>
 
-                            <button className="p-2 sm:p-3 rounded-xl glass border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all relative group shadow-lg shrink-0">
+                            <button
+                                onClick={() => router.push('/notifications')}
+                                className="p-2 sm:p-3 rounded-xl glass border-white/10 text-slate-400 hover:text-indigo-400 hover:border-indigo-500/30 transition-all relative group shadow-lg shrink-0"
+                            >
                                 <Bell className="w-4 h-4 sm:w-5 sm:h-5 group-hover:shake" />
                                 <span className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 h-1.5 bg-indigo-500 rounded-full glow-indigo shadow-[0_0_8px_rgba(99,102,241,1)]"></span>
                             </button>
 
-                            <button className="flex items-center space-x-2 px-3 sm:px-5 py-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-300 font-black text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 shrink-0">
+                            <button
+                                onClick={() => setShowProfile(true)}
+                                className="flex items-center space-x-2 px-3 sm:px-5 py-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-300 font-black text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 shrink-0"
+                            >
                                 <User className="w-4 h-4" />
                                 <span className="uppercase tracking-widest hidden sm:inline">User Identity</span>
                             </button>
@@ -176,9 +186,54 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div>
                 </main>
             </div>
+
+            {/* Profile Modal */}
+            <AnimatePresence>
+                {showProfile && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowProfile(false)}
+                            className="absolute inset-0 bg-black/60 backdrop-blur-md"
+                        />
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                            className="w-full max-w-lg glass-dark border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl"
+                        >
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full -z-10" />
+                            <div className="flex flex-col items-center text-center">
+                                <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-indigo-500 to-sky-500 flex items-center justify-center text-white text-4xl font-black mb-8 shadow-2xl transform rotate-3">
+                                    {user?.full_name?.substring(0, 2).toUpperCase() || "SY"}
+                                </div>
+                                <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-2">{user?.full_name || "Identity Node"}</h2>
+                                <p className="text-indigo-400 font-black uppercase tracking-[0.3em] text-[10px] mb-8">{user?.roles?.[0]?.name || "Strategic"} Authorization Level</p>
+
+                                <div className="w-full space-y-4 mb-8">
+                                    <div className="bg-white/5 border border-white/5 p-6 rounded-2xl flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Email Node</span>
+                                        <span className="text-sm font-bold text-white">{user?.email}</span>
+                                    </div>
+                                    <div className="bg-white/5 border border-white/5 p-6 rounded-2xl flex items-center justify-between">
+                                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Protocol Version</span>
+                                        <span className="text-sm font-bold text-emerald-400">V4.2.0-STABLE</span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => setShowProfile(false)}
+                                    className="w-full bg-white/5 hover:bg-white/10 text-white font-black py-5 rounded-2xl transition-all uppercase tracking-widest text-[10px] border border-white/10"
+                                >
+                                    Dismiss Terminal
+                                </button>
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
-
-
-
