@@ -89,7 +89,7 @@ export default function TasksPage() {
                                 transition={{ delay: index * 0.1, duration: 0.5 }}
                             >
                                 <Card className={`group glass-dark hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-2xl ${task.is_sla_breached ? 'border-rose-500/30' : 'border-white/5'}`}
-                                    onClick={() => router.push(`/requests/${task.request_id}`)}
+                                    onClick={() => router.push(`/instances/${task.request_id}`)}
                                 >
                                     <CardContent className="p-10 relative">
                                         {task.is_sla_breached && (
@@ -139,7 +139,13 @@ export default function TasksPage() {
                                             </div>
 
                                             <div className="flex flex-col items-end gap-3">
-                                                <button className="flex items-center justify-center space-x-4 px-10 py-5 rounded-2xl bg-indigo-500 text-white font-black tracking-widest uppercase text-xs shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        router.push(`/instances/${task.request_id}`);
+                                                    }}
+                                                    className="flex items-center justify-center space-x-4 px-10 py-5 rounded-2xl bg-indigo-500 text-white font-black tracking-widest uppercase text-xs shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40"
+                                                >
                                                     <span>Acknowledge & Execute</span>
                                                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
                                                 </button>

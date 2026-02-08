@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Cpu } from "lucide-react";
+import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Cpu, Plus } from "lucide-react";
 import apiClient from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Stats {
@@ -42,6 +43,7 @@ export default function DashboardPage() {
     const [recentRequests, setRecentRequests] = useState<any[]>([]);
     const [auditLogs, setAuditLogs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         async function fetchData() {
@@ -107,27 +109,36 @@ export default function DashboardPage() {
                         <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">NexusFlow Dashboard</h1>
                         <p className="text-slate-400 text-lg font-medium max-w-xl leading-relaxed">High-fidelity orchestration monitoring and real-time system telemetry across the operational grid.</p>
                     </div>
-                    <button
-                        onClick={handlePulse}
-                        disabled={pulsing}
-                        className={`group flex items-center space-x-4 px-8 py-5 rounded-2xl transition-all duration-500 font-black tracking-widest uppercase text-xs shadow-2xl relative overflow-hidden ${pulsing
-                            ? "bg-indigo-500/20 text-indigo-400 cursor-wait border border-indigo-500/30"
-                            : "bg-indigo-500 text-white hover:bg-indigo-600 hover:-translate-y-1 hover:shadow-indigo-500/30 active:translate-y-0"
-                            }`}
-                    >
-                        {pulsing ? (
-                            <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
-                                <span>Synchronizing Pulse...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Zap className="w-4 h-4 group-hover:scale-125 transition-transform" />
-                                <span>Initialize Core Pulse</span>
-                            </>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                    </button>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button
+                            onClick={() => router.push('/workflows')}
+                            className="group flex items-center space-x-4 px-8 py-5 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all font-black tracking-widest uppercase text-xs"
+                        >
+                            <Plus className="w-4 h-4" />
+                            <span>Start New Request</span>
+                        </button>
+                        <button
+                            onClick={handlePulse}
+                            disabled={pulsing}
+                            className={`group flex items-center space-x-4 px-8 py-5 rounded-2xl transition-all duration-500 font-black tracking-widest uppercase text-xs shadow-2xl relative overflow-hidden ${pulsing
+                                ? "bg-indigo-500/20 text-indigo-400 cursor-wait border border-indigo-500/30"
+                                : "bg-indigo-500 text-white hover:bg-indigo-600 hover:-translate-y-1 hover:shadow-indigo-500/30 active:translate-y-0"
+                                }`}
+                        >
+                            {pulsing ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    <span>Synchronizing Pulse...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Zap className="w-4 h-4 group-hover:scale-125 transition-transform" />
+                                    <span>Initialize Core Pulse</span>
+                                </>
+                            )}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                        </button>
+                    </div>
                 </motion.div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8">
@@ -197,7 +208,7 @@ export default function DashboardPage() {
                                         </div>
                                     ) : (
                                         recentRequests.map((req: any) => (
-                                            <Link href={`/requests/${req.id}`} key={req.id} className="flex items-center justify-between p-8 hover:bg-white/[0.03] transition-all group border-l-4 border-transparent hover:border-indigo-500">
+                                            <Link href={`/instances/${req.id}`} key={req.id} className="flex items-center justify-between p-8 hover:bg-white/[0.03] transition-all group border-l-4 border-transparent hover:border-indigo-500">
                                                 <div className="flex items-center space-x-6">
                                                     <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:bg-indigo-500/20 group-hover:text-indigo-400 transition-all duration-500 border border-white/5 shadow-inner">
                                                         <GitBranch className="w-8 h-8" />

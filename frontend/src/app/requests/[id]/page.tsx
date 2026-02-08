@@ -198,9 +198,25 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                             <CardContent className="p-8">
                                 {currentStep ? (
                                     <form onSubmit={handleProcess} className="space-y-8">
-                                        <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 shadow-inner">
-                                            <p className="text-[8px] text-indigo-400/60 font-black uppercase tracking-[0.3em] mb-2">Active Strategic Node</p>
-                                            <p className="text-lg text-white font-black uppercase italic tracking-tight">{currentStep.step_name}</p>
+                                        <div className="flex flex-col gap-4">
+                                            <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 shadow-inner">
+                                                <p className="text-[8px] text-indigo-400/60 font-black uppercase tracking-[0.3em] mb-2">Active Strategic Node</p>
+                                                <p className="text-lg text-white font-black uppercase italic tracking-tight">{currentStep.step_name}</p>
+                                            </div>
+
+                                            {currentStep.deadline && (
+                                                <div className={`p-6 rounded-2xl border ${new Date(currentStep.deadline) < new Date() ? 'bg-rose-500/10 border-rose-500/20' : 'bg-emerald-500/10 border-emerald-500/20'} shadow-inner`}>
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <p className={`text-[8px] font-black uppercase tracking-[0.3em] mb-1 ${new Date(currentStep.deadline) < new Date() ? 'text-rose-400' : 'text-emerald-400'}`}>SLA Protection</p>
+                                                            <p className="text-sm font-black text-white italic truncate">
+                                                                {new Date(currentStep.deadline) < new Date() ? 'CRITICAL: BREACH DETECTED' : 'NOMINAL: MONITORING ACTIVE'}
+                                                            </p>
+                                                        </div>
+                                                        <Clock className={`w-6 h-6 ${new Date(currentStep.deadline) < new Date() ? 'text-rose-500 animate-pulse' : 'text-emerald-500'}`} />
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4">

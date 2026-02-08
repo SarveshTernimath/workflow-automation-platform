@@ -124,7 +124,7 @@ export default function RequestsPage() {
                                     transition={{ delay: index * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                                 >
                                     <div
-                                        onClick={() => router.push(`/requests/${request.id}`)}
+                                        onClick={() => router.push(`/instances/${request.id}`)}
                                         className="group relative"
                                     >
                                         <Card
