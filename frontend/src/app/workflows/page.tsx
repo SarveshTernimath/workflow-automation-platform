@@ -52,7 +52,7 @@ export default function WorkflowsPage() {
 
     return (
         <DashboardLayout>
-            <div className="space-y-12 max-w-7xl mx-auto">
+            <div className="space-y-12">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
                     <div>
                         <div className="flex items-center space-x-2 mb-3">

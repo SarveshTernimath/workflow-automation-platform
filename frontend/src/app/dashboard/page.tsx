@@ -96,7 +96,7 @@ export default function DashboardPage() {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="space-y-16 max-w-7xl mx-auto"
+                className="space-y-16"
             >
                 <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
                     <div>

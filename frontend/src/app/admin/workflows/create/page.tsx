@@ -174,7 +174,7 @@ export default function CreateWorkflowPage() {
 
     return (
         <DashboardLayout>
-            <div className="max-w-7xl mx-auto min-h-[80vh] flex flex-col">
+            <div className="min-h-[80vh] flex flex-col">
                 {/* Header */}
                 <div className="mb-12">
                     <div className="flex items-center space-x-2 mb-3">

@@ -7,8 +7,8 @@ import apiClient, { API_BASE_URL } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function LoginPage() {
-    const [email, setEmail] = useState("admin@example.com");
-    const [password, setPassword] = useState("adminpassword123");
+    const [email, setEmail] = useState("manager@example.com");
+    const [password, setPassword] = useState("manager123");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");

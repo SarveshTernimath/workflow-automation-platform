@@ -5,6 +5,7 @@ import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, User, Cpu, Lock, Luci
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import apiClient from '@/lib/api';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -13,6 +14,19 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const router = useRouter();
     const pathname = usePathname();
+    const [user, setUser] = React.useState<any>(null);
+
+    React.useEffect(() => {
+        async function fetchUser() {
+            try {
+                const res = await apiClient.get("/users/me");
+                setUser(res.data);
+            } catch (err) {
+                console.error("Layout auth check failed", err);
+            }
+        }
+        fetchUser();
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("access_token");
@@ -31,8 +45,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         { name: "Ledger", icon: Cpu, path: "/requests" },
         { name: "Inventory", icon: Shield, path: "/workflows" },
         { name: "Alerts", icon: Bell, path: "/notifications" },
-        { name: "Admin Console", icon: Lock, path: "/admin/workflows" },
     ];
+
+    const isAdmin = user?.roles?.some((r: any) => r.name === "Admin");
+    if (isAdmin) {
+        navItems.push({ name: "Admin Console", icon: Lock, path: "/admin/workflows" });
+    }
 
     return (
         <div className="flex min-h-screen bg-background text-slate-200 font-sans selection:bg-primary/30 antialiased overflow-hidden">
@@ -76,11 +94,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="p-6 mt-auto">
                     <div className="flex items-center p-4 rounded-2xl glass border-white/5 mb-6 overflow-hidden hover:bg-white/10 transition-all cursor-pointer group shadow-xl">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-sky-500 flex items-center justify-center text-white font-black mr-3 shrink-0 shadow-lg group-hover:rotate-12 transition-all duration-500">
-                            SY
+                            {user?.full_name?.substring(0, 2).toUpperCase() || "SY"}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-black text-white truncate tracking-tight uppercase">Identity Node</p>
-                            <p className="text-[10px] font-bold text-slate-500 truncate uppercase tracking-widest opacity-70">Strategic Access</p>
+                            <p className="text-sm font-black text-white truncate tracking-tight uppercase">
+                                {user?.full_name || "Identity Node"}
+                            </p>
+                            <p className="text-[10px] font-bold text-slate-500 truncate uppercase tracking-widest opacity-70">
+                                {user?.roles?.[0]?.name || "Strategic"} Access
+                            </p>
                         </div>
                     </div>
                     <button
@@ -137,19 +159,21 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-12 lg:p-16 scrollbar-hide relative bg-transparent">
-                    {/* Background Accents */}
-                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
-                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+                <main className="flex-1 overflow-y-auto scrollbar-hide relative bg-transparent">
+                    <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 py-8 md:py-12 lg:py-16">
+                        {/* Background Accents */}
+                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+                        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
-                    <motion.div
-                        key={pathname}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    >
-                        {children}
-                    </motion.div>
+                        <motion.div
+                            key={pathname}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                            {children}
+                        </motion.div>
+                    </div>
                 </main>
             </div>
         </div>

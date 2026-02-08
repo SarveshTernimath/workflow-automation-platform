@@ -7,7 +7,7 @@ import { Bell } from "lucide-react";
 export default function NotificationsPage() {
     return (
         <DashboardLayout>
-            <div className="space-y-12 max-w-7xl mx-auto">
+            <div className="space-y-12">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
                     <div>
                         <div className="flex items-center space-x-2 mb-3">
@@ -30,9 +30,9 @@ export default function NotificationsPage() {
                             <div className="flex items-center justify-between relative z-10">
                                 <div className="flex items-center space-x-6">
                                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-inner ${alert.type === 'warning' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                                            alert.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
-                                                alert.type === 'security' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
-                                                    'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
+                                        alert.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                                            alert.type === 'security' ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20' :
+                                                'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'
                                         }`}>
                                         <Bell className="w-6 h-6" />
                                     </div>
