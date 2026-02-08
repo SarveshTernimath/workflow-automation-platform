@@ -192,6 +192,9 @@ export default function CreateWorkflowPage() {
                         <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Protocol Constructor</span>
                     </div>
                     <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Define New Strategy</h1>
+                    <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-2">
+                        Admins define core operational blueprints here. Standard users initialize instances via the “Inventory” portal.
+                    </p>
                 </div>
 
                 {/* Progress Bar */}

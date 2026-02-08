@@ -158,6 +158,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 <span className="absolute top-2 sm:top-3 right-2 sm:right-3 w-1.5 h-1.5 bg-indigo-500 rounded-full glow-indigo shadow-[0_0_8px_rgba(99,102,241,1)]"></span>
                             </button>
 
+                            <div className="hidden lg:flex items-center px-4 py-2 rounded-xl bg-slate-900 border border-white/10 shrink-0">
+                                <Shield className="w-3 h-3 text-indigo-400 mr-2" />
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{user?.roles?.[0]?.name || "Strategic"} Role</span>
+                            </div>
+
                             <button
                                 onClick={() => setShowProfile(true)}
                                 className="flex items-center space-x-2 px-3 sm:px-5 py-2.5 rounded-xl bg-indigo-500 text-white hover:bg-indigo-600 transition-all duration-300 font-black text-xs shadow-lg shadow-indigo-500/20 hover:scale-105 active:scale-95 shrink-0"

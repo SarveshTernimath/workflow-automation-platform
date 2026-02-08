@@ -138,10 +138,15 @@ export default function TasksPage() {
                                                 </div>
                                             </div>
 
-                                            <button className="flex items-center justify-center space-x-4 px-10 py-5 rounded-2xl bg-indigo-500 text-white font-black tracking-widest uppercase text-xs shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40">
-                                                <span>Acknowledge & Execute</span>
-                                                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
-                                            </button>
+                                            <div className="flex flex-col items-end gap-3">
+                                                <button className="flex items-center justify-center space-x-4 px-10 py-5 rounded-2xl bg-indigo-500 text-white font-black tracking-widest uppercase text-xs shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40">
+                                                    <span>Acknowledge & Execute</span>
+                                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+                                                </button>
+                                                <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    Advances protocol state for your assigned role
+                                                </p>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>

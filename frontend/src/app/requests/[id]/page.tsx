@@ -235,7 +235,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-black py-5 rounded-2xl shadow-2xl shadow-indigo-500/20 flex items-center justify-center group uppercase tracking-[0.3em] text-[10px] transition-all duration-500"
+                                            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-black py-5 rounded-2xl shadow-2xl shadow-indigo-500/20 flex items-center justify-center group uppercase tracking-[0.3em] text-[10px] transition-all duration-500 mb-4"
                                         >
                                             {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                                                 <>
@@ -244,6 +244,9 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                                 </>
                                             )}
                                         </button>
+                                        <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest text-center">
+                                            This action advances the operational step assigned to your identity clearance.
+                                        </p>
                                     </form>
                                 ) : (
                                     <div className="text-center py-12 px-6">

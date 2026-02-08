@@ -84,7 +84,7 @@ export default function DashboardPage() {
                         <Loader2 className="w-12 h-12 text-indigo-500 animate-spin" />
                         <div className="absolute inset-0 blur-xl bg-indigo-500/20 rounded-full animate-pulse" />
                     </div>
-                    <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">Calibrating Antigravity Core</p>
+                    <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">Calibrating NexusFlow Core</p>
                 </div>
             </DashboardLayout>
         );

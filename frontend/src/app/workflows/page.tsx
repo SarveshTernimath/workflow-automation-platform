@@ -97,9 +97,9 @@ export default function WorkflowsPage() {
                                     <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center text-indigo-400 group-hover:bg-indigo-500/20 transition-all duration-500 border border-indigo-500/20">
                                         <Play className="w-6 h-6 fill-indigo-400/20 group-hover:scale-110 transition-transform" />
                                     </div>
-                                    <button className="text-slate-600 hover:text-white transition-colors p-2">
-                                        <MoreVertical className="w-5 h-5" />
-                                    </button>
+                                    <div className="px-3 py-1.5 rounded-lg bg-indigo-500/5 border border-indigo-500/10">
+                                        <span className="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Protocol v4.1</span>
+                                    </div>
                                 </CardHeader>
 
                                 <CardContent className="flex-1 flex flex-col p-8 pt-0">
