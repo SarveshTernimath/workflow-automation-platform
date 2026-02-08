@@ -96,7 +96,7 @@ export default function DashboardPage() {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="space-y-16"
+                className="space-y-12"
             >
                 <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
                     <div>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
                             <span className="w-2 h-2 bg-indigo-500 rounded-full animate-ping" />
                             <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Operational Nexus</span>
                         </div>
-                        <h2 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Command Center</h2>
+                        <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">NexusFlow Dashboard</h1>
                         <p className="text-slate-400 text-lg font-medium max-w-xl leading-relaxed">High-fidelity orchestration monitoring and real-time system telemetry across the operational grid.</p>
                     </div>
                     <button

@@ -60,7 +60,7 @@ export default function LoginPage() {
                     <div className="absolute inset-0 bg-white/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <h1 className="text-6xl md:text-8xl font-black mb-6 tracking-tighter italic uppercase gradient-text">
-                    Antigravity
+                    NexusFlow
                 </h1>
                 <p className="text-slate-500 text-lg md:text-xl max-w-xl mx-auto font-medium uppercase tracking-[0.4em] opacity-80">
                     Enterprise Orchestration Nexus
@@ -152,7 +152,7 @@ export default function LoginPage() {
 
             <div className="mt-16 text-slate-700 text-[10px] font-black uppercase tracking-[0.5em] z-10 flex items-center">
                 <Shield className="w-3 h-3 mr-3 text-indigo-500/30" />
-                Secured by Antigravity Post-Quantum Protocols
+                Secured by NexusFlow Post-Quantum Protocols
             </div>
         </div>
     );

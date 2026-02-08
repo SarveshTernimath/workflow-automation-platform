@@ -62,7 +62,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center glow-indigo group-hover:scale-110 transition-all duration-500 shadow-lg shadow-indigo-500/20 shrink-0">
                             <Shield className="w-6 h-6 text-white" />
                         </div>
-                        <h2 className="text-2xl font-black gradient-text tracking-tighter uppercase italic truncate">Antigravity</h2>
+                        <h2 className="text-2xl font-black gradient-text tracking-tighter uppercase italic truncate">NexusFlow</h2>
                     </div>
                 </div>
 

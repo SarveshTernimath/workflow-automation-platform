@@ -3,7 +3,7 @@ import "./globals.css";
 import React from 'react';
 
 export const metadata: Metadata = {
-    title: "Antigravity | Strategic Workflow Orchestration",
+    title: "NexusFlow | Strategic Workflow Orchestration",
     description: "Industrial-grade automated workflow management",
 };
 

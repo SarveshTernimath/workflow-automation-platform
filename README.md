@@ -1,6 +1,6 @@
-# 🌌 Antigravity: Enterprise workflow Orchestration Nexus
+# 🌊 NexusFlow: Enterprise Workflow Orchestration Nexus
 
-**Antigravity** is a prestigious, industry-grade workflow automation platform engineered with a strict adherence to zero-hardcoding principles and high-fidelity operational monitoring.
+**NexusFlow** is a prestigious, industry-grade workflow automation platform engineered with a strict adherence to zero-hardcoding principles and high-fidelity operational monitoring.
 
 Built with **FastAPI**, **PostgreSQL**, and **Celery**, it provides a robust, state-enforced environment for orchestrating complex business processes across distributed infrastructures.
 
