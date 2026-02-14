@@ -44,7 +44,16 @@ def create_app() -> FastAPI:
                 }
             )
 
-    # Set up CORS middleware (Must be added AFTER the wrapper so it handles normal requests)
+    # Dynamic CORS for Render
+    @app.middleware("http")
+    async def dynamic_cors(request: Request, call_next):
+        origin = request.headers.get("origin")
+        if origin and ".onrender.com" in origin:
+            if origin not in settings.BACKEND_CORS_ORIGINS:
+                settings.BACKEND_CORS_ORIGINS.append(origin)
+        return await call_next(request)
+
+    # Set up CORS middleware
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.BACKEND_CORS_ORIGINS,

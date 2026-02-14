@@ -24,10 +24,8 @@ class Settings(BaseSettings):
     # CORS Configuration
     BACKEND_CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
-        "https://antigravtiy-frontend.onrender.com",  # Typo variant
-        "https://antigravtiy-frontend.onrender.com/", 
-        "https://antigravity-frontend.onrender.com",  # Correct variant
-        "https://antigravity-frontend.onrender.com/",
+        "https://antigravity-frontend.onrender.com",
+        "https://antigravtiy-frontend.onrender.com",
     ]
 
     # Celery Configuration

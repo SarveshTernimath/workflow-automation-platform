@@ -117,6 +117,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         <span className="font-bold tracking-tight">Logout</span>
                     </button>
                 </div>
+                {/* Deployment Signature */}
+                <div className="mt-10 px-6 pb-8 border-t border-white/5 pt-8">
+                    <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
+                        <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">NexusFlow Live</p>
+                        <p className="text-[10px] text-indigo-400 font-mono">Build: {new Date().toISOString().split('T')[0]}_v2.4</p>
+                    </div>
+                </div>
             </aside>
 
             {/* Main Content Area */}

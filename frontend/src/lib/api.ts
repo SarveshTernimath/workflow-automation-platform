@@ -1,8 +1,15 @@
 import axios from 'axios';
 
 const getApiBaseUrl = () => {
-    // FORCE the specific backend URL for the submission to ensure no typos break connectivity
-    return 'https://antigravity-backend-8ytp.onrender.com/api/v1';
+    if (typeof window !== 'undefined') {
+        const hostname = window.location.hostname;
+        // If we are on a Render frontend, guess the backend URL if not provided
+        if (hostname.includes('onrender.com') && !process.env.NEXT_PUBLIC_API_URL) {
+            const baseName = hostname.split('.')[0].replace('-frontend', '');
+            return `https://${baseName}-backend.onrender.com/api/v1`;
+        }
+    }
+    return process.env.NEXT_PUBLIC_API_URL || 'https://antigravity-backend.onrender.com/api/v1';
 };
 
 export const API_BASE_URL = getApiBaseUrl();
