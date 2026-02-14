@@ -48,9 +48,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         { name: "Alerts", icon: Bell, path: "/notifications" },
     ];
 
-    const isAdmin = user?.roles?.some((r: any) => r.name === "Admin");
+    const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin");
     if (isAdmin) {
-        navItems.push({ name: "Admin Console", icon: Lock, path: "/admin/workflows" });
+        navItems.push({ name: "Admin Console", icon: Lock, path: "/admin" });
     }
 
     return (

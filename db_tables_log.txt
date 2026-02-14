@@ -1,0 +1,16 @@
+Discovered 15 tables:
+- alembic_version
+- audit_logs
+- permissions
+- playing_with_neon
+- request_state_history
+- request_steps
+- role_permissions
+- roles
+- sla_escalations
+- step_transitions
+- user_roles
+- users
+- workflow_requests
+- workflow_steps
+- workflows
