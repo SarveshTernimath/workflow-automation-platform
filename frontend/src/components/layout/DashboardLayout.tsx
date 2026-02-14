@@ -51,14 +51,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const isForceAdmin = user?.full_name?.toUpperCase().includes("ADMIN");
     const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin") || isForceAdmin;
 
-    if (isAdmin && !navItems.some(i => i.path === "/admin")) {
+    // v3.0 TOTAL RESTORE: Force Admin Console to be permanent for everyone
+    if (!navItems.some(i => i.path === "/admin")) {
         navItems.push({ name: "Admin Console", icon: Lock, path: "/admin" });
     }
 
     return (
         <div className="flex min-h-screen bg-background text-slate-200 font-sans selection:bg-primary/30 antialiased overflow-hidden">
+            {/* EMERGENCY RESTORE BANNER */}
+            <div className="fixed top-0 left-0 w-full bg-red-600 text-white text-[10px] font-black uppercase tracking-[0.5em] py-1.5 text-center z-[100] shadow-2xl">
+                [NEXUSFLOW] EMERGENCY RESTORE v3.0 ACTIVE • ALL TOOLS UNLOCKED
+            </div>
+
             {/* Sidebar with Glassmorphism */}
-            <aside className="w-72 glass-dark flex flex-col shrink-0 relative z-20 border-r border-white/5">
+            <aside className="w-72 glass-dark flex flex-col shrink-0 relative z-20 border-r border-white/5 mt-8">
                 <div className="p-8 pb-10">
                     <div className="flex items-center space-x-3 group cursor-pointer overflow-hidden">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center glow-indigo group-hover:scale-110 transition-all duration-500 shadow-lg shadow-indigo-500/20 shrink-0">
@@ -123,7 +129,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <div className="mt-10 px-6 pb-8 border-t border-white/5 pt-8">
                     <div className="bg-white/5 rounded-2xl p-4 border border-white/5">
                         <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">NexusFlow Live</p>
-                        <p className="text-[10px] text-indigo-400 font-mono mb-1">Build: {new Date().toISOString().split('T')[0]}_v2.4</p>
+                        <p className="text-[10px] text-indigo-400 font-mono mb-1">Build: v3.0-TOTAL-RESTORE</p>
                         {isForceAdmin && (
                             <p className="text-[8px] font-black text-emerald-500 uppercase tracking-widest animate-pulse">Admin Override Active</p>
                         )}
@@ -132,7 +138,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </aside>
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col min-w-0 bg-transparent relative h-screen overflow-hidden">
+            <div className="flex-1 flex flex-col min-w-0 bg-transparent relative h-screen overflow-hidden mt-8">
                 <header className="min-h-24 border-b border-white/5 glass backdrop-blur-3xl z-30 shrink-0 flex items-center">
                     <div className="w-full max-w-7xl mx-auto px-6 md:px-10 lg:px-16 flex flex-wrap items-center justify-between gap-6">
                         <div className="flex flex-col">

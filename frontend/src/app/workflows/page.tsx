@@ -152,24 +152,22 @@ export default function WorkflowsPage() {
                         <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Workflow Inventory</h1>
                         <p className="text-slate-400 text-lg font-medium max-w-xl leading-relaxed">Manage and orchestrate enterprise-grade logic templates across your infrastructure.</p>
                     </div>
-                    {isAdmin && (
-                        <div className="flex gap-4">
-                            <button
-                                onClick={() => setShowCreateModal(true)}
-                                className="bg-white/5 hover:bg-white/10 text-slate-400 px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs border border-white/5 transition-all flex items-center group"
-                            >
-                                <Plus className="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform duration-500" />
-                                Start New Workflow
-                            </button>
-                            <button
-                                onClick={() => router.push('/admin/workflows/create')}
-                                className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:-translate-y-1 flex items-center group"
-                            >
-                                <Cpu className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform" />
-                                Build Strategy
-                            </button>
-                        </div>
-                    )}
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => setShowCreateModal(true)}
+                            className="bg-white/5 hover:bg-white/10 text-slate-400 px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs border border-white/5 transition-all flex items-center group"
+                        >
+                            <Plus className="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform duration-500" />
+                            Start New Workflow
+                        </button>
+                        <button
+                            onClick={() => router.push('/admin/workflows/create')}
+                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:-translate-y-1 flex items-center group"
+                        >
+                            <Cpu className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform" />
+                            Build Strategy
+                        </button>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
