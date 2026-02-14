@@ -41,7 +41,7 @@ export default function RequestsPage() {
     async function fetchRequests() {
         try {
             const params = statusFilter ? `?status=${statusFilter}` : "";
-            const res = await apiClient.get(`/requests/${params}`);
+            const res = await apiClient.get(`requests/${params}`);
             setRequests(res.data);
         } catch (err) {
             console.error("Failed to fetch requests", err);

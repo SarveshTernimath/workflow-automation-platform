@@ -24,7 +24,7 @@ export default function LoginPage() {
             formData.append("username", email);
             formData.append("password", password);
 
-            const response = await apiClient.post("/login/access-token", formData.toString(), {
+            const response = await apiClient.post("login/access-token", formData.toString(), {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
             });
 

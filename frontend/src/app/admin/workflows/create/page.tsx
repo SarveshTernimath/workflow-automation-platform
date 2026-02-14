@@ -60,8 +60,8 @@ export default function CreateWorkflowPage() {
         const fetchMetadata = async () => {
             try {
                 const [rolesRes, permsRes] = await Promise.all([
-                    apiClient.get("/roles/"),
-                    apiClient.get("/permissions/")
+                    apiClient.get("roles/"),
+                    apiClient.get("permissions/")
                 ]);
                 setRoles(rolesRes.data);
                 setPermissions(permsRes.data);
@@ -211,7 +211,7 @@ export default function CreateWorkflowPage() {
                 };
             }
 
-            await apiClient.post("/workflows/", finalPayload);
+            await apiClient.post("workflows/", finalPayload);
             router.push("/workflows"); // Redirect to inventory
         } catch (err) {
             console.error("Failed to create workflow", err);

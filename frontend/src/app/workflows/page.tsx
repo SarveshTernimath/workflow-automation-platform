@@ -25,9 +25,9 @@ export default function WorkflowsPage() {
         async function fetchData() {
             try {
                 const [wfRes, userRes, rolesRes] = await Promise.all([
-                    apiClient.get("/workflows/"),
-                    apiClient.get("/users/me"),
-                    apiClient.get("/roles/")
+                    apiClient.get("workflows/"),
+                    apiClient.get("users/me"),
+                    apiClient.get("roles/")
                 ]);
                 setWorkflows(wfRes.data);
                 setUser(userRes.data);

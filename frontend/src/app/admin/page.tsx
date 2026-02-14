@@ -16,7 +16,7 @@ export default function AdminDashboard() {
     useEffect(() => {
         async function fetchStats() {
             try {
-                const res = await apiClient.get("/admin/");
+                const res = await apiClient.get("admin/");
                 setStats(res.data);
             } catch (err) {
                 console.error("Failed to fetch admin stats", err);

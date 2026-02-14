@@ -49,9 +49,9 @@ export default function DashboardPage() {
         async function fetchData() {
             try {
                 const [statsRes, reqsRes, auditRes] = await Promise.all([
-                    apiClient.get("/requests/stats"),
-                    apiClient.get("/requests/"),
-                    apiClient.get("/audit/")
+                    apiClient.get("requests/stats"),
+                    apiClient.get("requests/"),
+                    apiClient.get("audit/")
                 ]);
 
                 setStats(statsRes.data);

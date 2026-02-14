@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     React.useEffect(() => {
         async function fetchUser() {
             try {
-                const res = await apiClient.get("/users/me");
+                const res = await apiClient.get("users/me");
                 setUser(res.data);
             } catch (err) {
                 console.error("Layout auth check failed", err);

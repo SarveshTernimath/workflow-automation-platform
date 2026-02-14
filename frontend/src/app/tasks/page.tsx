@@ -29,7 +29,7 @@ export default function TasksPage() {
     useEffect(() => {
         async function fetchTasks() {
             try {
-                const res = await apiClient.get("/requests/my-tasks");
+                const res = await apiClient.get("requests/my-tasks");
                 setTasks(res.data);
             } catch (err) {
                 console.error("Failed to fetch tasks", err);
