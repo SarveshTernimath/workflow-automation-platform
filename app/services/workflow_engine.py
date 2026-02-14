@@ -243,10 +243,9 @@ class WorkflowEngine:
             )
 
         # --- RBAC Enforcement ---
-        db.refresh(user)  # Ensure roles/permissions are loaded
         step_def = current_exec.step
+        user_role_ids = [role.id for role in user.roles]
         if step_def.required_role_id:
-            user_role_ids = [role.id for role in user.roles]
             if step_def.required_role_id not in user_role_ids:
                 logger.warning(
                     f"User {user.id} lacks required role {step_def.required_role_id} for step {step_def.id}"

@@ -33,7 +33,7 @@ def has_role(user: User, role_name: str) -> bool:
     if not user.roles:
         return False
 
-    return any(role.name == role_name for role in user.roles)
+    return any(role.name.lower() == role_name.lower() for role in user.roles)
 
 
 def get_user_permissions(user: User) -> Set[str]:

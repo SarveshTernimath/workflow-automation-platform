@@ -4,10 +4,16 @@ from sqlalchemy.orm import Session
 
 from app.core import security
 from app.core.config import settings
-from app.db.models.user import User
+from app.db.models.user import User, Role
 
 
 def create_test_user(db: Session) -> User:
+    role = db.query(Role).filter(Role.name == "admin").first()
+    if not role:
+        role = Role(name="admin")
+        db.add(role)
+        db.flush()
+        
     user = User(
         email="test@example.com",
         username="testuser",
@@ -15,8 +21,9 @@ def create_test_user(db: Session) -> User:
         hashed_password=security.get_password_hash("password123"),
         is_active=True,
     )
+    user.roles = [role]
     db.add(user)
-    db.commit()
+    db.flush()
     return user
 
 

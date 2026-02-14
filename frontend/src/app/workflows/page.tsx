@@ -14,18 +14,36 @@ export default function WorkflowsPage() {
     const [starting, setStarting] = useState<string | null>(null);
     const [payload, setPayload] = useState<string>(JSON.stringify({ amount: 2500, department: "Engineering" }, null, 2));
     const [showPayloadModal, setShowPayloadModal] = useState<any>(null);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [blueprintJson, setBlueprintJson] = useState<string>("");
+    const [roles, setRoles] = useState<any[]>([]);
     const [user, setUser] = useState<any>(null);
     const router = useRouter();
 
     useEffect(() => {
         async function fetchData() {
             try {
-                const [wfRes, userRes] = await Promise.all([
+                const [wfRes, userRes, rolesRes] = await Promise.all([
                     apiClient.get("/workflows/"),
-                    apiClient.get("/users/me")
+                    apiClient.get("/users/me"),
+                    apiClient.get("/roles/")
                 ]);
                 setWorkflows(wfRes.data);
                 setUser(userRes.data);
+                setRoles(rolesRes.data);
+
+                // Set default blueprint
+                const defaultBlueprint = {
+                    name: "NEW_PROTOCOL_" + Math.floor(Math.random() * 10000),
+                    description: "Enterprise-grade orchestration logic.",
+                    steps: [
+                        { name: "Initiation", role: "user", order: 1, sla: 24 },
+                        { name: "Verification", role: "manager", order: 2, sla: 24 },
+                        { name: "Final Authorization", role: "admin", order: 3, sla: 24 }
+                    ]
+                };
+                setBlueprintJson(JSON.stringify(defaultBlueprint, null, 2));
             } catch (err) {
                 console.error("Failed to fetch data", err);
             } finally {
@@ -34,6 +52,56 @@ export default function WorkflowsPage() {
         }
         fetchData();
     }, []);
+
+    const handleCreateWorkflow = async () => {
+        setIsSubmitting(true);
+        try {
+            const data = JSON.parse(blueprintJson);
+
+            // Map role names to IDs
+            const formattedSteps = data.steps.map((s: any) => {
+                const role = roles.find(r => r.name.toLowerCase() === s.role.toLowerCase());
+                return {
+                    name: s.name,
+                    description: s.description || "",
+                    step_order: s.order,
+                    sla_hours: s.sla || 24,
+                    required_role_id: role ? role.id : null,
+                    is_conditional: false
+                };
+            });
+
+            // Auto-generate linear transitions
+            const transitions = [];
+            for (let i = 0; i < formattedSteps.length; i++) {
+                const current = formattedSteps[i];
+                const next = formattedSteps[i + 1];
+                transitions.push({
+                    from_step_order: current.step_order,
+                    to_step_order: next ? next.step_order : null,
+                    outcome: "APPROVED"
+                });
+            }
+
+            await apiClient.post("/workflows/", {
+                name: data.name,
+                description: data.description,
+                is_active: true,
+                steps: formattedSteps,
+                transitions: transitions
+            });
+
+            // Refresh list
+            const wfRes = await apiClient.get("/workflows/");
+            setWorkflows(wfRes.data);
+            setShowCreateModal(false);
+        } catch (err) {
+            console.error("Failed to create workflow", err);
+            alert("Failed to create workflow. Verify JSON structure and role names.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     const handleStartWorkflow = async () => {
         if (!showPayloadModal) return;
@@ -84,13 +152,22 @@ export default function WorkflowsPage() {
                         <p className="text-slate-400 text-lg font-medium max-w-xl leading-relaxed">Manage and orchestrate enterprise-grade logic templates across your infrastructure.</p>
                     </div>
                     {isAdmin && (
-                        <button
-                            onClick={() => router.push('/admin/workflows/create')}
-                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:-translate-y-1 flex items-center group"
-                        >
-                            <Plus className="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform duration-500" />
-                            Build New Strategy
-                        </button>
+                        <div className="flex gap-4">
+                            <button
+                                onClick={() => setShowCreateModal(true)}
+                                className="bg-white/5 hover:bg-white/10 text-slate-400 px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs border border-white/5 transition-all flex items-center group"
+                            >
+                                <Plus className="w-4 h-4 mr-3 group-hover:rotate-90 transition-transform duration-500" />
+                                Start New Workflow
+                            </button>
+                            <button
+                                onClick={() => router.push('/admin/workflows/create')}
+                                className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:-translate-y-1 flex items-center group"
+                            >
+                                <Cpu className="w-4 h-4 mr-3 group-hover:scale-110 transition-transform" />
+                                Build Strategy
+                            </button>
+                        </div>
                     )}
                 </div>
 
@@ -142,6 +219,105 @@ export default function WorkflowsPage() {
                         ))
                     )}
                 </div>
+
+                {/* Create Workflow Modal */}
+                <AnimatePresence>
+                    {showCreateModal && (
+                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => !isSubmitting && setShowCreateModal(false)}
+                                className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+                            />
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                className="w-full max-w-3xl glass-dark border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl flex flex-col"
+                            >
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full -z-10" />
+
+                                <div className="flex items-center justify-between mb-8">
+                                    <div className="flex items-center space-x-3">
+                                        <div className="w-12 h-12 rounded-2xl bg-indigo-500/20 flex items-center justify-center">
+                                            <Plus className="w-6 h-6 text-indigo-400" />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter">Define Operational Blueprint</h2>
+                                            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest">JSON Source Interface</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col items-end">
+                                        <span className="text-[8px] font-black text-slate-600 uppercase tracking-widest mb-1">Available Roles</span>
+                                        <div className="flex gap-2">
+                                            {roles.map(r => (
+                                                <div key={r.id} className="px-2 py-0.5 rounded bg-indigo-500/10 border border-indigo-500/20 text-[6px] font-bold text-indigo-400 uppercase tracking-tighter">
+                                                    {r.name}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 overflow-hidden">
+                                    <div className="flex flex-col h-[400px]">
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Blueprint Definition</label>
+                                        <textarea
+                                            value={blueprintJson}
+                                            onChange={(e) => setBlueprintJson(e.target.value)}
+                                            className="flex-1 bg-slate-900/50 border border-white/5 rounded-2xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500/40 transition-all leading-relaxed resize-none overflow-y-auto"
+                                            spellCheck={false}
+                                        />
+                                    </div>
+
+                                    <div className="flex flex-col h-[400px] bg-white/5 rounded-2xl border border-white/5 p-8">
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 block">Interface Logic</label>
+                                        <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+                                            <div className="space-y-2">
+                                                <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-wider italic">Role-Based Tiers</h4>
+                                                <p className="text-[9px] text-slate-400 leading-relaxed font-medium">Use the <code className="text-indigo-400 text-[10px] font-mono">role</code> key to assign authority. The system will auto-map to standard system nodes.</p>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-wider italic">Sequence Order</h4>
+                                                <p className="text-[9px] text-slate-400 leading-relaxed font-medium">Define execution priority with <code className="text-indigo-400 text-[10px] font-mono">order</code>. Transitions are synthesized automatically in linear mode.</p>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-wider italic">Validation</h4>
+                                                <p className="text-[9px] text-slate-400 leading-relaxed font-medium">System strictly enforces JSON schema. Ensure all brackets are balanced before committing.</p>
+                                            </div>
+                                            <div className="mt-8 pt-6 border-t border-white/5">
+                                                <div className="flex items-center space-x-2 text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                                                    <Info className="w-3 h-3 text-indigo-500" />
+                                                    <span>Pro Tip</span>
+                                                </div>
+                                                <p className="text-[8px] text-slate-500 mt-2 leading-relaxed italic">"Defining blueprints here bypasses the wizard. Use this for rapid deployment of complex logic."</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex gap-4">
+                                    <button
+                                        onClick={() => setShowCreateModal(false)}
+                                        disabled={isSubmitting}
+                                        className="flex-1 px-8 py-5 rounded-2xl bg-white/5 text-slate-400 font-black uppercase tracking-widest text-[10px] border border-white/5 hover:bg-white/10 transition-all"
+                                    >
+                                        Discard
+                                    </button>
+                                    <button
+                                        onClick={handleCreateWorkflow}
+                                        disabled={isSubmitting}
+                                        className="flex-[2] px-8 py-5 rounded-2xl bg-indigo-500 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-indigo-500/20 flex items-center justify-center hover:bg-indigo-600 transition-all"
+                                    >
+                                        {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Commit Blueprint</span>}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
 
                 {/* Payload Configuration Modal */}
                 <AnimatePresence>
