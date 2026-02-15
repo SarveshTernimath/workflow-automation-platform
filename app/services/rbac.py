@@ -78,6 +78,7 @@ def check_role(user: User, required_role: str) -> None:
     Check if a user has the required role.
     Raises PermissionDeniedError if not.
     Accepts admin/ADMIN/superadmin as equivalent.
+    Fallback: checks for ADMIN in full_name (matches frontend logic).
     """
     # Log role check for debugging
     user_roles = [r.name for r in user.roles] if user.roles else []
@@ -88,6 +89,10 @@ def check_role(user: User, required_role: str) -> None:
         admin_variants = ["admin", "ADMIN", "superadmin"]
         if any(has_role(user, variant) for variant in admin_variants):
             logger.debug(f"User '{user.username}' authorized with admin role")
+            return
+        # Fallback: check full_name for ADMIN (matches frontend isForceAdmin logic)
+        if user.full_name and "ADMIN" in user.full_name.upper():
+            logger.debug(f"User '{user.username}' authorized via full_name override")
             return
     else:
         if has_role(user, required_role):

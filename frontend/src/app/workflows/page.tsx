@@ -12,7 +12,7 @@ export default function WorkflowsPage() {
     const [workflows, setWorkflows] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [starting, setStarting] = useState<string | null>(null);
-    const [payload, setPayload] = useState<string>(JSON.stringify({ amount: 2500, department: "Engineering" }, null, 2));
+    const [payload, setPayload] = useState<string>("");
     const [showPayloadModal, setShowPayloadModal] = useState<any>(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -103,18 +103,13 @@ export default function WorkflowsPage() {
         }
     };
 
+
     const handleStartWorkflow = async () => {
         if (!showPayloadModal) return;
         setStarting(showPayloadModal.id);
         try {
-            let parsedPayload = {};
-            try {
-                parsedPayload = JSON.parse(payload);
-            } catch (e) {
-                alert("Invalid JSON payload. Please correct it.");
-                setStarting(null);
-                return;
-            }
+            // Convert plain text to JSON object for backend
+            const parsedPayload = { description: payload };
 
             const res = await apiClient.post("/requests/", {
                 workflow_id: showPayloadModal.id,
@@ -351,16 +346,16 @@ export default function WorkflowsPage() {
 
                                 <div className="space-y-6 mb-10">
                                     <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
-                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Data Payload (JSON)</label>
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Request Description</label>
                                         <textarea
                                             value={payload}
                                             onChange={(e) => setPayload(e.target.value)}
-                                            className="w-full bg-slate-900/50 border border-white/5 rounded-xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500/40 transition-all min-h-[200px] leading-relaxed"
-                                            spellCheck={false}
+                                            className="w-full bg-slate-900/50 border border-white/5 rounded-xl p-6 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all min-h-[200px] leading-relaxed"
+                                            placeholder="Describe your request... (e.g., Budget approval for Q1 marketing campaign, $50,000)"
                                         />
                                     </div>
                                     <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest leading-relaxed">
-                                        Review initial payload parameters before committing to the orchestration grid. Injected data will be immutable once sequence starts.
+                                        Provide a brief description of your request. This will be recorded with your workflow instance.
                                     </p>
                                 </div>
 
