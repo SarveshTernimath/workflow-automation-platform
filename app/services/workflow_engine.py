@@ -277,6 +277,10 @@ class WorkflowEngine:
         current_exec.assigned_to = user.id
         current_exec.status = outcome  # Typically maps to APPROVED, REJECTED
         current_exec.decision_data = context
+        # Save comment explicitly to the column if provided
+        if context and "comment" in context:
+            current_exec.comments = context["comment"]
+            
         current_exec.completed_at = datetime.utcnow()
 
         # 2. Resolve Next Path
@@ -305,14 +309,17 @@ class WorkflowEngine:
             db.add(new_exec)
             request.current_step_id = next_step.id
 
-            # Trigger notification
-            notify_new_assignment.delay(
-                step_id=next_step.id,
-                request_id=request.id,
-                workflow_name=request.workflow.name,
-                step_name=next_step.name,
-                deadline=deadline.isoformat(),
-            )
+            # Trigger notification (Safe Mode)
+            try:
+                notify_new_assignment.delay(
+                    step_id=next_step.id,
+                    request_id=request.id,
+                    workflow_name=request.workflow.name,
+                    step_name=next_step.name,
+                    deadline=deadline.isoformat(),
+                )
+            except Exception as e:
+                logger.error(f"Failed to send notification for Request {request.id}: {e}")
 
             logger.info(f"Request {request_id} moved to step: {next_step.name}")
         else:

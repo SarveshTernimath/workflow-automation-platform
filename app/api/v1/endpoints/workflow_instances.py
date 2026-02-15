@@ -11,6 +11,7 @@ from app.core.exceptions import WorkflowEngineError, PermissionDeniedError
 
 router = APIRouter()
 
+@router.post("/{id}", response_model=WorkflowRequestSchema)
 @router.post("/{id}/decision", response_model=WorkflowRequestSchema)
 def make_decision(
     *,
@@ -23,31 +24,31 @@ def make_decision(
     Execute a decision on a workflow instance step.
     Payload: { action: "approve" | "reject" | "execute", comment: string }
     """
-    action = payload.get("action")
-    comment = payload.get("comment")
-    
-    if not action:
-        raise HTTPException(status_code=400, detail="Action is required (approve/reject/execute)")
-        
-    # Normalize action to uppercase to match transition outcomes (APPROVED, REJECTED)
-    # "execute" might map to APPROVED for simple steps, or we leave it as EXECUTE if DB has that.
-    # Assuming standard APPROVED/REJECTED for now based on seed data.
-    # If action is 'execute', we might treat it as 'APPROVED' or 'COMPLETED'.
-    # For now, just uppercase it.
-    outcome = action.upper()
-    
-    # Prepare context
-    context = {"comment": comment, "action": action}
-    
     try:
+        action = payload.get("action")
+        comment = payload.get("comment")
+        
+        if not action:
+            raise HTTPException(status_code=400, detail="Action is required (approve/reject/execute)")
+            
+        # Normalize action to uppercase to match transition outcomes (APPROVED, REJECTED)
+        outcome = action.upper()
+        
+        # Prepare context
+        context = {"comment": comment, "action": action}
+        
         # process_step logic handles RBAC and state transitions
         request = WorkflowEngine.process_step(db, id, current_user, outcome, context)
         db.commit()
         db.refresh(request)
         return request
     except (WorkflowEngineError, PermissionDeniedError) as e:
+        logger.warning(f"Workflow execution failed: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.error(f"Critical error in workflow execution: {e}")
         import traceback
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail="Internal server error during workflow execution")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
