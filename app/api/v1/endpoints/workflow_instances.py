@@ -1,0 +1,53 @@
+from typing import Any, Dict
+from fastapi import APIRouter, Depends, HTTPException, Body
+from sqlalchemy.orm import Session
+from uuid import UUID
+
+from app.api import deps
+from app.db.models.user import User
+from app.services.workflow_engine import WorkflowEngine
+from app.schemas.request import WorkflowRequestSchema
+from app.core.exceptions import WorkflowEngineError, PermissionDeniedError
+
+router = APIRouter()
+
+@router.post("/{id}/decision", response_model=WorkflowRequestSchema)
+def make_decision(
+    *,
+    db: Session = Depends(deps.get_db),
+    id: UUID,
+    payload: Dict[str, Any] = Body(...),
+    current_user: User = Depends(deps.get_current_user),
+) -> Any:
+    """
+    Execute a decision on a workflow instance step.
+    Payload: { action: "approve" | "reject" | "execute", comment: string }
+    """
+    action = payload.get("action")
+    comment = payload.get("comment")
+    
+    if not action:
+        raise HTTPException(status_code=400, detail="Action is required (approve/reject/execute)")
+        
+    # Normalize action to uppercase to match transition outcomes (APPROVED, REJECTED)
+    # "execute" might map to APPROVED for simple steps, or we leave it as EXECUTE if DB has that.
+    # Assuming standard APPROVED/REJECTED for now based on seed data.
+    # If action is 'execute', we might treat it as 'APPROVED' or 'COMPLETED'.
+    # For now, just uppercase it.
+    outcome = action.upper()
+    
+    # Prepare context
+    context = {"comment": comment, "action": action}
+    
+    try:
+        # process_step logic handles RBAC and state transitions
+        request = WorkflowEngine.process_step(db, id, current_user, outcome, context)
+        db.commit()
+        db.refresh(request)
+        return request
+    except (WorkflowEngineError, PermissionDeniedError) as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Internal server error during workflow execution")

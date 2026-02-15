@@ -1,9 +1,10 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import workflows, requests, users, roles, audit, admin, login, permissions
+from app.api.v1.endpoints import workflows, requests, users, roles, audit, admin, login, permissions, workflow_instances
 
 api_router = APIRouter()
 
 api_router.include_router(workflows.router, prefix="/workflows", tags=["Workflows"])
+api_router.include_router(workflow_instances.router, prefix="/workflow-instances", tags=["Workflow Instances"])
 api_router.include_router(requests.router, prefix="/requests", tags=["Requests"])
 api_router.include_router(users.router, prefix="/users", tags=["Users"])
 api_router.include_router(roles.router, prefix="/roles", tags=["Roles"])
