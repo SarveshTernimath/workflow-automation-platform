@@ -90,10 +90,6 @@ def check_role(user: User, required_role: str) -> None:
         if any(has_role(user, variant) for variant in admin_variants):
             logger.debug(f"User '{user.username}' authorized with admin role")
             return
-        # Fallback: check full_name for ADMIN (matches frontend isForceAdmin logic)
-        if user.full_name and "ADMIN" in user.full_name.upper():
-            logger.debug(f"User '{user.username}' authorized via full_name override")
-            return
     else:
         if has_role(user, required_role):
             logger.debug(f"User '{user.username}' authorized with role: {required_role}")

@@ -243,29 +243,33 @@ class WorkflowEngine:
             )
 
         # --- RBAC Enforcement ---
-        step_def = current_exec.step
-        user_role_ids = [role.id for role in user.roles]
-        if step_def.required_role_id:
-            if step_def.required_role_id not in user_role_ids:
-                logger.warning(
-                    f"User {user.id} lacks required role {step_def.required_role_id} for step {step_def.id}"
-                )
-                raise PermissionDeniedError(
-                    f"User lacks required role for this workflow step"
-                )
+        # Admin Bypass: Allow admins to execute any step
+        is_admin = any(r.name.lower() == "admin" for r in user.roles)
+        
+        if not is_admin:
+            step_def = current_exec.step
+            user_role_ids = [role.id for role in user.roles]
+            if step_def.required_role_id:
+                if step_def.required_role_id not in user_role_ids:
+                    logger.warning(
+                        f"User {user.id} lacks required role {step_def.required_role_id} for step {step_def.id}"
+                    )
+                    raise PermissionDeniedError(
+                        f"User lacks required role for this workflow step"
+                    )
 
-        if step_def.required_permission_id:
-            user_permission_ids = set()
-            for role in user.roles:
-                for perm in role.permissions:
-                    user_permission_ids.add(perm.id)
-            if step_def.required_permission_id not in user_permission_ids:
-                logger.warning(
-                    f"User {user.id} lacks required permission {step_def.required_permission_id} for step {step_def.id}"
-                )
-                raise PermissionDeniedError(
-                    f"User lacks required permission for this workflow step"
-                )
+            if step_def.required_permission_id:
+                user_permission_ids = set()
+                for role in user.roles:
+                    for perm in role.permissions:
+                        user_permission_ids.add(perm.id)
+                if step_def.required_permission_id not in user_permission_ids:
+                    logger.warning(
+                        f"User {user.id} lacks required permission {step_def.required_permission_id} for step {step_def.id}"
+                    )
+                    raise PermissionDeniedError(
+                        f"User lacks required permission for this workflow step"
+                    )
         # ------------------------
 
 

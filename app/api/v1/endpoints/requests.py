@@ -67,7 +67,11 @@ def get_my_tasks(
     # Find all pending steps where user has required role or permission
     user_role_ids = {role.id for role in current_user.roles}
     user_permission_ids = set()
+    is_admin = False
+    
     for role in current_user.roles:
+        if role.name.lower() == "admin":
+            is_admin = True
         for perm in role.permissions:
             user_permission_ids.add(perm.id)
     
@@ -87,12 +91,15 @@ def get_my_tasks(
     tasks = []
     for step in pending_steps:
         step_def = step.step
-        # Check if user has required role
-        if step_def.required_role_id and step_def.required_role_id not in user_role_ids:
-            continue
-        # Check if user has required permission
-        if step_def.required_permission_id and step_def.required_permission_id not in user_permission_ids:
-            continue
+        
+        # Admin Override: Bypass checks if user is admin
+        if not is_admin:
+            # Check if user has required role
+            if step_def.required_role_id and step_def.required_role_id not in user_role_ids:
+                continue
+            # Check if user has required permission
+            if step_def.required_permission_id and step_def.required_permission_id not in user_permission_ids:
+                continue
         
         tasks.append({
             "request_id": str(step.request_id),
