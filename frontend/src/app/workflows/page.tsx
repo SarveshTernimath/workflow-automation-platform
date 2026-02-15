@@ -124,8 +124,7 @@ export default function WorkflowsPage() {
         }
     };
 
-    const isForceAdmin = user?.full_name?.toUpperCase().includes("ADMIN");
-    const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin") || isForceAdmin;
+    const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin");
 
     if (loading) return (
         <DashboardLayout>

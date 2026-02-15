@@ -58,11 +58,17 @@ def get_current_user(
     except ValueError:
         raise HTTPException(status_code=401, detail="Invalid token payload")
 
+    import logging
+    logger = logging.getLogger("workflow-platform.auth")
+    
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
+
+    role_names = [r.name for r in user.roles]
+    logger.info(f"Authenticated User: {user.email} | Roles: {role_names}")
 
     return user
 
