@@ -77,6 +77,22 @@ def check_role(user: User, required_role: str) -> None:
     """
     Check if a user has the required role.
     Raises PermissionDeniedError if not.
+    Accepts admin/ADMIN/superadmin as equivalent.
     """
-    if not has_role(user, required_role):
-        raise PermissionDeniedError(f"User lacks required role: {required_role}")
+    # Log role check for debugging
+    user_roles = [r.name for r in user.roles] if user.roles else []
+    print(f"ROLE CHECK: {user.email} | User roles: {user_roles} | Required: {required_role}")
+    
+    # Normalize admin role names
+    if required_role.lower() == "admin":
+        admin_variants = ["admin", "ADMIN", "superadmin"]
+        if any(has_role(user, variant) for variant in admin_variants):
+            logger.debug(f"User '{user.username}' authorized with admin role")
+            return
+    else:
+        if has_role(user, required_role):
+            logger.debug(f"User '{user.username}' authorized with role: {required_role}")
+            return
+    
+    logger.warning(f"User '{user.username}' lacks required role: {required_role}")
+    raise PermissionDeniedError(f"User lacks required role: {required_role}")

@@ -24,7 +24,7 @@ def read_users(
     """
     Retrieve users. (Admin only)
     """
-    check_role(current_user, "Admin")
+    check_role(current_user, "admin")
     users = db.query(User).offset(skip).limit(limit).all()
     return users
 
@@ -39,7 +39,7 @@ def create_user(
     """
     Create new user. (Admin only)
     """
-    check_role(current_user, "Admin")
+    check_role(current_user, "admin")
     # Check permissions (TODO: Use PermissionChecker)
     # For now, just check if email exists
     user = db.query(User).filter(User.email == user_in.email).first()

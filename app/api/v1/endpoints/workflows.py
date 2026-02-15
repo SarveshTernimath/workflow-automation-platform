@@ -36,7 +36,7 @@ def create_workflow(
     """
     Create new workflow (Admin only).
     """
-    check_role(current_user, "Admin")
+    check_role(current_user, "admin")
     workflow = WorkflowService.create_workflow(
         db, workflow_in.model_dump(), current_user.id
     )
@@ -66,6 +66,6 @@ def delete_workflow(
     """
     Delete a workflow (Admin only).
     """
-    check_role(current_user, "Admin")
+    check_role(current_user, "admin")
     WorkflowService.delete_workflow(db, id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

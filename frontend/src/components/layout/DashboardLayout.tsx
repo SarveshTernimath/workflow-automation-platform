@@ -51,8 +51,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const isForceAdmin = user?.full_name?.toUpperCase().includes("ADMIN");
     const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin") || isForceAdmin;
 
-    // v3.0 TOTAL RESTORE: Force Admin Console to be permanent for everyone
-    if (!navItems.some(i => i.path === "/admin")) {
+    // Admin Console only for users with admin role
+    if (isAdmin && !navItems.some(i => i.path === "/admin")) {
         navItems.push({ name: "Admin Console", icon: Lock, path: "/admin" });
     }
 
