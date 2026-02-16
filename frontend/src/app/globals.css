@@ -76,12 +76,12 @@ body {
 }
 
 body {
-  /* Moody Dark Mountain Aesthetic - Deep Blacks, Greys, and a hint of dark green/blue */
+  /* Foggy Grey Mountain Aesthetic - Deep, Moody, Natural */
   background:
-    linear-gradient(to bottom, rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.95)),
-    url("https://images.unsplash.com/photo-1614095415752-972145330a1b?q=80&w=2548&auto=format&fit=crop"),
-    /* Fallback/Placeholder High Quality Mountain */
-    radial-gradient(circle at top, #1a2e1a, #020617);
+    linear-gradient(to bottom, rgba(10, 10, 12, 0.7), rgba(0, 0, 0, 0.9)),
+    url("https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?q=80&w=2670&auto=format&fit=crop"),
+    /* Moody Foggy Mountain */
+    radial-gradient(circle at center, #2c3e50, #000000);
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
@@ -91,31 +91,39 @@ body {
 }
 
 body::before {
-  /* Neon Glow Overlay */
+  /* Subtle Atmospheric Noise/Overlay */
   content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background:
-    radial-gradient(circle at 15% 25%, rgba(0, 255, 128, 0.05) 0%, transparent 45%),
-    radial-gradient(circle at 85% 75%, rgba(0, 255, 0, 0.05) 0%, transparent 45%);
+  background: url("https://grainy-gradients.vercel.app/noise.svg");
+  /* Subtle noise texture */
+  opacity: 0.03;
   pointer-events: none;
-  z-index: -1;
+  z-index: 50;
 }
 
 @layer utilities {
   .glass {
-    @apply bg-black/40 backdrop-blur-2xl border border-white/10 shadow-glass;
+    @apply bg-slate-900/50 backdrop-blur-3xl border border-white/10;
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+      inset 0 0 20px 0 rgba(255, 255, 255, 0.02),
+      0 10px 40px -10px rgba(0, 0, 0, 0.5);
   }
 
   .glass-dark {
-    @apply bg-black/60 backdrop-blur-3xl border border-white/10 shadow-lg;
+    @apply bg-black/60 backdrop-blur-3xl border border-white/10;
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      inset 0 0 30px 0 rgba(0, 0, 0, 0.3),
+      0 20px 60px -20px rgba(0, 0, 0, 0.8);
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-green-100 to-green-300;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-slate-400;
   }
 
   .gradient-primary {
@@ -207,18 +215,18 @@ body::before {
 
 .focus-glow {
   outline: none !important;
-  border-color: rgba(0, 255, 128, 0.5) !important;
-  box-shadow: 0 0 0 4px rgba(0, 255, 128, 0.1) !important;
+  border-color: rgba(99, 255, 200, 0.5) !important;
+  box-shadow: 0 0 0 4px rgba(99, 255, 200, 0.1) !important;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(0, 255, 128, 0.5) !important;
-  box-shadow: 0 0 0 4px rgba(0, 255, 128, 0.1) !important;
+  border-color: rgba(99, 255, 200, 0.5) !important;
+  box-shadow: 0 0 0 4px rgba(99, 255, 200, 0.1) !important;
   outline: none !important;
-  background-color: rgba(0, 255, 128, 0.02) !important;
+  background-color: rgba(99, 255, 200, 0.03) !important;
 }
 
 /* Neon Text Utilities */
