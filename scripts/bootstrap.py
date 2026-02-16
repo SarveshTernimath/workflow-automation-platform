@@ -21,6 +21,25 @@ def bootstrap():
     Base.metadata.create_all(bind=engine)
     print("Schema check complete.")
 
+    # AUTO-MIGRATION: Check for 'comments' column in 'request_steps'
+    # This prevents 500 errors if the DB was created before the column was added to the model.
+    try:
+        from sqlalchemy import text, inspect
+        inspector = inspect(engine)
+        columns = [c["name"] for c in inspector.get_columns("request_steps")]
+        
+        if "comments" not in columns:
+            print("Running auto-migration: Adding 'comments' column to 'request_steps'...")
+            with engine.connect() as conn:
+                conn.execute(text("ALTER TABLE request_steps ADD COLUMN comments TEXT"))
+                conn.commit()
+            print("Migration complete.")
+        else:
+            print("Schema is up to date (comments column exists).")
+            
+    except Exception as e:
+        print(f"Warning: Auto-migration check failed: {e}")
+
     db = SessionLocal()
     from app.db.models.workflow import Workflow, WorkflowStep
     try:
