@@ -19,6 +19,12 @@ export default function WorkflowsPage() {
     const [blueprintJson, setBlueprintJson] = useState<string>("");
     const [roles, setRoles] = useState<any[]>([]);
     const [user, setUser] = useState<any>(null);
+
+    // Wizard State
+    const [newStepName, setNewStepName] = useState("");
+    const [newStepRole, setNewStepRole] = useState("");
+    const [newStepSLA, setNewStepSLA] = useState(24);
+
     const router = useRouter();
 
     useEffect(() => {
@@ -100,6 +106,38 @@ export default function WorkflowsPage() {
             alert("Failed to create workflow. Verify JSON structure and role names.");
         } finally {
             setIsSubmitting(false);
+        }
+    };
+
+    const handleAddStep = () => {
+        if (!newStepName || !newStepRole) {
+            alert("Please provide a Step Name and Role.");
+            return;
+        }
+        try {
+            const current = JSON.parse(blueprintJson);
+            const nextOrder = (current.steps?.length || 0) + 1;
+
+            const newStep = {
+                name: newStepName,
+                role: newStepRole,
+                order: nextOrder,
+                sla: Number(newStepSLA)
+            };
+
+            const updated = {
+                ...current,
+                steps: [...(current.steps || []), newStep]
+            };
+
+            setBlueprintJson(JSON.stringify(updated, null, 2));
+
+            // Reset inputs
+            setNewStepName("");
+            setNewStepRole(roles[0]?.name || "");
+            setNewStepSLA(24);
+        } catch (e) {
+            alert("Invalid JSON in editor. Please fix before adding steps.");
         }
     };
 
@@ -258,7 +296,50 @@ export default function WorkflowsPage() {
 
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10 overflow-hidden">
                                     <div className="flex flex-col h-[400px]">
-                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Blueprint Definition</label>
+                                        {/* Wizard Inputs */}
+                                        <div className="bg-white/5 border border-white/5 rounded-2xl p-4 mb-4">
+                                            <label className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-3 block">Add Evaluation Node</label>
+                                            <div className="grid grid-cols-12 gap-2">
+                                                <div className="col-span-5">
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Step Name"
+                                                        value={newStepName}
+                                                        onChange={e => setNewStepName(e.target.value)}
+                                                        className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500"
+                                                    />
+                                                </div>
+                                                <div className="col-span-4">
+                                                    <select
+                                                        value={newStepRole}
+                                                        onChange={e => setNewStepRole(e.target.value)}
+                                                        className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                                                    >
+                                                        <option value="">Select Role...</option>
+                                                        {roles.map(r => <option key={r.id} value={r.name}>{r.name}</option>)}
+                                                    </select>
+                                                </div>
+                                                <div className="col-span-2">
+                                                    <input
+                                                        type="number"
+                                                        placeholder="SLA"
+                                                        value={newStepSLA}
+                                                        onChange={e => setNewStepSLA(Number(e.target.value))}
+                                                        className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+                                                    />
+                                                </div>
+                                                <div className="col-span-1">
+                                                    <button
+                                                        onClick={handleAddStep}
+                                                        className="w-full h-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg flex items-center justify-center transition-colors"
+                                                    >
+                                                        <Plus className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Blueprint Definition (JSON)</label>
                                         <textarea
                                             value={blueprintJson}
                                             onChange={(e) => setBlueprintJson(e.target.value)}
