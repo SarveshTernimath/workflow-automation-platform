@@ -76,22 +76,25 @@ body {
 }
 
 body {
-  /* Foggy Grey Mountain Aesthetic - Deep, Moody, Natural */
+  /* Royal Moody Mountain Aesthetic - High Fidelity, Cinematic Depth */
   background:
-    linear-gradient(to bottom, rgba(10, 10, 12, 0.7), rgba(0, 0, 0, 0.9)),
-    url("https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?q=80&w=2670&auto=format&fit=crop"),
-    /* Moody Foggy Mountain */
-    radial-gradient(circle at center, #2c3e50, #000000);
+    radial-gradient(circle at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%),
+    /* Vignette */
+    linear-gradient(to bottom, rgba(5, 20, 15, 0.6), rgba(0, 0, 0, 0.8)),
+    /* Color Grading */
+    url("https://images.unsplash.com/photo-1516008126381-8a39d8469395?q=80&w=2560&auto=format&fit=crop"),
+    /* Deep Foggy Spruce Mountain 4K */
+    #050a08;
   background-size: cover;
   background-attachment: fixed;
-  background-position: center;
+  background-position: center bottom;
   min-height: 100vh;
   position: relative;
   font-feature-settings: "cv11", "ss01";
 }
 
 body::before {
-  /* Subtle Atmospheric Noise/Overlay */
+  /* Cinematic Grain & Atmosphere */
   content: "";
   position: fixed;
   top: 0;
@@ -99,39 +102,50 @@ body::before {
   width: 100%;
   height: 100%;
   background: url("https://grainy-gradients.vercel.app/noise.svg");
-  /* Subtle noise texture */
-  opacity: 0.03;
+  opacity: 0.04;
   pointer-events: none;
   z-index: 50;
+  backdrop-filter: blur(8px);
+  /* The requested "blurred manner" for the background itself */
 }
 
 @layer utilities {
+
+  /* Royal 3D Glass - The Milled Block Effect */
   .glass {
-    @apply bg-slate-900/50 backdrop-blur-3xl border border-white/10;
+    @apply bg-transparent border-t border-l border-white/15;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(24px);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-      inset 0 0 20px 0 rgba(255, 255, 255, 0.02),
-      0 10px 40px -10px rgba(0, 0, 0, 0.5);
+      inset 1px 1px 0 0 rgba(255, 255, 255, 0.1),
+      /* Top-Left Bevel Highlight */
+      inset -1px -1px 0 0 rgba(0, 0, 0, 0.3),
+      /* Bottom-Right Inner Shadow */
+      0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    /* Deep Drop Shadow */
   }
 
+  /* Darker variant for sidebars/modals */
   .glass-dark {
-    @apply bg-black/60 backdrop-blur-3xl border border-white/10;
+    @apply bg-black/40 border-t border-l border-white/10;
+    backdrop-filter: blur(32px);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-      inset 0 0 30px 0 rgba(0, 0, 0, 0.3),
-      0 20px 60px -20px rgba(0, 0, 0, 0.8);
+      inset 1px 1px 0 0 rgba(255, 255, 255, 0.05),
+      inset -1px -1px 0 0 rgba(0, 0, 0, 0.5),
+      0 20px 60px -10px rgba(0, 0, 0, 0.8);
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-slate-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-200 to-teal-400;
+    text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
   }
 
   .gradient-primary {
-    @apply bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 text-black font-bold;
+    @apply bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 text-white font-bold shadow-lg shadow-emerald-900/50;
   }
 
   .border-glass {
-    @apply border border-white/20 shadow-glass;
+    @apply border-white/10;
   }
 
   .glow-indigo {
@@ -157,6 +171,7 @@ body::before {
 }
 
 /* Base Override for all headings to be White/Neon */
+/* Base Typography Lift */
 @layer base {
 
   h1,
@@ -166,6 +181,8 @@ body::before {
   h5,
   h6 {
     @apply tracking-tight font-black uppercase italic leading-[1.1] text-white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    /* Lift text off glass */
   }
 
   p {
@@ -197,21 +214,7 @@ body::before {
   }
 }
 
-@layer base {
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply tracking-tight font-black uppercase italic leading-[1.1];
-  }
-
-  p {
-    @apply leading-relaxed;
-  }
-}
 
 .focus-glow {
   outline: none !important;
