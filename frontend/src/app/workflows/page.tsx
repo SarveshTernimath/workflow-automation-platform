@@ -13,6 +13,8 @@ export default function WorkflowsPage() {
     const [loading, setLoading] = useState(true);
     const [starting, setStarting] = useState<string | null>(null);
     const [payload, setPayload] = useState<string>("");
+    const [requestTitle, setRequestTitle] = useState("");
+    const [requestPriority, setRequestPriority] = useState("medium");
     const [showPayloadModal, setShowPayloadModal] = useState<any>(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -144,10 +146,17 @@ export default function WorkflowsPage() {
 
     const handleStartWorkflow = async () => {
         if (!showPayloadModal) return;
+        if (!requestTitle.trim()) {
+            alert("Please provide a request title.");
+            return;
+        }
         setStarting(showPayloadModal.id);
         try {
-            // Convert plain text to JSON object for backend
-            const parsedPayload = { description: payload };
+            const parsedPayload = {
+                title: requestTitle,
+                description: payload,
+                priority: requestPriority
+            };
 
             const res = await apiClient.post("/requests/", {
                 workflow_id: showPayloadModal.id,
@@ -159,6 +168,9 @@ export default function WorkflowsPage() {
         } finally {
             setStarting(null);
             setShowPayloadModal(null);
+            setRequestTitle("");
+            setPayload("");
+            setRequestPriority("medium");
         }
     };
 
@@ -240,7 +252,7 @@ export default function WorkflowsPage() {
                                         <button
                                             onClick={() => {
                                                 setShowPayloadModal(wf);
-                                                setPayload(JSON.stringify({ amount: 2500, department: "Engineering" }, null, 2));
+                                                setPayload("");
                                             }}
                                             className="px-8 py-4 rounded-xl bg-indigo-500 text-white text-[10px] font-black tracking-widest uppercase hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-500/20 flex items-center hover:scale-105 active:scale-95"
                                         >
@@ -425,18 +437,39 @@ export default function WorkflowsPage() {
                                 </div>
 
                                 <div className="space-y-6 mb-10">
-                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5">
-                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Request Description</label>
-                                        <textarea
-                                            value={payload}
-                                            onChange={(e) => setPayload(e.target.value)}
-                                            className="w-full bg-slate-900/50 border border-white/5 rounded-xl p-6 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all min-h-[200px] leading-relaxed"
-                                            placeholder="Describe your request... (e.g., Budget approval for Q1 marketing campaign, $50,000)"
-                                        />
+                                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5 space-y-4">
+                                        <div>
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Request Title *</label>
+                                            <input
+                                                type="text"
+                                                value={requestTitle}
+                                                onChange={(e) => setRequestTitle(e.target.value)}
+                                                className="w-full bg-slate-900/50 border border-white/5 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all"
+                                                placeholder="e.g., Budget Approval for Q1 Marketing"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Description</label>
+                                            <textarea
+                                                value={payload}
+                                                onChange={(e) => setPayload(e.target.value)}
+                                                className="w-full bg-slate-900/50 border border-white/5 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all min-h-[120px] leading-relaxed"
+                                                placeholder="Provide additional details about your request..."
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Priority</label>
+                                            <select
+                                                value={requestPriority}
+                                                onChange={(e) => setRequestPriority(e.target.value)}
+                                                className="w-full bg-slate-900/50 border border-white/5 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all"
+                                            >
+                                                <option value="low">Low</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="high">High</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest leading-relaxed">
-                                        Provide a brief description of your request. This will be recorded with your workflow instance.
-                                    </p>
                                 </div>
 
                                 <div className="flex gap-4">
