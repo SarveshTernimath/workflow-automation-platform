@@ -1,26 +1,58 @@
 ﻿@import "tailwindcss";
 
 @theme {
-  --color-background: #020617;
-  --color-foreground: #f8fafc;
+  --color-background: #000000;
+  --color-foreground: #ecfdf5;
 
-  --color-primary: #6366f1;
-  --color-primary-glow: rgba(99, 102, 241, 0.2);
+  --color-primary: #00ff80;
+  --color-primary-glow: rgba(0, 255, 128, 0.6);
 
-  --color-accent: #0ea5e9;
-  --color-success: #10b981;
-  --color-error: #ef4444;
-  --color-warning: #f59e0b;
+  --color-accent: #020617;
+  --color-success: #00ff80;
+  --color-error: #ff0055;
+  --color-warning: #facc15;
 
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-card: rgba(15, 23, 42, 0.6);
+  --color-border: rgba(255, 255, 255, 0.15);
+  --color-card: rgba(0, 0, 0, 0.4);
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 
-  /* Premium Shadows - Enhanced for Vibrancy */
-  --shadow-glass: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  --shadow-glow-indigo: 0 0 30px -5px rgba(99, 102, 241, 0.5);
-  --shadow-glow-blue: 0 0 30px -5px rgba(14, 165, 233, 0.5);
+  /* Premium Shadows - Neon Enhanced */
+  --shadow-glass: inset 0 1px 1px rgba(255, 255, 255, 0.2), 0 0 20px rgba(0, 255, 128, 0.1);
+  --shadow-glow-indigo: 0 0 30px -5px rgba(0, 255, 128, 0.4);
+  /* Remapping 'indigo' glow to neon green for consistency */
+  --shadow-glow-blue: 0 0 30px -5px rgba(0, 255, 128, 0.4);
+
+  /* Global Color Overrides for Neon Transformation */
+  --color-indigo-50: #f0fdf4;
+  --color-indigo-100: #dcfce7;
+  --color-indigo-200: #bbf7d0;
+  --color-indigo-300: #86efac;
+  --color-indigo-400: #4ade80;
+  --color-indigo-500: #00ff80;
+  /* Primary Neon Green */
+  --color-indigo-600: #00cc66;
+  --color-indigo-700: #00994d;
+  --color-indigo-800: #064e3b;
+  --color-indigo-900: #022c22;
+  --color-indigo-950: #000000;
+
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0a0a0a;
+  /* Deep Black */
+  --color-slate-950: #000000;
+
+  --color-rose-500: #ff0055;
+  /* Neon Red */
+  --color-rose-400: #ff3377;
 }
 
 :root {
@@ -44,12 +76,22 @@ body {
 }
 
 body {
-  background: radial-gradient(circle at top right, #1e1b4b, #020617, #000000);
+  /* Moody Dark Mountain Aesthetic - Deep Blacks, Greys, and a hint of dark green/blue */
+  background:
+    linear-gradient(to bottom, rgba(2, 6, 23, 0.8), rgba(2, 6, 23, 0.95)),
+    url("https://images.unsplash.com/photo-1614095415752-972145330a1b?q=80&w=2548&auto=format&fit=crop"),
+    /* Fallback/Placeholder High Quality Mountain */
+    radial-gradient(circle at top, #1a2e1a, #020617);
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
   min-height: 100vh;
   position: relative;
+  font-feature-settings: "cv11", "ss01";
 }
 
 body::before {
+  /* Neon Glow Overlay */
   content: "";
   position: fixed;
   top: 0;
@@ -57,31 +99,31 @@ body::before {
   width: 100%;
   height: 100%;
   background:
-    radial-gradient(circle at 15% 25%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 75%, rgba(14, 165, 233, 0.08) 0%, transparent 40%);
+    radial-gradient(circle at 15% 25%, rgba(0, 255, 128, 0.05) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(0, 255, 0, 0.05) 0%, transparent 45%);
   pointer-events: none;
   z-index: -1;
 }
 
 @layer utilities {
   .glass {
-    @apply bg-slate-900/60 backdrop-blur-2xl border border-white/10;
+    @apply bg-black/40 backdrop-blur-2xl border border-white/10 shadow-glass;
   }
 
   .glass-dark {
-    @apply bg-black/60 backdrop-blur-3xl border border-white/5;
+    @apply bg-black/60 backdrop-blur-3xl border border-white/10 shadow-lg;
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-100 to-slate-400;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-green-100 to-green-300;
   }
 
   .gradient-primary {
-    @apply bg-gradient-to-br from-indigo-500 via-indigo-600 to-blue-700;
+    @apply bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 text-black font-bold;
   }
 
   .border-glass {
-    @apply border border-white/10 shadow-glass;
+    @apply border border-white/20 shadow-glass;
   }
 
   .glow-indigo {
@@ -103,6 +145,23 @@ body::before {
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/* Base Override for all headings to be White/Neon */
+@layer base {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply tracking-tight font-black uppercase italic leading-[1.1] text-white;
+  }
+
+  p {
+    @apply leading-relaxed text-slate-300;
   }
 }
 
@@ -148,15 +207,33 @@ body::before {
 
 .focus-glow {
   outline: none !important;
-  border-color: rgba(99, 102, 241, 0.5) !important;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
+  border-color: rgba(0, 255, 128, 0.5) !important;
+  box-shadow: 0 0 0 4px rgba(0, 255, 128, 0.1) !important;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: rgba(99, 102, 241, 0.5) !important;
-  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2) !important;
+  border-color: rgba(0, 255, 128, 0.5) !important;
+  box-shadow: 0 0 0 4px rgba(0, 255, 128, 0.1) !important;
   outline: none !important;
+  background-color: rgba(0, 255, 128, 0.02) !important;
+}
+
+/* Neon Text Utilities */
+.text-neon {
+  color: #00ff80;
+  text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+}
+
+.border-neon {
+  border-color: rgba(0, 255, 128, 0.3);
+  box-shadow: 0 0 15px rgba(0, 255, 128, 0.1);
+}
+
+.bg-neon-glass {
+  background: rgba(0, 20, 10, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 255, 128, 0.1);
 }
