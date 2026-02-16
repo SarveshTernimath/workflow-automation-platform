@@ -156,7 +156,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                                         </div>
                                                         {step.outcome && (
                                                             <div className="mt-6 pt-6 border-t border-white/5">
-                                                                <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-2">Protocol Notes</p>
+                                                                <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-2">Decision Notes</p>
                                                                 <p className="text-xs text-slate-400 font-medium italic">"{step.outcome}"</p>
                                                             </div>
                                                         )}
@@ -226,7 +226,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                                 className={`py-5 rounded-[1.5rem] flex items-center justify-center border transition-all duration-500 font-extrabold uppercase tracking-widest text-[10px] ${outcome === 'APPROVED' ? 'bg-emerald-500 text-white border-emerald-500 shadow-xl shadow-emerald-500/20' : 'bg-slate-900 border-white/5 text-slate-500 hover:text-white'}`}
                                             >
                                                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                                                Authorize
+                                                Approve
                                             </button>
                                             <button
                                                 type="button"
@@ -234,7 +234,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                                 className={`py-5 rounded-[1.5rem] flex items-center justify-center border transition-all duration-500 font-extrabold uppercase tracking-widest text-[10px] ${outcome === 'REJECTED' ? 'bg-rose-500 text-white border-rose-500 shadow-xl shadow-rose-500/20' : 'bg-slate-900 border-white/5 text-slate-500 hover:text-white'}`}
                                             >
                                                 <XCircle className="w-4 h-4 mr-2" />
-                                                Terminate
+                                                Reject
                                             </button>
                                         </div>
 
@@ -255,7 +255,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                         >
                                             {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : (
                                                 <>
-                                                    Commit to Protocol
+                                                    Submit Decision
                                                     <Send className="w-4 h-4 ml-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                                                 </>
                                             )}

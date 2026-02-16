@@ -256,7 +256,7 @@ export default function WorkflowsPage() {
                                             }}
                                             className="px-8 py-4 rounded-xl bg-indigo-500 text-white text-[10px] font-black tracking-widest uppercase hover:bg-indigo-600 transition-all shadow-lg shadow-indigo-500/20 flex items-center hover:scale-105 active:scale-95"
                                         >
-                                            Deploy Strategy
+                                            New Request
                                         </button>
                                     </div>
                                 </CardContent>
@@ -485,7 +485,7 @@ export default function WorkflowsPage() {
                                         disabled={starting !== null}
                                         className="flex-[2] px-8 py-5 rounded-2xl bg-indigo-500 text-white font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-indigo-500/20 flex items-center justify-center hover:bg-indigo-600 transition-all"
                                     >
-                                        {starting ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Authorize Deployment</span>}
+                                        {starting ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Start Request</span>}
                                     </button>
                                 </div>
                             </motion.div>

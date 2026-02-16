@@ -308,7 +308,7 @@ export default function TasksPage() {
                                             disabled={processing}
                                             className="flex-1 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 py-4 rounded-xl font-black uppercase tracking-widest text-xs transition-all"
                                         >
-                                            Reject Protocol
+                                            Reject Request
                                         </button>
                                         <button
                                             onClick={() => handleDecision("approve")}
@@ -319,7 +319,7 @@ export default function TasksPage() {
                                                 <Loader2 className="w-5 h-5 animate-spin" />
                                             ) : (
                                                 <>
-                                                    <span>Authorize & Advance</span>
+                                                    <span>Approve & Continue</span>
                                                     <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
                                                 </>
                                             )}
