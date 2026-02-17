@@ -149,22 +149,30 @@ export default function DashboardPage() {
                         <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">NexusFlow Dashboard</h1>
                         <p className="text-slate-400 text-lg font-medium max-w-xl leading-relaxed">High-fidelity orchestration monitoring and real-time system telemetry across the operational grid.</p>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col sm:flex-row gap-4 relative z-50">
                         <button
                             type="button"
-                            onClick={() => setRequestModalOpen(true)}
-                            className="group flex items-center space-x-4 px-8 py-5 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all font-black tracking-widest uppercase text-xs pointer-events-auto cursor-pointer z-10"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setRequestModalOpen(true);
+                            }}
+                            className="group flex items-center space-x-4 px-8 py-5 rounded-2xl bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-white/10 transition-all font-black tracking-widest uppercase text-xs cursor-pointer active:scale-95"
                         >
                             <Plus className="w-4 h-4" />
                             <span>Start New Request</span>
                         </button>
                         <button
                             type="button"
-                            onClick={handlePulse}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handlePulse();
+                            }}
                             disabled={pulsing}
-                            className={`group flex items-center space-x-4 px-8 py-5 rounded-2xl transition-all duration-500 font-black tracking-widest uppercase text-xs shadow-2xl relative overflow-hidden pointer-events-auto cursor-pointer z-10 ${pulsing
+                            className={`group flex items-center space-x-4 px-8 py-5 rounded-2xl transition-all duration-500 font-black tracking-widest uppercase text-xs shadow-2xl relative overflow-hidden cursor-pointer active:scale-95 ${pulsing
                                 ? "bg-[#00ff80]/20 text-[#00ff80] cursor-wait border border-[#00ff80]/30"
-                                : "bg-[#00ff80] text-black hover:bg-[#00cc66] hover:-translate-y-1 hover:shadow-[#00ff80]/30 active:translate-y-0"
+                                : "bg-[#00ff80] text-black hover:bg-[#00cc66] hover:-translate-y-1 hover:shadow-[#00ff80]/30"
                                 }`}
                         >
                             {pulsing ? (
