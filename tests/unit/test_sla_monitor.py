@@ -2,8 +2,12 @@ import pytest
 from unittest.mock import MagicMock, patch
 from datetime import datetime, timedelta
 from uuid import uuid4
+from sqlalchemy.orm import configure_mappers
 from app.services.sla_monitor import SLAMonitor
 from app.db.models.request import RequestStep, StepStatus
+
+# Force SQLAlchemy to initialize mappers
+configure_mappers()
 
 
 @pytest.fixture
@@ -34,7 +38,8 @@ def test_scan_for_breaches_detected(mock_db):
 
     mock_db.query.return_value.filter.return_value.all.return_value = [overdue_step]
 
-    with patch("app.services.audit_service.AuditService.log_action") as mock_audit:
+    with patch("app.services.audit_service.AuditService.log_action") as mock_audit, \
+         patch("app.services.sla_monitor.send_sla_breach_email") as mock_email:
         count = SLAMonitor.scan_for_breaches(mock_db)
 
         assert count == 1

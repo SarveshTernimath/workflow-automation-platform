@@ -79,6 +79,13 @@ def create_app() -> FastAPI:
             "version": "0.1.0",
         }
 
+    @app.get(f"{settings.API_V1_PREFIX}/health", tags=["Health"])
+    async def api_health_check():
+        """
+        Health check endpoint under API v1 prefix.
+        """
+        return {"status": "healthy", "version": "0.1.0"}
+
     @app.get("/debug/db", tags=["Debug"])
     async def debug_db():
         """

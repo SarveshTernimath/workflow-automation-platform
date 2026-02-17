@@ -61,6 +61,10 @@ class AuditLog(Base):
     def __repr__(self):
         return f"<AuditLog(id={self.id}, action={self.action}, resource_type={self.resource_type}, resource_id={self.resource_id})>"
 
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
 
 class SLAEscalation(Base):
     """
@@ -101,3 +105,7 @@ class SLAEscalation(Base):
 
     def __repr__(self):
         return f"<SLAEscalation(id={self.id}, escalation_level={self.escalation_level}, resolved_at={self.resolved_at})>"
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)

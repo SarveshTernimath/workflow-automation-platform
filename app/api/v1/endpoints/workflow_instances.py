@@ -8,6 +8,9 @@ from app.db.models.user import User
 from app.services.workflow_engine import WorkflowEngine
 from app.schemas.request import WorkflowRequestSchema
 from app.core.exceptions import WorkflowEngineError, PermissionDeniedError
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 

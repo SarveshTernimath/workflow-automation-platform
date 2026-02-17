@@ -13,13 +13,14 @@ celery_app = Celery(
     "workflow_platform",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
+    include=["app.tasks.sla", "app.tasks.notifications"]
 )
 
 # Optional configuration
 # celery_app.conf.timezone = 'UTC'
 # celery_app.conf.task_track_started = True
 
-# Automated discovery of tasks in app.tasks package
+# Automated discovery is kept as a backup for future modules following standard naming
 celery_app.autodiscover_tasks(["app.tasks"])
 
 # Periodic task schedule (Beat)

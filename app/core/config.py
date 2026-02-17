@@ -44,6 +44,8 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     PROJECT_NAME: str = "Workflow Automation Platform"
     API_V1_PREFIX: str = "/api/v1"
+    FRONTEND_URL: str = "http://localhost:3000"
+    ADMIN_EMAILS: List[str] = ["admin@workflow-platform.com"]
 
     class Config:
         # Load from .env file

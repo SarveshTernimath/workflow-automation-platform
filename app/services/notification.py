@@ -69,7 +69,7 @@ class NotificationService:
             "step_name": step_name,
             "request_id": request_id,
             "deadline": deadline,
-            "action_url": f"http://localhost:3000/requests/{request_id}",  # Placeholder
+            "action_url": f"{settings.FRONTEND_URL}/requests/{request_id}",
         }
         NotificationService.send_email(
             to_email=email,

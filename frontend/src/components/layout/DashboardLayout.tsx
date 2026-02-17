@@ -51,17 +51,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     // RBAC: Filter Navigation Items
     const userRoles = user?.roles?.map((r: any) => r.name.toLowerCase()) || [];
     const isAdmin = userRoles.includes("admin");
-    const isManager = userRoles.includes("manager");
+    const isManager = userRoles.includes("manager") || userRoles.includes("strategic_node");
+    const isUser = userRoles.includes("user") || userRoles.includes("operational_node");
 
     const filteredNavItems = navItems.filter(item => {
         if (isAdmin) return true; // Admin sees everything
 
         if (isManager) {
-            // Manager sees Dashboard, Tasks, Alerts
+            // Manager/Strategic sees Dashboard, Tasks, Alerts
             return ["/dashboard", "/tasks", "/notifications"].includes(item.path);
         }
 
-        // Standard User sees Dashboard, Alerts (Requests initiated from Dashboard)
+        // Standard User/Operational sees Dashboard, Alerts (Requests initiated from Dashboard)
         return ["/dashboard", "/notifications"].includes(item.path);
     });
 

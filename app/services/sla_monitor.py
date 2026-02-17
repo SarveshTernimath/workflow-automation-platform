@@ -7,6 +7,7 @@ import logging
 from datetime import datetime
 from typing import List
 from sqlalchemy.orm import Session
+from app.core.config import settings
 from app.db.models.request import (
     RequestStep,
     StepStatus,
@@ -82,7 +83,7 @@ class SLAMonitor:
 
         # Notify admins about breach
         send_sla_breach_email.delay(
-            emails=["admin@example.com"],  # In production, resolve from role
+            emails=settings.ADMIN_EMAILS,
             workflow_name=step.request.workflow.name,
             step_name=step.step.name,
             request_id=str(step.request_id),

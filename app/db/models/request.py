@@ -170,13 +170,6 @@ class RequestStep(Base):
     def __repr__(self):
         return f"<RequestStep(id={self.id}, status={self.status}, is_sla_breached={self.is_sla_breached})>"
 
-    def __init__(self, **kwargs):
-        """
-        Explicit init to avoid potential SQLAlchemy mapping issues in tests.
-        """
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
 
 class RequestStateHistory(Base):
     """
