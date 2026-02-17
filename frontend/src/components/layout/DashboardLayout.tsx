@@ -48,9 +48,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         { name: "Alerts", icon: Bell, path: "/notifications" },
     ];
 
-    const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin");    // Admin Console only for users with admin role
-    if (isAdmin && !navItems.some(i => i.path === "/admin")) {
-        navItems.push({ name: "Admin Console", icon: Lock, path: "/admin" });
+    // RBAC: Filter Navigation Items
+    const userRoles = user?.roles?.map((r: any) => r.name.toLowerCase()) || [];
+    const isAdmin = userRoles.includes("admin");
+    const isManager = userRoles.includes("manager");
+
+    const filteredNavItems = navItems.filter(item => {
+        if (isAdmin) return true; // Admin sees everything
+
+        if (isManager) {
+            // Manager sees Dashboard, Tasks, Alerts
+            return ["/dashboard", "/tasks", "/notifications"].includes(item.path);
+        }
+
+        // Standard User sees Dashboard, Alerts (Requests initiated from Dashboard)
+        return ["/dashboard", "/notifications"].includes(item.path);
+    });
+
+    if (isAdmin && !filteredNavItems.some(i => i.path === "/admin")) {
+        filteredNavItems.push({ name: "Admin Console", icon: Lock, path: "/admin" });
     }
 
     return (
@@ -74,15 +90,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
                 {/* Navigation Items */}
                 <nav className="flex-1 px-4 space-y-2 mt-2">
-                    {navItems.map((item) => {
+                    {filteredNavItems.map((item) => {
                         const isActive = pathname === item.path;
                         return (
                             <Link
                                 key={item.path}
                                 href={item.path}
                                 className={`flex items-center px-6 py-4 rounded-xl transition-all duration-300 group relative ${isActive
-                                        ? "nav-item-active font-bold"
-                                        : "text-slate-400 hover:text-white hover:bg-white/5"
+                                    ? "nav-item-active font-bold"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5"
                                     }`}
                             >
                                 <item.icon className={`w-5 h-5 mr-4 transition-all duration-300 ${isActive ? "text-[#00ff80]" : "text-slate-600 group-hover:text-white"}`} />

@@ -182,7 +182,7 @@ export default function TasksPage() {
                                                     }}
                                                     className="flex items-center justify-center space-x-4 px-10 py-5 rounded-2xl bg-indigo-500 text-white font-black tracking-widest uppercase text-xs shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40"
                                                 >
-                                                    <span>Acknowledge & Execute</span>
+                                                    <span>Review Request</span>
                                                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
                                                 </button>
                                                 <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
@@ -303,27 +303,29 @@ export default function TasksPage() {
                                     </div>
 
                                     <div className="flex gap-4 pt-4">
-                                        <button
-                                            onClick={() => handleDecision("reject")}
-                                            disabled={processing}
-                                            className="flex-1 bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-500/20 py-4 rounded-xl font-black uppercase tracking-widest text-xs transition-all"
-                                        >
-                                            Reject Request
-                                        </button>
-                                        <button
-                                            onClick={() => handleDecision("approve")}
-                                            disabled={processing}
-                                            className="flex-[2] bg-indigo-500 hover:bg-indigo-600 text-white py-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-xl shadow-indigo-500/20 transition-all flex items-center justify-center group"
-                                        >
-                                            {processing ? (
-                                                <Loader2 className="w-5 h-5 animate-spin" />
-                                            ) : (
-                                                <>
-                                                    <span>Approve & Continue</span>
-                                                    <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
-                                                </>
-                                            )}
-                                        </button>
+                                        <div className="flex gap-4 pt-4">
+                                            <button
+                                                onClick={() => handleDecision("reject")}
+                                                disabled={processing}
+                                                className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all"
+                                            >
+                                                REJECT
+                                            </button>
+                                            <button
+                                                onClick={() => handleDecision("approve")}
+                                                disabled={processing}
+                                                className="flex-[2] bg-[#00ff80] hover:bg-[#00cc66] text-black py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,128,0.3)] transition-all flex items-center justify-center group hover:scale-[1.02]"
+                                            >
+                                                {processing ? (
+                                                    <Loader2 className="w-5 h-5 animate-spin" />
+                                                ) : (
+                                                    <>
+                                                        <span>APPROVE REQUEST</span>
+                                                        <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
+                                                    </>
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
 
