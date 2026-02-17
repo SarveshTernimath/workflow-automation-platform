@@ -69,6 +69,11 @@ export default function LoginPage() {
                     <p className="text-[#00ff80] text-xs font-bold uppercase tracking-[0.4em] opacity-80">
                         Enterprise Orchestration Nexus
                     </p>
+                    <div className="mt-4 px-4 py-1 bg-[#00ff80]/20 border border-[#00ff80]/50 rounded-full inline-block">
+                        <p className="text-[#00ff80] text-[10px] font-black uppercase tracking-widest">
+                            Build Status: Matrix Fixed v4.0.1 (Active)
+                        </p>
+                    </div>
                 </motion.div>
 
                 <motion.div
