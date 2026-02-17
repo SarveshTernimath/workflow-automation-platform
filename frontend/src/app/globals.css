@@ -75,85 +75,96 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap');
+
+/* Royal Monochrome Glacier Aesthetic - Sharp, Professional, Popped */
 body {
-  /* Royal Moody Mountain Aesthetic - High Fidelity, Cinematic Depth */
   background:
     radial-gradient(circle at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%),
     /* Vignette */
-    linear-gradient(to bottom, rgba(5, 20, 15, 0.6), rgba(0, 0, 0, 0.8)),
-    /* Color Grading */
-    url("https://images.unsplash.com/photo-1516008126381-8a39d8469395?q=80&w=2560&auto=format&fit=crop"),
-    /* Deep Foggy Spruce Mountain 4K */
-    #050a08;
+    url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=3840&auto=format&fit=crop"),
+    /* The "Monochrome Glacier" Match */
+    #050505;
   background-size: cover;
   background-attachment: fixed;
-  background-position: center bottom;
+  background-position: center;
   min-height: 100vh;
   position: relative;
   font-feature-settings: "cv11", "ss01";
+  font-family: 'Outfit', sans-serif;
+  /* Modern Royal Font */
 }
 
 body::before {
-  /* Cinematic Grain & Atmosphere */
+  /* Blur Effect & Atmosphere */
   content: "";
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.04;
-  pointer-events: none;
-  z-index: 50;
   backdrop-filter: blur(8px);
-  /* The requested "blurred manner" for the background itself */
+  /* Explicitly requested blur effect */
+  background: rgba(0, 0, 0, 0.2);
+  /* Slight darken for readability */
+  pointer-events: none;
+  z-index: -1;
+  /* Behind content, in front of bg image */
+}
+
+/* Global Layout Centering - The "Premium App" Feel */
+body>div:first-child {
+  max-width: 1800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
 }
 
 @layer utilities {
 
-  /* Royal 3D Glass - The Milled Block Effect */
+  /* Popped 3D Glass - Luminous & Elevated */
   .glass {
-    @apply bg-transparent border-t border-l border-white/15;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
-    backdrop-filter: blur(24px);
+    @apply bg-black/40 border border-white/20;
+    backdrop-filter: blur(40px);
+    /* High Blur */
     box-shadow:
-      inset 1px 1px 0 0 rgba(255, 255, 255, 0.1),
-      /* Top-Left Bevel Highlight */
-      inset -1px -1px 0 0 rgba(0, 0, 0, 0.3),
-      /* Bottom-Right Inner Shadow */
-      0 8px 32px 0 rgba(0, 0, 0, 0.5);
-    /* Deep Drop Shadow */
+      inset 0 0 30px rgba(255, 255, 255, 0.05),
+      /* Inner Glow */
+      0 20px 50px -10px rgba(0, 0, 0, 0.6);
+    /* Deep Lift Shadow */
+    border-radius: 1.5rem;
+    /* Enforce soft corners */
   }
 
-  /* Darker variant for sidebars/modals */
+  /* Darker variant */
   .glass-dark {
-    @apply bg-black/40 border-t border-l border-white/10;
-    backdrop-filter: blur(32px);
+    @apply bg-black/60 border border-white/10;
+    backdrop-filter: blur(50px);
     box-shadow:
-      inset 1px 1px 0 0 rgba(255, 255, 255, 0.05),
-      inset -1px -1px 0 0 rgba(0, 0, 0, 0.5),
-      0 20px 60px -10px rgba(0, 0, 0, 0.8);
+      inset 0 0 20px rgba(255, 255, 255, 0.03),
+      0 30px 60px -15px rgba(0, 0, 0, 0.8);
+    border-radius: 1.5rem;
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-emerald-200 to-teal-400;
-    text-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
   }
 
   .gradient-primary {
-    @apply bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 text-white font-bold shadow-lg shadow-emerald-900/50;
+    @apply bg-gradient-to-br from-white via-slate-200 to-slate-400 text-black font-bold shadow-lg shadow-white/20;
   }
 
   .border-glass {
-    @apply border-white/10;
+    @apply border-white/20;
   }
 
   .glow-indigo {
-    @apply shadow-glow-indigo;
+    @apply shadow-lg shadow-white/10;
   }
 
   .glow-blue {
-    @apply shadow-glow-blue;
+    @apply shadow-lg shadow-blue-500/20;
   }
 
   .animate-premium {
@@ -170,8 +181,7 @@ body::before {
   }
 }
 
-/* Base Override for all headings to be White/Neon */
-/* Base Typography Lift */
+/* Base Typography Lift with Outfit */
 @layer base {
 
   h1,
@@ -180,10 +190,12 @@ body::before {
   h4,
   h5,
   h6 {
-    @apply tracking-tight font-black uppercase italic leading-[1.1] text-white;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    font-family: 'Outfit', sans-serif;
+    @apply tracking-tight font-bold uppercase leading-[1.1] text-white;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     /* Lift text off glass */
   }
+
 
   p {
     @apply leading-relaxed text-slate-300;
