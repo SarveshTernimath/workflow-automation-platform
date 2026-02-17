@@ -76,7 +76,8 @@ export default function LoginPage() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="w-full max-w-sm aspect-square flex flex-col justify-center bg-black/40 backdrop-blur-2xl border border-white/10 p-10 rounded-[2rem] shadow-[0_0_80px_rgba(0,0,0,0.8)] relative z-10"
+                className="w-full max-w-md bg-black/40 backdrop-blur-2xl border border-white/10 p-12 rounded-[2rem] shadow-[0_0_80px_rgba(0,0,0,0.8)] relative z-10"
+                style={{ aspectRatio: '1 / 1.1' }}
             >
                 {/* Neon Glow behind the card */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#00ff80]/5 blur-[100px] rounded-full -z-10 pointer-events-none" />
