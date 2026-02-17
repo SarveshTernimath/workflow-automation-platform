@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Clock, AlertCircle, CheckCircle2, Loader2, ArrowRight, GitBranch } from "lucide-react";
+import Portal from "@/components/ui/Portal";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
@@ -198,139 +199,141 @@ export default function TasksPage() {
                 )}
 
                 {/* Execution Modal */}
-                <div className="fixed z-[9999]" style={{ display: selectedTask ? 'block' : 'none' }}>
+                <div style={{ display: selectedTask ? 'block' : 'none' }}>
                     {selectedTask && (
-                        <div className="fixed inset-0 flex items-center justify-center p-6 z-[9999]">
-                            {/* Backdrop */}
-                            <div
-                                className="absolute inset-0 bg-black/80 backdrop-blur-xl"
-                                onClick={() => setSelectedTask(null)}
-                            />
+                        <Portal>
+                            <div className="fixed inset-0 flex items-center justify-center p-6 z-[9999]">
+                                {/* Backdrop */}
+                                <div
+                                    className="absolute inset-0 bg-black/80 backdrop-blur-xl"
+                                    onClick={() => setSelectedTask(null)}
+                                />
 
-                            {/* Modal Content */}
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="w-full max-w-4xl glass-dark border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
-                            >
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full -z-10" />
+                                {/* Modal Content */}
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="w-full max-w-4xl glass-dark border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+                                >
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full -z-10" />
 
-                                <div className="flex items-start justify-between mb-8">
-                                    <div>
-                                        <div className="flex items-center space-x-2 mb-2">
-                                            <span className="w-2 h-2 bg-indigo-500 rounded-full" />
-                                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Execution Protocol</span>
-                                        </div>
-                                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">{selectedTask.workflow_name}</h2>
-                                        <p className="text-xl text-slate-400 mt-1">{selectedTask.step_name}</p>
-                                    </div>
-                                    <button
-                                        onClick={() => setSelectedTask(null)}
-                                        className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 transition-colors"
-                                    >
-                                        <span className="sr-only">Close</span>
-                                        X
-                                    </button>
-                                </div>
-
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-8 overflow-y-auto custom-scrollbar flex-1">
-                                    <div className="space-y-8">
-                                        <div className="bg-white/5 border border-white/5 p-6 rounded-3xl">
-                                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Description</h3>
-                                            <p className="text-slate-300 leading-relaxed font-medium">
-                                                {selectedTask.step_description || "No description provided for this operational node."}
-                                            </p>
-                                        </div>
-
+                                    <div className="flex items-start justify-between mb-8">
                                         <div>
-                                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Request Context</h3>
-                                            <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 font-mono text-xs text-indigo-400 overflow-x-auto">
-                                                {/* Filter out sensitive keys if needed, for now just hiding raw JSON if explicitly requested, but request_data might be needed. User said "NEVER show JSON payload". I will render key-values cleanly. */}
-                                                {selectedTask.request_data ? (
-                                                    <div className="space-y-2">
-                                                        {Object.entries(selectedTask.request_data).map(([key, value]) => (
-                                                            <div key={key} className="flex justify-between border-b border-white/5 pb-1">
-                                                                <span className="text-slate-500 uppercase">{key}:</span>
-                                                                <span className="text-white">{String(value)}</span>
-                                                            </div>
-                                                        ))}
+                                            <div className="flex items-center space-x-2 mb-2">
+                                                <span className="w-2 h-2 bg-indigo-500 rounded-full" />
+                                                <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Execution Protocol</span>
+                                            </div>
+                                            <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">{selectedTask.workflow_name}</h2>
+                                            <p className="text-xl text-slate-400 mt-1">{selectedTask.step_name}</p>
+                                        </div>
+                                        <button
+                                            onClick={() => setSelectedTask(null)}
+                                            className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 transition-colors"
+                                        >
+                                            <span className="sr-only">Close</span>
+                                            X
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-8 overflow-y-auto custom-scrollbar flex-1">
+                                        <div className="space-y-8">
+                                            <div className="bg-white/5 border border-white/5 p-6 rounded-3xl">
+                                                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Description</h3>
+                                                <p className="text-slate-300 leading-relaxed font-medium">
+                                                    {selectedTask.step_description || "No description provided for this operational node."}
+                                                </p>
+                                            </div>
+
+                                            <div>
+                                                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Request Context</h3>
+                                                <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 font-mono text-xs text-indigo-400 overflow-x-auto">
+                                                    {/* Filter out sensitive keys if needed, for now just hiding raw JSON if explicitly requested, but request_data might be needed. User said "NEVER show JSON payload". I will render key-values cleanly. */}
+                                                    {selectedTask.request_data ? (
+                                                        <div className="space-y-2">
+                                                            {Object.entries(selectedTask.request_data).map(([key, value]) => (
+                                                                <div key={key} className="flex justify-between border-b border-white/5 pb-1">
+                                                                    <span className="text-slate-500 uppercase">{key}:</span>
+                                                                    <span className="text-white">{String(value)}</span>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : <span className="text-slate-600">No context data available.</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex flex-col h-full">
+                                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Timeline</h3>
+                                            <div className="flex-1 bg-white/5 border border-white/5 rounded-3xl p-6 relative overflow-y-auto">
+                                                {!requestDetails ? (
+                                                    <div className="flex items-center justify-center h-full">
+                                                        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
                                                     </div>
-                                                ) : <span className="text-slate-600">No context data available.</span>}
+                                                ) : (
+                                                    <div className="space-y-6 relative">
+                                                        {/* Vertical Line */}
+                                                        <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-white/10" />
+
+                                                        {requestDetails.steps?.sort((a: any, b: any) => (a.step_order || 0) - (b.step_order || 0)).map((step: any, idx: number) => {
+                                                            const isCompleted = step.status === "COMPLETED" || step.status === "APPROVED";
+                                                            const isCurrent = step.status === "PENDING" || step.status === "IN_PROGRESS";
+                                                            return (
+                                                                <div key={step.id} className="relative pl-8">
+                                                                    <div className={`absolute left-0 top-1 w-4 h-4 rounded-full border-2 ${isCompleted ? 'bg-emerald-500 border-emerald-500' : isCurrent ? 'bg-indigo-500 border-indigo-500 animate-pulse' : 'bg-slate-900 border-slate-700'}`} />
+                                                                    <p className={`text-sm font-bold ${isCurrent ? 'text-indigo-400' : isCompleted ? 'text-emerald-400' : 'text-slate-600'}`}>
+                                                                        {step.step_name || `Step ${idx + 1}`}
+                                                                    </p>
+                                                                    <p className="text-[10px] text-slate-500 uppercase tracking-wider">{step.status}</p>
+                                                                </div>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-col h-full">
-                                        <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Timeline</h3>
-                                        <div className="flex-1 bg-white/5 border border-white/5 rounded-3xl p-6 relative overflow-y-auto">
-                                            {!requestDetails ? (
-                                                <div className="flex items-center justify-center h-full">
-                                                    <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-                                                </div>
-                                            ) : (
-                                                <div className="space-y-6 relative">
-                                                    {/* Vertical Line */}
-                                                    <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-white/10" />
-
-                                                    {requestDetails.steps?.sort((a: any, b: any) => (a.step_order || 0) - (b.step_order || 0)).map((step: any, idx: number) => {
-                                                        const isCompleted = step.status === "COMPLETED" || step.status === "APPROVED";
-                                                        const isCurrent = step.status === "PENDING" || step.status === "IN_PROGRESS";
-                                                        return (
-                                                            <div key={step.id} className="relative pl-8">
-                                                                <div className={`absolute left-0 top-1 w-4 h-4 rounded-full border-2 ${isCompleted ? 'bg-emerald-500 border-emerald-500' : isCurrent ? 'bg-indigo-500 border-indigo-500 animate-pulse' : 'bg-slate-900 border-slate-700'}`} />
-                                                                <p className={`text-sm font-bold ${isCurrent ? 'text-indigo-400' : isCompleted ? 'text-emerald-400' : 'text-slate-600'}`}>
-                                                                    {step.step_name || `Step ${idx + 1}`}
-                                                                </p>
-                                                                <p className="text-[10px] text-slate-500 uppercase tracking-wider">{step.status}</p>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </div>
-                                            )}
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Executive Commentary</label>
+                                            <textarea
+                                                value={comment}
+                                                onChange={(e) => setComment(e.target.value)}
+                                                className="w-full bg-slate-900/80 border border-white/10 rounded-2xl p-4 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors h-24 resize-none"
+                                                placeholder="Provide strategic context for your decision..."
+                                            />
                                         </div>
-                                    </div>
-                                </div>
 
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Executive Commentary</label>
-                                        <textarea
-                                            value={comment}
-                                            onChange={(e) => setComment(e.target.value)}
-                                            className="w-full bg-slate-900/80 border border-white/10 rounded-2xl p-4 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors h-24 resize-none"
-                                            placeholder="Provide strategic context for your decision..."
-                                        />
-                                    </div>
-
-                                    <div className="flex gap-4 pt-4">
                                         <div className="flex gap-4 pt-4">
-                                            <button
-                                                onClick={() => handleDecision("reject")}
-                                                disabled={processing}
-                                                className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all"
-                                            >
-                                                REJECT
-                                            </button>
-                                            <button
-                                                onClick={() => handleDecision("approve")}
-                                                disabled={processing}
-                                                className="flex-[2] bg-[#00ff80] hover:bg-[#00cc66] text-black py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,128,0.3)] transition-all flex items-center justify-center group hover:scale-[1.02]"
-                                            >
-                                                {processing ? (
-                                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                                ) : (
-                                                    <>
-                                                        <span>APPROVE REQUEST</span>
-                                                        <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
-                                                    </>
-                                                )}
-                                            </button>
+                                            <div className="flex gap-4 pt-4">
+                                                <button
+                                                    onClick={() => handleDecision("reject")}
+                                                    disabled={processing}
+                                                    className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all"
+                                                >
+                                                    REJECT
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDecision("approve")}
+                                                    disabled={processing}
+                                                    className="flex-[2] bg-[#00ff80] hover:bg-[#00cc66] text-black py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,128,0.3)] transition-all flex items-center justify-center group hover:scale-[1.02]"
+                                                >
+                                                    {processing ? (
+                                                        <Loader2 className="w-5 h-5 animate-spin" />
+                                                    ) : (
+                                                        <>
+                                                            <span>APPROVE REQUEST</span>
+                                                            <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                            </motion.div>
-                        </div>
+                                </motion.div>
+                            </div>
+                        </Portal>
                     )}
                 </div>
             </div>

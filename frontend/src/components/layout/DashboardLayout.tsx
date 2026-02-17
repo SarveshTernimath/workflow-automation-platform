@@ -97,7 +97,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 key={item.path}
                                 href={item.path}
                                 className={`flex items-center px-6 py-4 rounded-xl transition-all duration-300 group relative ${isActive
-                                    ? "nav-item-active font-bold"
+                                    ? "nav-item-active font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] bg-gradient-to-r from-[#00ff80]/10 to-transparent" // Added embossing/gradient
                                     : "text-slate-400 hover:text-white hover:bg-white/5"
                                     }`}
                             >
@@ -112,9 +112,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </nav>
 
                 {/* Bottom Profile Section */}
-                <div className="p-6 mt-auto border-t border-white/5 bg-black/40">
+                <div className="p-6 mt-auto border-t border-white/5 bg-black/40 relative">
                     <div
-                        onClick={() => setShowProfile(true)}
+                        onClick={() => setShowProfile(!showProfile)}
                         className="flex items-center space-x-4 cursor-pointer group hover:bg-white/5 p-3 rounded-xl transition-all"
                     >
                         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00ff80] to-emerald-900 flex items-center justify-center text-black font-black shadow-lg">
@@ -125,6 +125,40 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                             <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-1.5">{user?.roles?.[0]?.name || "Strategic"} Access</p>
                         </div>
                     </div>
+
+                    {/* Profile Popover - Bottom Left */}
+                    <AnimatePresence>
+                        {showProfile && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                className="absolute bottom-full left-4 mb-4 w-64 bg-black/90 backdrop-blur-xl border border-[#00ff80]/30 rounded-2xl p-6 shadow-2xl z-[60]"
+                            >
+                                <div className="flex flex-col space-y-4">
+                                    <div className="flex items-center space-x-3 mb-2">
+                                        <div className="w-8 h-8 rounded-full bg-[#00ff80] flex items-center justify-center text-black font-bold text-xs">
+                                            {user?.full_name?.substring(0, 2).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p className="text-white text-xs font-bold">{user?.full_name}</p>
+                                            <p className="text-[9px] text-[#00ff80] uppercase tracking-wider">{user?.roles?.[0]?.name}</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="h-px bg-white/10" />
+
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center space-x-2 text-red-400 hover:text-red-300 transition-colors text-xs font-bold uppercase tracking-wider"
+                                    >
+                                        <LogOut className="w-3 h-3" />
+                                        <span>Terminate Session</span>
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </aside>
 
@@ -172,55 +206,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </div>
                 </div>
             </main>
-
-            {/* Profile Modal - Neon Edition */}
-            <AnimatePresence>
-                {showProfile && (
-                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setShowProfile(false)}
-                            className="absolute inset-0 bg-black/90 backdrop-blur-xl"
-                        />
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            className="w-full max-w-md bg-black border border-[#00ff80]/30 rounded-[2rem] p-10 relative overflow-hidden shadow-[0_0_50px_rgba(0,255,128,0.1)]"
-                        >
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff80]/5 blur-[80px] rounded-full -z-10" />
-
-                            <div className="flex flex-col items-center text-center">
-                                <div className="w-24 h-24 rounded-full border-4 border-[#00ff80]/20 p-1 mb-6">
-                                    <div className="w-full h-full rounded-full bg-[#00ff80] flex items-center justify-center text-black text-3xl font-black">
-                                        {user?.full_name?.substring(0, 2).toUpperCase() || "SY"}
-                                    </div>
-                                </div>
-
-                                <h2 className="text-2xl font-black text-white uppercase italic tracking-tighter mb-1">{user?.full_name || "Identity Node"}</h2>
-                                <p className="text-[#00ff80] font-bold uppercase tracking-[0.2em] text-[10px] mb-8">{user?.roles?.[0]?.name || "Strategic"} Level</p>
-
-                                <div className="w-full space-y-3 mb-8 text-left">
-                                    <div className="bg-[#00ff80]/5 border border-[#00ff80]/10 p-5 rounded-xl flex items-center justify-between">
-                                        <span className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest">Email Hash</span>
-                                        <span className="text-xs font-bold text-slate-300">{user?.email}</span>
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={handleLogout}
-                                    className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 font-black py-4 rounded-xl transition-all uppercase tracking-widest text-[10px] border border-red-500/20 flex items-center justify-center space-x-2"
-                                >
-                                    <LogOut className="w-4 h-4" />
-                                    <span>Terminate Session</span>
-                                </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
         </div>
     );
 }

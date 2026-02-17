@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Cpu, Plus } from "lucide-react";
+import Portal from "@/components/ui/Portal";
 import apiClient from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -317,100 +318,102 @@ export default function DashboardPage() {
                 {/* START REQUEST MODAL */}
                 <AnimatePresence>
                     {requestModalOpen && (
-                        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                onClick={() => setRequestModalOpen(false)}
-                                className="absolute inset-0 bg-black/90 backdrop-blur-xl"
-                            />
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                                className="w-full max-w-2xl glass-dark border border-[#00ff80]/20 rounded-[3rem] p-10 relative overflow-hidden shadow-[0_0_50px_rgba(0,255,128,0.1)]"
-                            >
-                                {/* Neon Glow Background */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff80]/10 blur-[80px] rounded-full -z-10" />
+                        <Portal>
+                            <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6">
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    onClick={() => setRequestModalOpen(false)}
+                                    className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+                                />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                    className="w-full max-w-2xl glass-dark border border-[#00ff80]/20 rounded-[3rem] p-10 relative overflow-hidden shadow-[0_0_50px_rgba(0,255,128,0.1)]"
+                                >
+                                    {/* Neon Glow Background */}
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff80]/10 blur-[80px] rounded-full -z-10" />
 
-                                <div className="mb-8">
-                                    <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">Initialize New Request</h2>
-                                    <p className="text-slate-400 text-sm font-bold uppercase tracking-widest mt-2">Submit operational requirements for processing.</p>
-                                </div>
-
-                                <div className="space-y-6">
-                                    <div>
-                                        <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Select Protocol</label>
-                                        <select
-                                            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors appearance-none"
-                                            value={newRequestData.workflow_id}
-                                            onChange={(e) => setNewRequestData({ ...newRequestData, workflow_id: e.target.value })}
-                                        >
-                                            <option value="">-- Choose Protocol --</option>
-                                            {workflows.map(w => (
-                                                <option key={w.id} value={w.id}>{w.name}</option>
-                                            ))}
-                                        </select>
+                                    <div className="mb-8">
+                                        <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">Initialize New Request</h2>
+                                        <p className="text-slate-400 text-sm font-bold uppercase tracking-widest mt-2">Submit operational requirements for processing.</p>
                                     </div>
 
-                                    <div>
-                                        <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Request Title</label>
-                                        <input
-                                            type="text"
-                                            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors"
-                                            placeholder="e.g. Server Provisioning for AI Team"
-                                            value={newRequestData.title}
-                                            onChange={(e) => setNewRequestData({ ...newRequestData, title: e.target.value })}
-                                        />
-                                    </div>
+                                    <div className="space-y-6">
+                                        <div>
+                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Select Protocol</label>
+                                            <select
+                                                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors appearance-none"
+                                                value={newRequestData.workflow_id}
+                                                onChange={(e) => setNewRequestData({ ...newRequestData, workflow_id: e.target.value })}
+                                            >
+                                                <option value="">-- Choose Protocol --</option>
+                                                {workflows.map(w => (
+                                                    <option key={w.id} value={w.id}>{w.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
 
-                                    <div>
-                                        <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Context / Description</label>
-                                        <textarea
-                                            className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors h-32 resize-none"
-                                            placeholder="Provide necessary functional details..."
-                                            value={newRequestData.description}
-                                            onChange={(e) => setNewRequestData({ ...newRequestData, description: e.target.value })}
-                                        />
-                                    </div>
+                                        <div>
+                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Request Title</label>
+                                            <input
+                                                type="text"
+                                                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors"
+                                                placeholder="e.g. Server Provisioning for AI Team"
+                                                value={newRequestData.title}
+                                                onChange={(e) => setNewRequestData({ ...newRequestData, title: e.target.value })}
+                                            />
+                                        </div>
 
-                                    <div>
-                                        <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Priority Level</label>
-                                        <div className="flex gap-4">
-                                            {['low', 'medium', 'high'].map((p) => (
-                                                <button
-                                                    key={p}
-                                                    onClick={() => setNewRequestData({ ...newRequestData, priority: p })}
-                                                    className={`flex-1 py-3 rounded-xl border font-bold uppercase tracking-widest text-[10px] transition-all ${newRequestData.priority === p
-                                                        ? 'bg-[#00ff80] text-black border-[#00ff80]'
-                                                        : 'bg-transparent border-white/10 text-slate-500 hover:text-white'
-                                                        }`}
-                                                >
-                                                    {p}
-                                                </button>
-                                            ))}
+                                        <div>
+                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Context / Description</label>
+                                            <textarea
+                                                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors h-32 resize-none"
+                                                placeholder="Provide necessary functional details..."
+                                                value={newRequestData.description}
+                                                onChange={(e) => setNewRequestData({ ...newRequestData, description: e.target.value })}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Priority Level</label>
+                                            <div className="flex gap-4">
+                                                {['low', 'medium', 'high'].map((p) => (
+                                                    <button
+                                                        key={p}
+                                                        onClick={() => setNewRequestData({ ...newRequestData, priority: p })}
+                                                        className={`flex-1 py-3 rounded-xl border font-bold uppercase tracking-widest text-[10px] transition-all ${newRequestData.priority === p
+                                                            ? 'bg-[#00ff80] text-black border-[#00ff80]'
+                                                            : 'bg-transparent border-white/10 text-slate-500 hover:text-white'
+                                                            }`}
+                                                    >
+                                                        {p}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-4 pt-4">
+                                            <button
+                                                onClick={() => setRequestModalOpen(false)}
+                                                className="flex-1 py-4 rounded-xl border border-white/10 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:bg-white/5 transition-all"
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                onClick={handleStartRequest}
+                                                disabled={isStartingRequest}
+                                                className="flex-[2] py-4 rounded-xl bg-[#00ff80] hover:bg-[#00cc66] text-black font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,128,0.3)] flex items-center justify-center transition-all hover:scale-[1.02]"
+                                            >
+                                                {isStartingRequest ? <Loader2 className="w-4 h-4 animate-spin" /> : "Initialize Request"}
+                                            </button>
                                         </div>
                                     </div>
-
-                                    <div className="flex gap-4 pt-4">
-                                        <button
-                                            onClick={() => setRequestModalOpen(false)}
-                                            className="flex-1 py-4 rounded-xl border border-white/10 text-slate-400 font-black uppercase tracking-widest text-[10px] hover:bg-white/5 transition-all"
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            onClick={handleStartRequest}
-                                            disabled={isStartingRequest}
-                                            className="flex-[2] py-4 rounded-xl bg-[#00ff80] hover:bg-[#00cc66] text-black font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,128,0.3)] flex items-center justify-center transition-all hover:scale-[1.02]"
-                                        >
-                                            {isStartingRequest ? <Loader2 className="w-4 h-4 animate-spin" /> : "Initialize Request"}
-                                        </button>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </div>
+                                </motion.div>
+                            </div>
+                        </Portal>
                     )}
                 </AnimatePresence>
             </motion.div>
