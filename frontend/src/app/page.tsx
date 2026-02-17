@@ -20,11 +20,20 @@ export default function LoginPage() {
         setError("");
 
         try {
+            // 1. Force absolute URL to bypass any relative path issues causing 429 on Render
+            // We use the environment variable if available, otherwise the verified backend URL
+            const backendBaseUrl = (API_BASE_URL && API_BASE_URL.startsWith('http'))
+                ? API_BASE_URL
+                : 'https://antigravity-backend-8ytp.onrender.com/api/v1';
+
+            const loginUrl = `${backendBaseUrl}/login/access-token`;
+            console.log(`[NexusFlow] Initializing Auth Protocol at: ${loginUrl}`);
+
             const formData = new URLSearchParams();
             formData.append("username", email);
             formData.append("password", password);
 
-            const response = await apiClient.post("login/access-token", formData.toString(), {
+            const response = await apiClient.post(loginUrl, formData.toString(), {
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
             });
 
