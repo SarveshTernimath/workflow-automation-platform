@@ -1,16 +1,25 @@
 import axios from 'axios';
 
 const getApiBaseUrl = () => {
+    // Build version to verify deployment in browser console
+    const buildVersion = '2026-02-18-v2';
+    console.log(`[NexusFlow] Build Version: ${buildVersion}`);
+
     // 1. Try Environment Variable (standard for Next.js/Render)
-    if (process.env.NEXT_PUBLIC_API_URL) {
-        const url = `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')}/api/v1`;
-        console.log(`[NexusFlow] Connecting to Matrix via ENV: ${url}`);
+    let envUrl = process.env.NEXT_PUBLIC_API_URL;
+    if (envUrl) {
+        // Ensure absolute URL (add https:// if only hostname provided)
+        if (!envUrl.startsWith('http')) {
+            envUrl = `https://${envUrl}`;
+        }
+        const url = `${envUrl.replace(/\/$/, '')}/api/v1`;
+        console.log(`[NexusFlow] Matrix Connection via ENV: ${url}`);
         return url;
     }
 
     // 2. Hardcoded fallback (the precise backend URL for this deployment)
     const url = 'https://antigravity-backend-8ytp.onrender.com/api/v1';
-    console.log(`[NexusFlow] Connecting to Hardcoded Matrix: ${url}`);
+    console.log(`[NexusFlow] Matrix Connection via FALLBACK: ${url}`);
     return url;
 };
 
