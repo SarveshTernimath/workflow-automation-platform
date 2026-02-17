@@ -20,10 +20,27 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     React.useEffect(() => {
         async function fetchUser() {
             try {
+                const token = localStorage.getItem("access_token");
+                console.log("[DashboardLayout] Checking auth token:", token ? "Exists" : "Missing");
+
+                if (!token) {
+                    console.log("[DashboardLayout] No token found, redirecting to login");
+                    router.push("/");
+                    return;
+                }
+
+                console.log("[DashboardLayout] Fetching user profile...");
                 const res = await apiClient.get("users/me");
+                console.log("[DashboardLayout] User profile fetched:", res.data);
                 setUser(res.data);
-            } catch (err) {
-                console.error("Layout auth check failed", err);
+            } catch (err: any) {
+                console.error("[DashboardLayout] Auth check failed:", err);
+                console.error("[DashboardLayout] Error Status:", err.response?.status);
+                // If the error is 401, the interceptor in api.ts might have already redirected,
+                // but we double check here to be sure.
+                if (err.response?.status === 401 || err.response?.status === 403) {
+                    router.push("/");
+                }
             }
         }
         fetchUser();

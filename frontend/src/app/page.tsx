@@ -109,10 +109,12 @@ export default function LoginPage() {
 
                     <form onSubmit={handleLogin} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[9px] font-black text-[#00ff80] uppercase tracking-[0.2em] ml-1 block">Identity Matrix</label>
+                            <label htmlFor="email" className="text-[9px] font-black text-[#00ff80] uppercase tracking-[0.2em] ml-1 block">Identity Matrix</label>
                             <div className="relative group">
                                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#00ff80] transition-colors z-20" />
                                 <input
+                                    id="email"
+                                    name="email"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
@@ -124,10 +126,12 @@ export default function LoginPage() {
                         </div>
 
                         <div className="space-y-2">
-                            <label className="text-[9px] font-black text-[#00ff80] uppercase tracking-[0.2em] ml-1 block">Access Key</label>
+                            <label htmlFor="password" className="text-[9px] font-black text-[#00ff80] uppercase tracking-[0.2em] ml-1 block">Access Key</label>
                             <div className="relative group">
                                 <Lock className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-[#00ff80] transition-colors z-20" />
                                 <input
+                                    id="password"
+                                    name="password"
                                     type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
