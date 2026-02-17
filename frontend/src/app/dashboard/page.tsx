@@ -353,8 +353,10 @@ export default function DashboardPage() {
 
                                     <div className="space-y-6">
                                         <div>
-                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Select Protocol</label>
+                                            <label htmlFor="protocol-select" className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Select Protocol</label>
                                             <select
+                                                id="protocol-select"
+                                                name="protocol"
                                                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors appearance-none"
                                                 value={newRequestData.workflow_id}
                                                 onChange={(e) => setNewRequestData({ ...newRequestData, workflow_id: e.target.value })}
@@ -367,8 +369,10 @@ export default function DashboardPage() {
                                         </div>
 
                                         <div>
-                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Request Title</label>
+                                            <label htmlFor="request-title" className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Request Title</label>
                                             <input
+                                                id="request-title"
+                                                name="title"
                                                 type="text"
                                                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors"
                                                 placeholder="e.g. Server Provisioning for AI Team"
@@ -378,8 +382,10 @@ export default function DashboardPage() {
                                         </div>
 
                                         <div>
-                                            <label className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Context / Description</label>
+                                            <label htmlFor="request-description" className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest mb-2 block">Context / Description</label>
                                             <textarea
+                                                id="request-description"
+                                                name="description"
                                                 className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-4 text-white text-sm focus:outline-none focus:border-[#00ff80] transition-colors h-32 resize-none"
                                                 placeholder="Provide necessary functional details..."
                                                 value={newRequestData.description}
