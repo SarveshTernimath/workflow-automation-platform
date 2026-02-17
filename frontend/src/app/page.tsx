@@ -44,7 +44,14 @@ export default function LoginPage() {
                 router.push("/dashboard");
             }, 500);
         } catch (err: any) {
-            setError(err.response?.data?.detail || err.message || `Connection failed to ${API_BASE_URL.replace('/api/v1', '')}. Please verify your Backend service is active.`);
+            console.error("Login Error:", err);
+            if (err.response?.status === 429) {
+                setError("System Overload (Rate Limited). Please wait 60 seconds before retrying.");
+            } else if (err.response?.status === 401) {
+                setError("Invalid Identity Matrix or Access Key.");
+            } else {
+                setError(err.response?.data?.detail || "Connection Failed. Backend may be offline.");
+            }
         } finally {
             setLoading(false);
         }
