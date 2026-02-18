@@ -4,11 +4,12 @@
 
 /* Premium Ultra-Black Theme */
 :root {
-  /* Surface Colors - Ultra Dark */
+  /* Surface Colors - Ultra Dark Opaque */
   --background: #000000;
-  --surface: rgba(10, 10, 10, 0.6);
-  --surface-hover: rgba(20, 20, 20, 0.7);
-  --surface-active: rgba(30, 30, 30, 0.8);
+  --surface: rgba(18, 18, 18, 0.6);
+  /* Matches glass-panel base */
+  --surface-hover: rgba(28, 28, 28, 0.7);
+  --surface-active: rgba(35, 35, 35, 0.8);
 
   /* Borders */
   --border: rgba(255, 255, 255, 0.08);
@@ -77,30 +78,43 @@ body {
 }
 
 /* Glass Utilities - Enhanced Transparency */
+/* Glass Utilities - iPhone Style Opaque */
 .glass-panel {
-  background: rgba(5, 5, 5, 0.4);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 24px -1px rgba(0, 0, 0, 0.5);
+  background: rgba(18, 18, 18, 0.65);
+  /* Darker, more opaque base */
+  backdrop-filter: blur(24px) saturate(180%);
+  /* Heavy blur + saturation boost for "vibrancy" */
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Subtle crisp border */
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.5),
+    0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  /* Inner light ring for depth */
 }
 
 .glass-panel-hover {
-  transition: all 0.3s var(--ease-smooth);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .glass-panel-hover:hover {
-  border-color: var(--border-hover);
-  background: rgba(15, 15, 15, 0.5);
-  transform: translateY(-1px);
-  box-shadow: 0 8px 32px -2px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 255, 255, 0.03);
+  background: rgba(28, 28, 28, 0.75);
+  /* Lightens slightly */
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px) scale(1.005);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.6),
+    0 10px 10px -5px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Sidebar Specific */
+/* Sidebar Specific - Ultra Deep Opaque */
 .sidebar-glass {
-  background: rgba(0, 0, 0, 0.5);
-  /* More transparent */
-  backdrop-filter: blur(16px);
-  border-right: 1px solid var(--border);
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(32px) saturate(180%);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* Animations */

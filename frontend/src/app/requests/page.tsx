@@ -110,7 +110,7 @@ export default function RequestsPage() {
                 </div>
 
                 {requests.length === 0 ? (
-                    <Card className="py-40 flex flex-col items-center justify-center glass-dark border-dashed border-white/10 rounded-[3rem] shadow-2xl">
+                    <Card className="py-40 flex flex-col items-center justify-center glass-panel border-dashed border-white/10 rounded-[3rem] shadow-2xl">
                         <div className="p-8 rounded-3xl bg-slate-900 border border-white/5 mb-8">
                             <GitBranch className="w-16 h-16 text-slate-800" />
                         </div>
@@ -133,7 +133,7 @@ export default function RequestsPage() {
                                         className="group relative"
                                     >
                                         <Card
-                                            className="glass-dark border border-white/5 hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/5 p-8"
+                                            className="glass-panel border border-white/5 hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/5 p-8"
                                         >
                                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
                                                 <div className="flex items-center gap-8 flex-1">

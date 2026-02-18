@@ -141,7 +141,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </nav>
 
                 {/* User Profile */}
-                <div className="p-4 mt-auto border-t border-border bg-surface/30 backdrop-blur-md">
+                <div className="p-4 mt-auto border-t border-border bg-black/20">
                     <div
                         onClick={() => setShowProfile(!showProfile)}
                         className="flex items-center space-x-3 cursor-pointer hover:bg-surface-hover/50 p-2 rounded-lg transition-all"
@@ -200,7 +200,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         {/* Portal Target for Page Actions */}
                         <div id="header-actions" className="flex items-center space-x-2" />
 
-                        <div className="flex items-center px-3 py-1.5 rounded-full bg-surface/50 border border-border backdrop-blur-md">
+                        <div className="flex items-center px-3 py-1.5 rounded-full glass-panel">
                             <div className="w-1.5 h-1.5 rounded-full bg-accent-success mr-2 animate-pulse" />
                             <span className="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Online</span>
                         </div>

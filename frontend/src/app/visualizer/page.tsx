@@ -88,7 +88,7 @@ export default function VisualizerPage() {
                             initial={{ x: 300, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: 300, opacity: 0 }}
-                            className="absolute top-6 right-6 bottom-6 w-80 glass-panel border-l border-white/10 bg-black/80 backdrop-blur-xl z-20 rounded-xl overflow-hidden flex flex-col shadow-2xl"
+                            className="absolute top-6 right-6 bottom-6 w-80 glass-panel z-20 rounded-xl overflow-hidden flex flex-col shadow-2xl"
                         >
                             {/* Header */}
                             <div className="p-6 border-b border-white/10 relative overflow-hidden">

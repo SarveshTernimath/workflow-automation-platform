@@ -114,7 +114,7 @@ export default function TasksPage() {
                 </div>
 
                 {tasks.length === 0 ? (
-                    <Card className="py-32 flex flex-col items-center justify-center glass-dark border-dashed border-white/10 shadow-2xl rounded-[3rem]">
+                    <Card className="py-32 flex flex-col items-center justify-center glass-panel border-dashed border-white/10 shadow-2xl rounded-[3rem]">
                         <div className="p-8 rounded-3xl bg-slate-900 border border-white/5 mb-8 animate-pulse shadow-2xl">
                             <CheckCircle2 className="w-16 h-16 text-emerald-500/50" />
                         </div>
@@ -137,7 +137,7 @@ export default function TasksPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1, duration: 0.5 }}
                             >
-                                <Card className={`group glass-dark hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-2xl ${task.is_sla_breached ? 'border-rose-500/30' : 'border-white/5'}`}
+                                <Card className={`group glass-panel hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-2xl ${task.is_sla_breached ? 'border-rose-500/30' : 'border-white/5'}`}
                                     onClick={() => setSelectedTask(task)}
                                 >
                                     <CardContent className="p-10 relative">
@@ -227,7 +227,7 @@ export default function TasksPage() {
                                 <motion.div
                                     initial={{ opacity: 0, scale: 0.95 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    className="w-full max-w-4xl glass-dark border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+                                    className="w-full max-w-4xl glass-panel border border-white/10 rounded-[3rem] p-12 relative overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
                                 >
                                     <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 blur-[80px] rounded-full -z-10" />
 
@@ -332,7 +332,7 @@ export default function TasksPage() {
                                                 <button
                                                     onClick={() => handleDecision("approve")}
                                                     disabled={processing}
-                                                    className="flex-[2] bg-[#00ff80] hover:bg-[#00cc66] text-black py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-[0_0_20px_rgba(0,255,128,0.3)] transition-all flex items-center justify-center group hover:scale-[1.02]"
+                                                    className="flex-[2] bg-emerald-500 hover:bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center group hover:scale-[1.02]"
                                                 >
                                                     {processing ? (
                                                         <Loader2 className="w-5 h-5 animate-spin" />

@@ -3,11 +3,23 @@
 import React, { useEffect, useState, use } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { CheckCircle2, Clock, ArrowLeft, Send, XCircle, Activity, Zap, Shield, Loader2 } from "lucide-react";
+import {
+    CheckCircle2,
+    Clock,
+    ArrowLeft,
+    Send,
+    XCircle,
+    Activity,
+    Shield,
+    Loader2,
+    FileJson,
+    Cpu,
+    Calendar,
+    AlertCircle
+} from "lucide-react";
 import apiClient from "@/lib/api";
 import { format } from "date-fns";
 import Link from "next/link";
-
 
 interface Step {
     step_order: number;
@@ -70,99 +82,134 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
 
     if (loading) return (
         <DashboardLayout>
-            <div className="flex flex-col items-center justify-center h-[60vh] space-y-8">
-                <div className="relative">
-                    <Loader2 className="w-12 h-12 text-indigo-500 animate-spin" />
-                    <div className="absolute inset-0 blur-xl bg-indigo-500/20 rounded-full animate-pulse" />
-                </div>
-                <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] animate-pulse">Accessing Instance Memory</p>
+            <div className="flex flex-col items-center justify-center h-[60vh] space-y-6">
+                <Loader2 className="w-10 h-10 text-accent-primary animate-spin" />
+                <p className="text-text-secondary text-sm font-medium animate-pulse">Retrieving Trace Data...</p>
             </div>
         </DashboardLayout>
     );
 
-    if (!request) return <DashboardLayout><div className="text-center py-20 text-slate-500 uppercase font-black tracking-widest text-xs">Request sequence terminated or not found.</div></DashboardLayout>;
+    if (!request) return (
+        <DashboardLayout>
+            <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+                <div className="p-4 rounded-full bg-surface border border-dashed border-border">
+                    <AlertCircle className="w-8 h-8 text-text-tertiary" />
+                </div>
+                <p className="text-text-secondary font-medium">Request trace not found or access terminated.</p>
+                <Link href="/dashboard" className="text-accent-primary hover:text-accent-primary-hover text-sm font-medium transition-colors">
+                    Return to Dashboard
+                </Link>
+            </div>
+        </DashboardLayout>
+    );
 
     const currentStep = request.steps.find((s) => s.status === 'PENDING');
+    const sortedSteps = [...request.steps].sort((a, b) => (a.step_order || 0) - (b.step_order || 0));
 
     return (
         <DashboardLayout>
-            <div className="space-y-12">
-                <div className="flex items-center space-x-4">
-                    <Link href="/dashboard" className="p-3 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-all group">
-                        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                    </Link>
-                    <div className="h-px w-8 bg-white/10" />
-                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Operational Tracker</span>
-                </div>
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
-                    {/* ... */}
+            <div className="max-w-7xl mx-auto space-y-8">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border">
+                    <div className="flex items-center gap-4">
+                        <Link
+                            href="/dashboard"
+                            className="p-2.5 rounded-lg bg-surface hover:bg-surface-hover border border-border text-text-secondary hover:text-text-primary transition-all group"
+                        >
+                            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+                        </Link>
+                        <div>
+                            <div className="flex items-center gap-3 mb-1">
+                                <h1 className="text-2xl font-bold text-text-primary">Request Audit</h1>
+                                <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${request.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                    request.status === 'PENDING' ? 'bg-amber-500/10 text-amber-500 border-amber-500/20' :
+                                        'bg-accent-primary/10 text-accent-primary border-accent-primary/20'
+                                    }`}>
+                                    {request.status}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4 text-xs text-text-secondary font-mono">
+                                <span className="flex items-center gap-1.5">
+                                    <Shield className="w-3.5 h-3.5" />
+                                    ID: {request.id.slice(0, 8)}...
+                                </span>
+                                <span className="w-1 h-1 rounded-full bg-border" />
+                                <span className="flex items-center gap-1.5">
+                                    <Calendar className="w-3.5 h-3.5" />
+                                    {format(new Date(request.created_at), "MMM d, yyyy 'at' HH:mm")}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    <div className="lg:col-span-2 space-y-12">
-                        <Card className="glass-dark border border-white/5 shadow-2xl overflow-hidden">
-                            <CardHeader className="p-8 border-b border-white/5 bg-white/2">
-                                <div className="flex items-center space-x-3">
-                                    <div className="p-2 rounded-lg bg-indigo-500/10">
-                                        <Activity className="w-5 h-5 text-indigo-400" />
-                                    </div>
-                                    <CardTitle className="text-lg font-black tracking-widest uppercase italic">Execution Timeline</CardTitle>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Left Column: Timeline */}
+                    <div className="lg:col-span-2 space-y-8">
+                        <Card className="glass-panel border-border bg-black/40">
+                            <CardHeader className="px-6 py-5 border-b border-border flex flex-row items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <Activity className="w-5 h-5 text-accent-secondary" />
+                                    <CardTitle className="text-lg font-semibold text-text-primary">Execution Trace</CardTitle>
                                 </div>
                             </CardHeader>
-                            <CardContent className="p-10">
-                                <div className="relative pl-12 space-y-16">
-                                    <div className="absolute left-[23px] top-2 bottom-2 w-px bg-white/5" />
-
-                                    {request.steps.sort((a, b) => (a.step_order || 0) - (b.step_order || 0)).map((step, idx) => {
+                            <CardContent className="p-6">
+                                <div className="space-y-8 relative before:absolute before:inset-y-0 before:left-[19px] before:w-px before:bg-border">
+                                    {sortedSteps.map((step, idx) => {
                                         const isCompleted = step.status === 'APPROVED' || step.status === 'REJECTED';
                                         const isPending = step.status === 'PENDING';
 
                                         return (
-                                            <div key={idx} className="relative group">
-                                                <div className={`absolute left-[-38px] top-0 w-[50px] h-[50px] rounded-2xl flex items-center justify-center border-4 border-[#0a0a0c] z-10 transition-all duration-500 ${isCompleted ? 'bg-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]' :
-                                                    isPending ? 'bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.5)] scale-110' :
-                                                        'bg-slate-800'
+                                            <div key={idx} className="relative pl-12 group">
+                                                {/* Timeline Node */}
+                                                <div className={`absolute left-0 top-1 w-10 h-10 rounded-xl border flex items-center justify-center z-10 transition-all duration-300 ${isCompleted ? 'bg-surface border-emerald-500/50 text-emerald-500 shadow-[0_0_15px_-3px_rgba(16,185,129,0.3)]' :
+                                                    isPending ? 'bg-surface border-accent-secondary text-accent-secondary shadow-[0_0_15px_-3px_rgba(59,130,246,0.3)] scale-110' :
+                                                        'bg-surface border-border text-text-tertiary'
                                                     }`}>
-                                                    {isCompleted ? <CheckCircle2 className="w-5 h-5 text-white" /> :
-                                                        isPending ? <Clock className="w-5 h-5 text-white animate-pulse" /> :
-                                                            <div className="w-2 h-2 rounded-full bg-slate-600" />}
+                                                    {isCompleted ? <CheckCircle2 className="w-5 h-5" /> :
+                                                        isPending ? <Clock className="w-5 h-5 animate-pulse" /> :
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-text-tertiary" />}
                                                 </div>
 
-                                                <div className="flex flex-col">
-                                                    <div className="flex items-center justify-between mb-3">
-                                                        <h4 className={`text-xl font-black italic uppercase tracking-tight ${isPending ? 'text-white' : 'text-slate-500'}`}>
-                                                            {step.step_name}
-                                                        </h4>
-                                                        {step.completed_at && (
-                                                            <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest opacity-60">Verified {format(new Date(step.completed_at), 'p')}</span>
-                                                        )}
-                                                    </div>
-
-                                                    <div className={`p-8 rounded-[2rem] border transition-all duration-500 ${isPending ? 'bg-indigo-500/5 border-indigo-500/20 shadow-xl' : 'bg-white/2 border-white/5 opacity-60'
-                                                        }`}>
-                                                        <div className="grid grid-cols-2 gap-8">
-                                                            <div>
-                                                                <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-1">State Vector</p>
-                                                                <p className={`text-xs font-bold uppercase tracking-widest ${isCompleted && step.status === 'APPROVED' ? 'text-emerald-400' :
-                                                                    isCompleted && step.status === 'REJECTED' ? 'text-rose-400' :
-                                                                        isPending ? 'text-indigo-400' : 'text-slate-500'
+                                                {/* Content Card */}
+                                                <div className={`rounded-xl border p-5 transition-all duration-300 ${isPending ? 'bg-surface-active border-accent-secondary/30 shadow-lg' :
+                                                    'bg-surface border-border hover:border-border-hover'
+                                                    }`}>
+                                                    <div className="flex items-start justify-between mb-4">
+                                                        <div>
+                                                            <h3 className={`text-base font-bold mb-1 ${isPending ? 'text-white' : 'text-text-primary'}`}>
+                                                                {step.step_name}
+                                                            </h3>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded border uppercase tracking-wider ${step.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' :
+                                                                    step.status === 'REJECTED' ? 'bg-red-500/10 text-red-500 border-red-500/20' :
+                                                                        isPending ? 'bg-accent-secondary/10 text-accent-secondary border-accent-secondary/20' :
+                                                                            'bg-surface text-text-tertiary border-border'
                                                                     }`}>
                                                                     {step.status}
+                                                                </span>
+                                                                {step.completed_at && (
+                                                                    <span className="text-[10px] text-text-secondary px-2 py-0.5 rounded bg-surface border border-border">
+                                                                        {format(new Date(step.completed_at), 'MMM d, HH:mm')}
+                                                                    </span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                        {step.deadline && (
+                                                            <div className="p-3 rounded-lg bg-black/20 border border-border">
+                                                                <p className="text-[10px] text-text-secondary font-bold uppercase tracking-wider mb-1">SLA Deadline</p>
+                                                                <p className={`text-sm font-medium ${new Date(step.deadline) < new Date() ? 'text-red-400' : 'text-text-primary'}`}>
+                                                                    {format(new Date(step.deadline), 'PP')}
                                                                 </p>
                                                             </div>
-                                                            {step.deadline && (
-                                                                <div className="text-right">
-                                                                    <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-1">Expiration</p>
-                                                                    <p className={`text-xs font-bold uppercase tracking-widest ${new Date(step.deadline) < new Date() ? 'text-rose-400' : 'text-slate-400'}`}>
-                                                                        {format(new Date(step.deadline), 'PP')}
-                                                                    </p>
-                                                                </div>
-                                                            )}
-                                                        </div>
+                                                        )}
                                                         {step.outcome && (
-                                                            <div className="mt-6 pt-6 border-t border-white/5">
-                                                                <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-2">Decision Notes</p>
-                                                                <p className="text-xs text-slate-400 font-medium italic">&quot;{step.outcome}&quot;</p>
+                                                            <div className="p-3 rounded-lg bg-black/20 border border-border md:col-span-2">
+                                                                <p className="text-[10px] text-text-secondary font-bold uppercase tracking-wider mb-1">Decision Note</p>
+                                                                <p className="text-sm text-text-primary italic">&quot;{step.outcome}&quot;</p>
                                                             </div>
                                                         )}
                                                     </div>
@@ -172,18 +219,13 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                     })}
 
                                     {request.status === 'COMPLETED' && (
-                                        <div className="relative pt-8">
-                                            <div className="absolute left-[-38px] top-8 w-[50px] h-[50px] rounded-full bg-emerald-500 shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center justify-center border-4 border-[#0a0a0c] z-10">
-                                                <Zap className="w-6 h-6 text-white" />
+                                        <div className="relative pl-12 pt-4">
+                                            <div className="absolute left-0 top-6 w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/50 text-emerald-500 flex items-center justify-center z-10 shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)]">
+                                                <Shield className="w-5 h-5" />
                                             </div>
-                                            <div className="p-8 rounded-[2rem] bg-emerald-500/10 border border-emerald-500/20 flex items-center space-x-6 animate-premium">
-                                                <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
-                                                    <Shield className="w-6 h-6 text-emerald-400" />
-                                                </div>
-                                                <div>
-                                                    <h4 className="text-xl font-black text-emerald-400 uppercase italic tracking-tighter">Chain Optimization Completed</h4>
-                                                    <p className="text-[10px] text-emerald-500/60 font-black uppercase tracking-widest">All strategic nodes validated successfully.</p>
-                                                </div>
+                                            <div className="p-5 rounded-xl bg-gradient-to-r from-emerald-500/10 to-transparent border border-emerald-500/20">
+                                                <h3 className="text-emerald-400 font-bold mb-1">Workflow Completed</h3>
+                                                <p className="text-emerald-500/70 text-sm">All steps executed successfully. Chain of custody verified.</p>
                                             </div>
                                         </div>
                                     )}
@@ -192,115 +234,128 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                         </Card>
                     </div>
 
-                    <div className="space-y-12">
-                        <Card className="glass-dark border border-indigo-500/20 shadow-2xl overflow-hidden shadow-indigo-500/5">
-                            <CardHeader className="p-8 border-b border-indigo-500/10 bg-indigo-500/5">
-                                <CardTitle className="flex items-center text-lg font-black tracking-widest uppercase italic">
-                                    <Clock className="w-5 h-5 mr-3 text-indigo-400" />
+                    {/* Right Column: Console & Details */}
+                    <div className="space-y-8">
+                        {/* Decision Console */}
+                        <Card className={`glass-panel border-border bg-black/40 overflow-hidden sticky top-6 transition-all duration-300 ${currentStep ? 'shadow-[0_0_30px_-10px_rgba(59,130,246,0.15)] border-accent-secondary/30' : ''
+                            }`}>
+                            <CardHeader className={`px-6 py-5 border-b ${currentStep ? 'bg-accent-secondary/5 border-accent-secondary/20' : 'border-border'}`}>
+                                <CardTitle className="text-lg font-semibold text-text-primary flex items-center gap-2">
+                                    <Cpu className={`w-5 h-5 ${currentStep ? 'text-accent-secondary animate-pulse' : 'text-text-tertiary'}`} />
                                     Decision Console
                                 </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-8">
+                            <CardContent className="p-6">
                                 {currentStep ? (
-                                    <form onSubmit={handleProcess} className="space-y-8">
-                                        <div className="flex flex-col gap-4">
-                                            <div className="p-6 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 shadow-inner">
-                                                <p className="text-[8px] text-indigo-400/60 font-black uppercase tracking-[0.3em] mb-2">Active Strategic Node</p>
-                                                <p className="text-lg text-white font-black uppercase italic tracking-tight">{currentStep.step_name}</p>
+                                    <form onSubmit={handleProcess} className="space-y-6">
+                                        <div className="p-4 rounded-xl bg-surface border border-border">
+                                            <p className="text-xs text-text-secondary font-bold uppercase tracking-wider mb-2">Active Step</p>
+                                            <p className="text-lg font-bold text-white mb-2">{currentStep.step_name}</p>
+                                            <div className="h-1 w-full bg-border rounded-full overflow-hidden">
+                                                <div className="h-full bg-accent-secondary w-full animate-pulse" />
                                             </div>
-
-                                            {currentStep.deadline && (
-                                                <div className={`p-6 rounded-2xl border ${new Date(currentStep.deadline) < new Date() ? 'bg-rose-500/10 border-rose-500/20' : 'bg-emerald-500/10 border-emerald-500/20'} shadow-inner`}>
-                                                    <div className="flex items-center justify-between">
-                                                        <div>
-                                                            <p className={`text-[8px] font-black uppercase tracking-[0.3em] mb-1 ${new Date(currentStep.deadline) < new Date() ? 'text-rose-400' : 'text-emerald-400'}`}>SLA Protection</p>
-                                                            <p className="text-sm font-black text-white italic truncate">
-                                                                {new Date(currentStep.deadline) < new Date() ? 'CRITICAL: BREACH DETECTED' : 'NOMINAL: MONITORING ACTIVE'}
-                                                            </p>
-                                                        </div>
-                                                        <Clock className={`w-6 h-6 ${new Date(currentStep.deadline) < new Date() ? 'text-rose-500 animate-pulse' : 'text-emerald-500'}`} />
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
-
-                                        <div className="grid grid-cols-2 gap-4">
-                                            <button
-                                                type="button"
-                                                onClick={() => setOutcome("APPROVED")}
-                                                className={`py-5 rounded-[1.5rem] flex items-center justify-center border transition-all duration-500 font-extrabold uppercase tracking-widest text-[10px] ${outcome === 'APPROVED' ? 'bg-emerald-500 text-white border-emerald-500 shadow-xl shadow-emerald-500/20' : 'bg-slate-900 border-white/5 text-slate-500 hover:text-white'}`}
-                                            >
-                                                <CheckCircle2 className="w-4 h-4 mr-2" />
-                                                Approve
-                                            </button>
-                                            <button
-                                                type="button"
-                                                onClick={() => setOutcome("REJECTED")}
-                                                className={`py-5 rounded-[1.5rem] flex items-center justify-center border transition-all duration-500 font-extrabold uppercase tracking-widest text-[10px] ${outcome === 'REJECTED' ? 'bg-rose-500 text-white border-rose-500 shadow-xl shadow-rose-500/20' : 'bg-slate-900 border-white/5 text-slate-500 hover:text-white'}`}
-                                            >
-                                                <XCircle className="w-4 h-4 mr-2" />
-                                                Reject
-                                            </button>
                                         </div>
 
                                         <div className="space-y-3">
-                                            <label htmlFor="execution-note" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Strategic Justification</label>
+                                            <label className="text-xs text-text-primary font-bold uppercase tracking-wider ml-1">Action</label>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setOutcome("APPROVED")}
+                                                    className={`py-3 px-4 rounded-lg border font-bold text-xs uppercase tracking-wider transition-all ${outcome === 'APPROVED'
+                                                        ? 'bg-emerald-500 text-white border-emerald-600 shadow-lg shadow-emerald-500/20'
+                                                        : 'bg-surface text-text-secondary border-border hover:bg-surface-hover'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <CheckCircle2 className="w-4 h-4" />
+                                                        Approve
+                                                    </div>
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setOutcome("REJECTED")}
+                                                    className={`py-3 px-4 rounded-lg border font-bold text-xs uppercase tracking-wider transition-all ${outcome === 'REJECTED'
+                                                        ? 'bg-red-500 text-white border-red-600 shadow-lg shadow-red-500/20'
+                                                        : 'bg-surface text-text-secondary border-border hover:bg-surface-hover'
+                                                        }`}
+                                                >
+                                                    <div className="flex items-center justify-center gap-2">
+                                                        <XCircle className="w-4 h-4" />
+                                                        Reject
+                                                    </div>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-3">
+                                            <label htmlFor="note" className="text-xs text-text-primary font-bold uppercase tracking-wider ml-1">
+                                                Justification context
+                                            </label>
                                             <textarea
-                                                id="execution-note"
-                                                name="execution_note"
+                                                id="note"
                                                 value={note}
                                                 onChange={(e) => setNote(e.target.value)}
-                                                className="w-full bg-slate-900 border border-white/5 rounded-2xl p-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all placeholder:text-slate-700 min-h-[160px] font-medium text-sm leading-relaxed"
-                                                placeholder="Provide the operational context for this decision..."
+                                                className="w-full bg-surface border border-border rounded-xl p-4 text-sm text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent-secondary/50 focus:ring-1 focus:ring-accent-secondary/50 transition-all resize-y min-h-[120px]"
+                                                placeholder="Add context or reasoning for this decision..."
                                             />
                                         </div>
 
                                         <button
                                             type="submit"
                                             disabled={processing}
-                                            className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 text-white font-black py-5 rounded-2xl shadow-2xl shadow-indigo-500/20 flex items-center justify-center group uppercase tracking-[0.3em] text-[10px] transition-all duration-500 mb-4"
+                                            className="w-full py-4 rounded-xl bg-accent-secondary hover:bg-accent-secondary-hover text-white font-bold text-sm uppercase tracking-widest shadow-lg shadow-accent-secondary/20 hover:shadow-accent-secondary/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
                                         >
-                                            {processing ? <Loader2 className="w-4 h-4 animate-spin" /> : (
+                                            {processing ? (
+                                                <Loader2 className="w-4 h-4 animate-spin" />
+                                            ) : (
                                                 <>
-                                                    Submit Decision
-                                                    <Send className="w-4 h-4 ml-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                                    Execute
+                                                    <Send className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                                 </>
                                             )}
                                         </button>
-                                        <p className="text-[9px] text-slate-600 font-bold uppercase tracking-widest text-center">
-                                            This action advances the operational step assigned to your identity clearance.
-                                        </p>
                                     </form>
                                 ) : (
-                                    <div className="text-center py-12 px-6">
-                                        <div className={`w-20 h-20 rounded-[2rem] mx-auto flex items-center justify-center mb-6 shadow-2xl ${request.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-slate-900 text-slate-700 border border-white/5'}`}>
-                                            <Shield className="w-10 h-10" />
+                                    <div className="py-8 text-center space-y-4">
+                                        <div className="w-16 h-16 rounded-2xl bg-surface border border-border flex items-center justify-center mx-auto">
+                                            <Shield className="w-8 h-8 text-text-tertiary" />
                                         </div>
-                                        <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-[10px]">Security Lock: Sequence finalized or action privilege restricted.</p>
+                                        <div>
+                                            <h4 className="text-text-primary font-bold">No Actions Required</h4>
+                                            <p className="text-text-tertiary text-xs mt-1">Workflow is completed or waiting for upstream tasks.</p>
+                                        </div>
                                     </div>
                                 )}
                             </CardContent>
                         </Card>
 
-                        <Card className="glass-dark border border-white/5 shadow-2xl overflow-hidden mt-8">
-                            <CardHeader className="p-8 border-b border-white/5 bg-white/2">
-                                <CardTitle className="text-lg font-black tracking-widest uppercase italic">Instance Intel</CardTitle>
+                        {/* Instance Data */}
+                        <Card className="glass-panel border-border bg-black/40">
+                            <CardHeader className="px-6 py-5 border-b border-border">
+                                <CardTitle className="text-lg font-semibold text-text-primary flex items-center gap-2">
+                                    <FileJson className="w-5 h-5 text-text-secondary" />
+                                    Payload Data
+                                </CardTitle>
                             </CardHeader>
-                            <CardContent className="p-8 space-y-10">
-                                <div>
-                                    <p className="text-[8px] text-slate-600 font-black uppercase tracking-[0.3em] mb-2">Primary Payload</p>
-                                    <pre className="text-[11px] bg-slate-900/50 p-6 rounded-[2rem] overflow-x-auto text-indigo-400 font-mono shadow-inner border border-white/5 leading-relaxed">
+                            <CardContent className="p-0">
+                                <div className="max-h-[300px] overflow-y-auto custom-scrollbar p-6 bg-black/50">
+                                    <pre className="font-mono text-xs text-accent-secondary leading-relaxed">
                                         {JSON.stringify(request.request_data, null, 2)}
                                     </pre>
                                 </div>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="p-4 rounded-2xl bg-white/2 border border-white/5">
-                                        <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-1">Source Matrix</p>
-                                        <p className="text-[10px] text-slate-400 font-bold truncate">{request.requester_id}</p>
+                                <div className="p-4 border-t border-border grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p className="text-[10px] text-text-tertiary font-bold uppercase tracking-wider mb-1">Requester</p>
+                                        <p className="text-xs text-text-secondary font-mono truncate" title={request.requester_id}>
+                                            {request.requester_id}
+                                        </p>
                                     </div>
-                                    <div className="p-4 rounded-2xl bg-white/2 border border-white/5">
-                                        <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-1">Core Blueprint</p>
-                                        <p className="text-[10px] text-slate-400 font-bold truncate">{request.workflow_id}</p>
+                                    <div>
+                                        <p className="text-[10px] text-text-tertiary font-bold uppercase tracking-wider mb-1">Workflow ID</p>
+                                        <p className="text-xs text-text-secondary font-mono truncate" title={request.workflow_id}>
+                                            {request.workflow_id}
+                                        </p>
                                     </div>
                                 </div>
                             </CardContent>
@@ -311,4 +366,3 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
         </DashboardLayout>
     );
 }
-

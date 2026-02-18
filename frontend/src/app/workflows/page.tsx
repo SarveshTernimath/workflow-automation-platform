@@ -252,7 +252,7 @@ export default function WorkflowsPage() {
                 {/* Workflow Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {workflows.length === 0 ? (
-                        <Card className="col-span-full py-24 flex flex-col items-center justify-center border-dashed border-border bg-surface/30">
+                        <Card className="col-span-full py-24 flex flex-col items-center justify-center border-dashed border-border">
                             <div className="p-4 rounded-full bg-surface-elevated border border-border mb-4">
                                 <Info className="w-8 h-8 text-text-tertiary" />
                             </div>
@@ -313,9 +313,9 @@ export default function WorkflowsPage() {
                                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                                className="w-full max-w-4xl glass-dark border border-border rounded-xl flex flex-col max-h-[90vh]"
+                                className="w-full max-w-4xl glass-panel rounded-xl flex flex-col max-h-[90vh]"
                             >
-                                <div className="p-6 border-b border-border flex items-center justify-between sticky top-0 bg-surface/50 backdrop-blur-md z-10 rounded-t-xl">
+                                <div className="p-6 border-b border-border flex items-center justify-between sticky top-0 bg-transparent z-10 rounded-t-xl">
                                     <div className="flex items-center space-x-3">
                                         <div className="w-10 h-10 rounded-lg bg-accent-primary/10 flex items-center justify-center">
                                             <Cpu className="w-5 h-5 text-accent-primary" />
@@ -398,7 +398,7 @@ export default function WorkflowsPage() {
                                     </div>
                                 </div>
 
-                                <div className="p-6 border-t border-border bg-surface/50 flex gap-3 sticky bottom-0 rounded-b-xl backdrop-blur-md">
+                                <div className="p-6 border-t border-border bg-transparent flex gap-3 sticky bottom-0 rounded-b-xl backdrop-blur-md">
                                     <Button
                                         variant="ghost"
                                         onClick={() => setShowCreateModal(false)}
@@ -428,7 +428,7 @@ export default function WorkflowsPage() {
                                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
                                 animate={{ opacity: 1, scale: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                                className="w-full max-w-lg glass-dark border border-border rounded-xl p-0 relative overflow-hidden shadow-2xl"
+                                className="w-full max-w-lg glass-panel rounded-xl p-0 relative overflow-hidden shadow-2xl"
                             >
                                 <div className="p-6 border-b border-border">
                                     <h2 className="text-xl font-bold text-white">Initialize Sequence</h2>

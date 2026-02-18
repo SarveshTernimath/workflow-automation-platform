@@ -7,6 +7,7 @@ import { Loader2, ArrowRight, ArrowLeft, Save, Plus, Trash2, Check, Shield, Code
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/Button";
 
 // --- Types ---
 
@@ -15,10 +16,8 @@ interface Role {
     name: string;
 }
 
-
-
 interface Step {
-    tempId: string; // for frontend tracking
+    tempId: string;
     name: string;
     description: string;
     step_order: number;
@@ -30,8 +29,8 @@ interface Step {
 
 interface Transition {
     from_step_tempId: string;
-    to_step_tempId?: string; // undefined means END
-    outcome: string; // e.g. "APPROVED"
+    to_step_tempId?: string;
+    outcome: string;
 }
 
 // --- Component ---
@@ -51,17 +50,14 @@ export default function CreateWorkflowPage() {
 
     // Metadata
     const [roles, setRoles] = useState<Role[]>([]);
-    // const [permissions, setPermissions] = useState<Permission[]>([]);
 
     useEffect(() => {
         const fetchMetadata = async () => {
             try {
                 const [rolesRes] = await Promise.all([
                     apiClient.get("roles/"),
-                    // apiClient.get("permissions/")
                 ]);
                 setRoles(rolesRes.data);
-                // setPermissions(permsRes.data);
 
                 // Set initial JSON template
                 const template = {
@@ -109,32 +105,26 @@ export default function CreateWorkflowPage() {
         setWorkflowSteps(newSteps);
     };
 
-    // --- Transitions Management logic (Simplified for Auto-Linking) ---
-
-    // When moving to step 3, we auto-generate default linear transitions
     const generateDefaultTransitions = () => {
         const newTransitions: Transition[] = [];
         for (let i = 0; i < workflowSteps.length; i++) {
             const current = workflowSteps[i];
             const next = workflowSteps[i + 1];
 
-            // Standard Approval Path
             newTransitions.push({
                 from_step_tempId: current.tempId,
-                to_step_tempId: next?.tempId, // undefined if last step
+                to_step_tempId: next?.tempId,
                 outcome: "APPROVED"
             });
 
-            // Standard Rejection Path (Terminates flow)
             newTransitions.push({
                 from_step_tempId: current.tempId,
-                to_step_tempId: undefined, // Terminate
+                to_step_tempId: undefined,
                 outcome: "REJECTED"
             });
         }
         setTransitions(newTransitions);
     };
-
 
     const handleSubmit = async () => {
         setIsSubmitting(true);
@@ -144,7 +134,6 @@ export default function CreateWorkflowPage() {
             if (mode === 'json') {
                 const data = JSON.parse(jsonSource);
 
-                // Map role names/IDs from JSON
                 const formattedSteps = data.steps.map((s: { role?: string; role_id?: string; name: string; description?: string; order: number; sla?: number }) => {
                     const role = roles.find(r =>
                         r.name.toLowerCase() === s.role?.toLowerCase() ||
@@ -160,7 +149,6 @@ export default function CreateWorkflowPage() {
                     };
                 });
 
-                // Auto-generate linear transitions
                 const transitionsResult = [];
                 for (let i = 0; i < formattedSteps.length; i++) {
                     const current = formattedSteps[i];
@@ -209,7 +197,7 @@ export default function CreateWorkflowPage() {
             }
 
             await apiClient.post("workflows/", finalPayload);
-            router.push("/workflows"); // Redirect to inventory
+            router.push("/admin/workflows");
         } catch (err) {
             console.error("Failed to create workflow", err);
             alert("Validation Error: " + (err instanceof Error ? err.message : "Ensure JSON structure and role names are correct."));
@@ -237,30 +225,31 @@ export default function CreateWorkflowPage() {
 
     return (
         <DashboardLayout>
-            <div className="min-h-[80vh] flex flex-col">
+            <div className="min-h-[80vh] flex flex-col max-w-[1600px] mx-auto space-y-8">
                 {/* Header */}
-                <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border">
                     <div>
-                        <div className="flex items-center space-x-2 mb-3">
-                            <span className="w-2 h-2 bg-indigo-500 rounded-full glow-indigo shadow-[0_0_10px_#6366f1]" />
-                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Protocol Constructor</span>
+                        <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20">
+                                <Cpu className="w-5 h-5 text-indigo-400" />
+                            </div>
+                            <h1 className="text-2xl font-bold text-text-primary">Protocol Constructor</h1>
                         </div>
-                        <h1 className="text-5xl font-black text-white tracking-tighter uppercase italic">Define New Strategy</h1>
-                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mt-2 max-w-xl">
+                        <p className="text-text-secondary text-sm max-w-2xl">
                             Admins define core operational blueprints here. Standard users initialize instances via the “Inventory” portal.
                         </p>
                     </div>
 
-                    <div className="flex bg-slate-900/50 p-1.5 rounded-2xl border border-white/5 self-start md:self-auto">
+                    <div className="flex items-center bg-surface p-1 rounded-xl border border-border">
                         <button
                             onClick={() => setMode('wizard')}
-                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center ${mode === 'wizard' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'text-slate-500 hover:text-white'}`}
+                            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center ${mode === 'wizard' ? 'bg-indigo-500 text-white shadow-lg' : 'text-text-tertiary hover:text-text-primary'}`}
                         >
                             <Cpu className="w-3 h-3 mr-2" /> Wizard
                         </button>
                         <button
                             onClick={() => setMode('json')}
-                            className={`px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center ${mode === 'json' ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' : 'text-slate-500 hover:text-white'}`}
+                            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all flex items-center ${mode === 'json' ? 'bg-indigo-500 text-white shadow-lg' : 'text-text-tertiary hover:text-text-primary'}`}
                         >
                             <Code className="w-3 h-3 mr-2" /> Source
                         </button>
@@ -268,11 +257,11 @@ export default function CreateWorkflowPage() {
                 </div>
 
                 {/* Progress Bar */}
-                <div className="flex items-center gap-4 mb-12">
+                <div className="flex items-center gap-4">
                     {[1, 2, 3].map((s) => (
                         <div key={s} className="flex items-center gap-4 flex-1">
-                            <div className={`h-1 flex-1 rounded-full px-2 transition-all duration-500 ${s <= step ? 'bg-indigo-500 shadow-[0_0_10px_#6366f1]' : 'bg-white/5'}`} />
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black border transition-all duration-500 ${s === step ? 'bg-indigo-500 border-indigo-500 text-white scale-110 shadow-lg' : s < step ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-transparent border-white/10 text-slate-600'}`}>
+                            <div className={`h-1 flex-1 rounded-full px-2 transition-all duration-500 ${s <= step ? 'bg-indigo-500 shadow-[0_0_10px_#6366f1]' : 'bg-surface'}`} />
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border transition-all duration-500 ${s === step ? 'bg-indigo-500 border-indigo-500 text-white scale-110 shadow-lg' : s < step ? 'bg-emerald-500 border-emerald-500 text-white' : 'bg-transparent border-border text-text-tertiary'}`}>
                                 {s < step ? <Check className="w-4 h-4" /> : s}
                             </div>
                         </div>
@@ -280,14 +269,14 @@ export default function CreateWorkflowPage() {
                 </div>
 
                 {/* Content */}
-                <Card className="flex-1 glass-dark border border-white/5 p-10 relative overflow-hidden flex flex-col">
+                <Card className="flex-1 glass-panel p-8 relative overflow-hidden flex flex-col min-h-[600px]">
                     <AnimatePresence mode="wait">
                         {mode === 'json' ? (
-                            <motion.div key="json-mode" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex-1 flex flex-col lg:flex-row gap-10">
+                            <motion.div key="json-mode" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex-1 flex flex-col lg:flex-row gap-8">
                                 <div className="flex-1 flex flex-col">
                                     <div className="flex items-center justify-between mb-4">
-                                        <label htmlFor="json-source" className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Blueprint Definition</label>
-                                        <div className="flex items-center space-x-2 text-[9px] text-indigo-400 font-black uppercase">
+                                        <label htmlFor="json-source" className="text-xs font-bold text-text-secondary uppercase tracking-wider">Blueprint Definition</label>
+                                        <div className="flex items-center space-x-2 text-[10px] text-indigo-400 font-bold uppercase">
                                             <Info className="w-3 h-3" />
                                             <span>JSON Strict Schema</span>
                                         </div>
@@ -297,49 +286,39 @@ export default function CreateWorkflowPage() {
                                         name="json_source"
                                         value={jsonSource}
                                         onChange={(e) => setJsonSource(e.target.value)}
-                                        className="flex-1 bg-slate-900/50 border border-white/5 rounded-3xl p-8 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500/40 transition-all leading-relaxed resize-none custom-scrollbar"
+                                        className="flex-1 bg-surface-elevated border border-border rounded-xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500 transition-colors leading-relaxed resize-none"
                                         spellCheck={false}
                                     />
                                 </div>
 
                                 <div className="w-full lg:w-80 flex flex-col">
-                                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Node Explorer</label>
-                                    <div className="flex-1 bg-white/5 rounded-3xl border border-white/5 p-6 overflow-hidden flex flex-col">
-                                        <div className="relative mb-6">
-                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500" />
+                                    <label className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-4">Node Explorer</label>
+                                    <div className="flex-1 bg-surface-elevated rounded-xl border border-border p-4 overflow-hidden flex flex-col">
+                                        <div className="relative mb-4">
+                                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-text-tertiary" />
                                             <input
                                                 id="search-authorities"
                                                 name="search_authorities"
-                                                aria-label="Search Authorities"
-                                                className="w-full bg-slate-900 border border-white/5 rounded-xl py-2 pl-8 pr-4 text-[10px] font-bold text-white focus:outline-none"
+                                                className="w-full bg-surface border border-border rounded-lg py-2 pl-8 pr-4 text-xs font-medium text-text-primary focus:outline-none focus:border-indigo-500"
                                                 placeholder="Search Authorities..."
                                             />
                                         </div>
-                                        <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
-
-                                            <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-2">Available Roles</p>
+                                        <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+                                            <p className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-2">Available Roles</p>
                                             {roles.map(r => (
-                                                <div key={r.id} className="p-3 rounded-xl bg-slate-900/50 border border-white/5 flex items-center justify-between group hover:border-indigo-500/30 transition-all">
-                                                    <span className="text-[10px] font-bold text-slate-300">{r.name}</span>
+                                                <div key={r.id} className="p-3 rounded-lg bg-surface border border-border flex items-center justify-between group hover:border-indigo-500/30 transition-all">
+                                                    <span className="text-xs font-medium text-text-secondary group-hover:text-text-primary">{r.name}</span>
                                                     <button
                                                         onClick={() => {
                                                             const newJson = jsonSource.replace(/("role":\s*")[^"]*(")/, `$1${r.name.toLowerCase()}$2`);
                                                             setJsonSource(newJson);
                                                         }}
-                                                        className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-indigo-500 text-white transition-all"
-                                                        aria-label={`Insert role ${r.name}`}
+                                                        className="opacity-0 group-hover:opacity-100 p-1 rounded-md bg-indigo-500 text-white transition-all"
                                                     >
-                                                        <ArrowRight className="w-2 h-2" />
+                                                        <ArrowRight className="w-3 h-3" />
                                                     </button>
                                                 </div>
                                             ))}
-                                        </div>
-                                        <div className="mt-6 pt-6 border-t border-white/5">
-                                            <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl">
-                                                <p className="text-[8px] text-indigo-400 font-bold leading-relaxed">
-                                                    Linear transitions are synthesized automatically. Ensure &quot;order&quot; keys are sequential.
-                                                </p>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -347,27 +326,26 @@ export default function CreateWorkflowPage() {
                         ) : (
                             <>
                                 {step === 1 && (
-
-                                    <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8">
+                                    <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8 max-w-2xl mx-auto w-full pt-10">
                                         <div>
-                                            <label htmlFor="protocol-id" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 block">Protocol Identifier</label>
+                                            <label htmlFor="protocol-id" className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2 block">Protocol Identifier</label>
                                             <input
                                                 id="protocol-id"
                                                 name="protocol_id"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                className="w-full bg-slate-900 border border-white/10 rounded-2xl p-6 text-white text-xl font-bold focus:outline-none focus:border-indigo-500/50 transition-all placeholder:text-slate-700"
+                                                className="w-full bg-surface-elevated border border-border rounded-xl p-4 text-text-primary text-lg font-medium focus:outline-none focus:border-indigo-500 transition-colors"
                                                 placeholder="e.g. CORE_FINANCE_APPROVAL_V1"
                                             />
                                         </div>
                                         <div>
-                                            <label htmlFor="protocol-desc" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 block">Strategy Description</label>
+                                            <label htmlFor="protocol-desc" className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2 block">Strategy Description</label>
                                             <textarea
                                                 id="protocol-desc"
                                                 name="protocol_desc"
                                                 value={description}
                                                 onChange={(e) => setDescription(e.target.value)}
-                                                className="w-full bg-slate-900 border border-white/10 rounded-2xl p-6 text-slate-300 font-medium h-40 focus:outline-none focus:border-indigo-500/50 transition-all placeholder:text-slate-700 resize-none"
+                                                className="w-full bg-surface-elevated border border-border rounded-xl p-4 text-text-secondary font-medium h-32 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                                 placeholder="Define the purpose and scope of this operational workflow..."
                                             />
                                         </div>
@@ -377,66 +355,60 @@ export default function CreateWorkflowPage() {
                                 {step === 2 && (
                                     <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                         <div className="flex justify-between items-center mb-6">
-                                            <h3 className="text-xl font-black text-white uppercase italic">Execution Nodes</h3>
-                                            <button onClick={addStep} className="bg-indigo-500/10 hover:bg-indigo-500 text-indigo-400 hover:text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all border border-indigo-500/20 flex items-center">
+                                            <h3 className="text-lg font-bold text-text-primary uppercase tracking-tight">Execution Nodes</h3>
+                                            <Button onClick={addStep} variant="secondary" size="sm" className="text-xs uppercase tracking-wider">
                                                 <Plus className="w-3 h-3 mr-2" /> Add Node
-                                            </button>
+                                            </Button>
                                         </div>
                                         <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
                                             {workflowSteps.map((s, idx) => (
-                                                <div key={s.tempId} className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 relative group hover:border-indigo-500/20 transition-all">
+                                                <div key={s.tempId} className="bg-surface-elevated border border-border rounded-xl p-6 relative group hover:border-indigo-500/30 transition-all">
                                                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button onClick={() => removeStep(idx)} className="text-red-400 hover:bg-red-500/10 p-2 rounded-lg"><Trash2 className="w-4 h-4" /></button>
+                                                        <button onClick={() => removeStep(idx)} className="text-text-tertiary hover:text-red-400 p-2"><Trash2 className="w-4 h-4" /></button>
                                                     </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                         <div>
-                                                            <label htmlFor={`step-name-${s.tempId}`} className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Node Name</label>
+                                                            <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1 block">Node Name</label>
                                                             <input
-                                                                id={`step-name-${s.tempId}`}
-                                                                name={`step_name_${s.tempId}`}
                                                                 value={s.name}
                                                                 onChange={(e) => updateStep(idx, 'name', e.target.value)}
-                                                                className="w-full bg-transparent border-b border-white/10 py-2 text-white font-bold focus:outline-none focus:border-indigo-500 text-sm"
+                                                                className="w-full bg-transparent border-b border-border py-2 text-text-primary font-medium focus:outline-none focus:border-indigo-500 text-sm"
                                                                 placeholder="Name"
                                                             />
                                                         </div>
                                                         <div>
-                                                            <label htmlFor={`step-auth-${s.tempId}`} className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Required Authority</label>
+                                                            <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1 block">Required Authority</label>
                                                             <div className="relative">
                                                                 <select
-                                                                    id={`step-auth-${s.tempId}`}
-                                                                    name={`step_auth_${s.tempId}`}
                                                                     value={s.required_role_id || ""}
                                                                     onChange={(e) => updateStep(idx, 'required_role_id', e.target.value || undefined)}
-                                                                    className="w-full bg-transparent border-b border-white/10 py-2 text-indigo-400 font-bold focus:outline-none focus:border-indigo-500 text-sm appearance-none cursor-pointer"
+                                                                    className="w-full bg-transparent border-b border-border py-2 text-indigo-400 font-medium focus:outline-none focus:border-indigo-500 text-sm appearance-none cursor-pointer"
                                                                 >
-                                                                    <option value="" className="bg-slate-900 text-slate-500">No Restriction</option>
+                                                                    <option value="" className="bg-surface">No Restriction</option>
                                                                     {roles.map(r => (
-                                                                        <option key={r.id} value={r.id} className="bg-slate-900">{r.name}</option>
+                                                                        <option key={r.id} value={r.id} className="bg-surface">{r.name}</option>
                                                                     ))}
                                                                 </select>
-                                                                <Shield className="w-3 h-3 text-slate-600 absolute right-0 top-3 pointer-events-none" />
+                                                                <Shield className="w-3 h-3 text-text-tertiary absolute right-0 top-3 pointer-events-none" />
                                                             </div>
                                                         </div>
                                                         <div className="md:col-span-2">
-                                                            <label htmlFor={`step-desc-${s.tempId}`} className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Description</label>
+                                                            <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1 block">Description</label>
                                                             <input
-                                                                id={`step-desc-${s.tempId}`}
-                                                                name={`step_desc_${s.tempId}`}
                                                                 value={s.description}
                                                                 onChange={(e) => updateStep(idx, 'description', e.target.value)}
-                                                                className="w-full bg-transparent border-b border-white/10 py-2 text-slate-400 text-xs focus:outline-none focus:border-indigo-500"
+                                                                className="w-full bg-transparent border-b border-border py-2 text-text-secondary text-xs focus:outline-none focus:border-indigo-500"
                                                                 placeholder="What happens at this step?"
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-black text-slate-500">
+                                                    <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface border border-border flex items-center justify-center text-[10px] font-bold text-text-secondary">
                                                         {idx + 1}
                                                     </div>
                                                 </div>
                                             ))}
                                             {workflowSteps.length === 0 && (
-                                                <div className="text-center py-10 text-slate-600 uppercase text-[10px] font-black tracking-widest">
+                                                <div className="text-center py-10 text-text-tertiary uppercase text-[10px] font-bold tracking-widest">
                                                     No execution nodes defined
                                                 </div>
                                             )}
@@ -445,19 +417,19 @@ export default function CreateWorkflowPage() {
                                 )}
 
                                 {step === 3 && (
-                                    <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8 flex-1 flex flex-col">
-                                        <div className="text-center space-y-4">
+                                    <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8 flex-1 flex flex-col items-center justify-center text-center">
+                                        <div className="space-y-4">
                                             <div className="inline-flex p-6 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 mb-4 items-center justify-center">
                                                 <Check className="w-12 h-12 text-emerald-500" />
                                             </div>
-                                            <h3 className="text-2xl font-black text-white uppercase italic">Protocol Matrix Validated</h3>
-                                            <p className="text-slate-400 text-sm max-w-lg mx-auto">
+                                            <h3 className="text-2xl font-bold text-text-primary uppercase tracking-tight">Protocol Matrix Validated</h3>
+                                            <p className="text-text-secondary text-sm max-w-lg mx-auto">
                                                 The system has automatically generated a linear execution logic for your {workflowSteps.length} nodes.
                                                 Standard &quot;Approve&quot; and &quot;Reject&quot; pathways have been synthesized.
                                             </p>
                                         </div>
 
-                                        <div className="bg-slate-900/50 rounded-2xl p-8 border border-white/5 flex-1 relative overflow-hidden">
+                                        <div className="bg-surface-elevated rounded-xl p-8 border border-border w-full max-w-2xl relative overflow-hidden text-left">
                                             <pre className="text-[10px] text-indigo-300 font-mono leading-relaxed opacity-70">
                                                 {JSON.stringify({
                                                     protocol: name,
@@ -466,7 +438,7 @@ export default function CreateWorkflowPage() {
                                                     topology: "LINEAR_OPTIMIZED"
                                                 }, null, 2)}
                                             </pre>
-                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent" />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent" />
                                         </div>
                                     </motion.div>
                                 )}
@@ -475,46 +447,47 @@ export default function CreateWorkflowPage() {
                     </AnimatePresence>
 
                     {/* Footer Actions */}
-                    <div className="flex justify-between items-center mt-10 pt-8 border-t border-white/5">
+                    <div className="flex justify-between items-center mt-10 pt-8 border-t border-border bg-black/20">
                         {mode === 'wizard' ? (
-                            <button
+                            <Button
+                                variant="ghost"
                                 disabled={step === 1}
                                 onClick={() => setStep(step - 1)}
-                                className="bg-transparent text-slate-500 hover:text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-0 flex items-center"
+                                className="text-xs uppercase tracking-wider"
                             >
                                 <ArrowLeft className="w-3 h-3 mr-2" /> Back
-                            </button>
+                            </Button>
                         ) : (
                             <div />
                         )}
 
                         {mode === 'wizard' ? (
                             step < 3 ? (
-                                <button
+                                <Button
                                     onClick={nextStep}
-                                    className="bg-indigo-500 hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-indigo-500/20 flex items-center hover:scale-105 active:scale-95"
+                                    className="bg-indigo-500 hover:bg-indigo-600 text-white shadow-lg shadow-indigo-500/20 text-xs uppercase tracking-wider"
                                 >
                                     Continue <ArrowRight className="w-3 h-3 ml-2" />
-                                </button>
+                                </Button>
                             ) : (
-                                <button
+                                <Button
                                     onClick={handleSubmit}
                                     disabled={isSubmitting}
-                                    className="bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20 flex items-center hover:scale-105 active:scale-95 group"
+                                    className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 text-xs uppercase tracking-wider"
                                 >
                                     {isSubmitting ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : <Save className="w-3 h-3 mr-2" />}
                                     Initialize Protocol
-                                </button>
+                                </Button>
                             )
                         ) : (
-                            <button
+                            <Button
                                 onClick={handleSubmit}
                                 disabled={isSubmitting}
-                                className="bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-white px-10 py-4 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-emerald-500/20 flex items-center hover:scale-105 active:scale-95 group"
+                                className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 text-xs uppercase tracking-wider"
                             >
                                 {isSubmitting ? <Loader2 className="w-3 h-3 animate-spin mr-2" /> : <Plus className="w-3 h-3 mr-2" />}
                                 Commit Source Blueprint
-                            </button>
+                            </Button>
                         )}
                     </div>
                 </Card>
