@@ -286,7 +286,7 @@ export default function CreateWorkflowPage() {
                                         name="json_source"
                                         value={jsonSource}
                                         onChange={(e) => setJsonSource(e.target.value)}
-                                        className="flex-1 bg-slate-950/50 border border-white/10 rounded-xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500 transition-colors leading-relaxed resize-none"
+                                        className="flex-1 bg-[#0a0a0a] border border-white/10 rounded-xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500 transition-colors leading-relaxed resize-none shadow-inner"
                                         spellCheck={false}
                                     />
                                 </div>
