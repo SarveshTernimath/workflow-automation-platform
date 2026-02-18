@@ -286,7 +286,7 @@ export default function CreateWorkflowPage() {
                                         name="json_source"
                                         value={jsonSource}
                                         onChange={(e) => setJsonSource(e.target.value)}
-                                        className="flex-1 bg-surface-elevated border border-border rounded-xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500 transition-colors leading-relaxed resize-none"
+                                        className="flex-1 bg-slate-950/50 border border-white/10 rounded-xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500 transition-colors leading-relaxed resize-none"
                                         spellCheck={false}
                                     />
                                 </div>
@@ -299,7 +299,7 @@ export default function CreateWorkflowPage() {
                                             <input
                                                 id="search-authorities"
                                                 name="search_authorities"
-                                                className="w-full bg-surface border border-border rounded-lg py-2 pl-8 pr-4 text-xs font-medium text-text-primary focus:outline-none focus:border-indigo-500"
+                                                className="w-full bg-slate-900 border border-white/10 rounded-lg py-2 pl-8 pr-4 text-xs font-medium text-white focus:outline-none focus:border-indigo-500"
                                                 placeholder="Search Authorities..."
                                             />
                                         </div>
@@ -334,7 +334,7 @@ export default function CreateWorkflowPage() {
                                                 name="protocol_id"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
-                                                className="w-full bg-surface-elevated border border-border rounded-xl p-4 text-text-primary text-lg font-medium focus:outline-none focus:border-indigo-500 transition-colors"
+                                                className="w-full bg-slate-950/50 border border-white/10 rounded-xl p-4 text-white text-lg font-medium focus:outline-none focus:border-indigo-500 transition-colors"
                                                 placeholder="e.g. CORE_FINANCE_APPROVAL_V1"
                                             />
                                         </div>
@@ -345,7 +345,7 @@ export default function CreateWorkflowPage() {
                                                 name="protocol_desc"
                                                 value={description}
                                                 onChange={(e) => setDescription(e.target.value)}
-                                                className="w-full bg-surface-elevated border border-border rounded-xl p-4 text-text-secondary font-medium h-32 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
+                                                className="w-full bg-slate-950/50 border border-white/10 rounded-xl p-4 text-slate-300 font-medium h-32 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
                                                 placeholder="Define the purpose and scope of this operational workflow..."
                                             />
                                         </div>
@@ -355,60 +355,60 @@ export default function CreateWorkflowPage() {
                                 {step === 2 && (
                                     <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                                         <div className="flex justify-between items-center mb-6">
-                                            <h3 className="text-lg font-bold text-text-primary uppercase tracking-tight">Execution Nodes</h3>
-                                            <Button onClick={addStep} variant="secondary" size="sm" className="text-xs uppercase tracking-wider">
+                                            <h3 className="text-lg font-bold text-white uppercase tracking-tight">Execution Nodes</h3>
+                                            <Button onClick={addStep} variant="secondary" size="sm" className="text-xs uppercase tracking-wider bg-white/10 hover:bg-white/20 text-white border-none">
                                                 <Plus className="w-3 h-3 mr-2" /> Add Node
                                             </Button>
                                         </div>
                                         <div className="space-y-4 max-h-[50vh] overflow-y-auto pr-2 custom-scrollbar">
                                             {workflowSteps.map((s, idx) => (
-                                                <div key={s.tempId} className="bg-surface-elevated border border-border rounded-xl p-6 relative group hover:border-indigo-500/30 transition-all">
+                                                <div key={s.tempId} className="bg-slate-900/40 border border-white/10 rounded-xl p-6 relative group hover:border-indigo-500/30 transition-all">
                                                     <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                        <button onClick={() => removeStep(idx)} className="text-text-tertiary hover:text-red-400 p-2"><Trash2 className="w-4 h-4" /></button>
+                                                        <button onClick={() => removeStep(idx)} className="text-slate-500 hover:text-red-400 p-2"><Trash2 className="w-4 h-4" /></button>
                                                     </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                         <div>
-                                                            <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1 block">Node Name</label>
+                                                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">Node Name</label>
                                                             <input
                                                                 value={s.name}
                                                                 onChange={(e) => updateStep(idx, 'name', e.target.value)}
-                                                                className="w-full bg-transparent border-b border-border py-2 text-text-primary font-medium focus:outline-none focus:border-indigo-500 text-sm"
+                                                                className="w-full bg-transparent border-b border-white/10 py-2 text-white font-medium focus:outline-none focus:border-indigo-500 text-sm"
                                                                 placeholder="Name"
                                                             />
                                                         </div>
                                                         <div>
-                                                            <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1 block">Required Authority</label>
+                                                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">Required Authority</label>
                                                             <div className="relative">
                                                                 <select
                                                                     value={s.required_role_id || ""}
                                                                     onChange={(e) => updateStep(idx, 'required_role_id', e.target.value || undefined)}
-                                                                    className="w-full bg-transparent border-b border-border py-2 text-indigo-400 font-medium focus:outline-none focus:border-indigo-500 text-sm appearance-none cursor-pointer"
+                                                                    className="w-full bg-transparent border-b border-white/10 py-2 text-indigo-400 font-medium focus:outline-none focus:border-indigo-500 text-sm appearance-none cursor-pointer"
                                                                 >
-                                                                    <option value="" className="bg-surface">No Restriction</option>
+                                                                    <option value="" className="bg-slate-900 text-white">No Restriction</option>
                                                                     {roles.map(r => (
-                                                                        <option key={r.id} value={r.id} className="bg-surface">{r.name}</option>
+                                                                        <option key={r.id} value={r.id} className="bg-slate-900 text-white">{r.name}</option>
                                                                     ))}
                                                                 </select>
-                                                                <Shield className="w-3 h-3 text-text-tertiary absolute right-0 top-3 pointer-events-none" />
+                                                                <Shield className="w-3 h-3 text-slate-500 absolute right-0 top-3 pointer-events-none" />
                                                             </div>
                                                         </div>
                                                         <div className="md:col-span-2">
-                                                            <label className="text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-1 block">Description</label>
+                                                            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1 block">Description</label>
                                                             <input
                                                                 value={s.description}
                                                                 onChange={(e) => updateStep(idx, 'description', e.target.value)}
-                                                                className="w-full bg-transparent border-b border-border py-2 text-text-secondary text-xs focus:outline-none focus:border-indigo-500"
+                                                                className="w-full bg-transparent border-b border-white/10 py-2 text-slate-400 text-xs focus:outline-none focus:border-indigo-500"
                                                                 placeholder="What happens at this step?"
                                                             />
                                                         </div>
                                                     </div>
-                                                    <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-surface border border-border flex items-center justify-center text-[10px] font-bold text-text-secondary">
+                                                    <div className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white">
                                                         {idx + 1}
                                                     </div>
                                                 </div>
                                             ))}
                                             {workflowSteps.length === 0 && (
-                                                <div className="text-center py-10 text-text-tertiary uppercase text-[10px] font-bold tracking-widest">
+                                                <div className="text-center py-10 text-slate-600 uppercase text-[10px] font-bold tracking-widest">
                                                     No execution nodes defined
                                                 </div>
                                             )}

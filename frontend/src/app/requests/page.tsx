@@ -133,7 +133,7 @@ export default function RequestsPage() {
                                         className="group relative"
                                     >
                                         <Card
-                                            className="glass-panel border border-white/5 hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/5 p-8"
+                                            className="glass-panel border border-white/10 hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/5 p-8"
                                         >
                                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
                                                 <div className="flex items-center gap-8 flex-1">

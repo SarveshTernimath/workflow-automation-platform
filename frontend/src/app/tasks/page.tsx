@@ -137,7 +137,7 @@ export default function TasksPage() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: index * 0.1, duration: 0.5 }}
                             >
-                                <Card className={`group glass-panel hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-2xl ${task.is_sla_breached ? 'border-rose-500/30' : 'border-white/5'}`}
+                                <Card className={`group glass-panel hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-2xl ${task.is_sla_breached ? 'border-rose-500/30' : 'border-white/10'}`}
                                     onClick={() => setSelectedTask(task)}
                                 >
                                     <CardContent className="p-10 relative">

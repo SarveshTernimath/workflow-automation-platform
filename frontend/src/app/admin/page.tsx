@@ -114,7 +114,10 @@ export default function AdminDashboard() {
                         </CardHeader>
                         <CardContent className="p-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="group p-5 rounded-2xl bg-surface hover:bg-surface-active border border-border hover:border-indigo-500/30 transition-all cursor-pointer">
+                                <div
+                                    onClick={() => router.push('/admin/workflows')}
+                                    className="group p-5 rounded-2xl bg-surface hover:bg-surface-active border border-border hover:border-indigo-500/30 transition-all cursor-pointer"
+                                >
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
                                             <Database className="w-6 h-6" />
@@ -125,7 +128,10 @@ export default function AdminDashboard() {
                                     <p className="text-xs text-text-secondary leading-relaxed">Update and refine core workflow data structures.</p>
                                 </div>
 
-                                <div className="group p-5 rounded-2xl bg-surface hover:bg-surface-active border border-border hover:border-purple-500/30 transition-all cursor-pointer">
+                                <div
+                                    onClick={() => router.push('/requests')}
+                                    className="group p-5 rounded-2xl bg-surface hover:bg-surface-active border border-border hover:border-purple-500/30 transition-all cursor-pointer"
+                                >
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
                                             <Activity className="w-6 h-6" />

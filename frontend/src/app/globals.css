@@ -78,20 +78,30 @@ body {
 }
 
 /* Glass Utilities - Enhanced Transparency */
-/* Glass Utilities - iPhone Style Opaque */
+/* Glass Utilities - iPhone Style Opaque -> Upgraded to Diamond Crystal Global */
 .glass-panel {
-  background: rgba(18, 18, 18, 0.65);
-  /* Darker, more opaque base */
-  backdrop-filter: blur(24px) saturate(180%);
-  /* Heavy blur + saturation boost for "vibrancy" */
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  /* Subtle crisp border */
+  /* Diamond Crystal Base */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+  background-color: rgba(18, 18, 18, 0.65);
+  /* Keep opaque fallback base */
+
+  /* Extreme blur for depth */
+  backdrop-filter: blur(40px) saturate(160%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+
+  /* Crisp, "cut" border like Diamond */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+
+  /* Inner Bezel & Glow */
   box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.5),
-    0 10px 15px -3px rgba(0, 0, 0, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  /* Inner light ring for depth */
+    0 8px 32px 0 rgba(0, 0, 0, 0.5),
+    /* Deep shadow */
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    /* Inner rim */
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  /* Top inner highlight */
 }
 
 .glass-panel-hover {
@@ -109,12 +119,15 @@ body {
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-/* Sidebar Specific - Ultra Deep Opaque */
+/* Sidebar Specific - Ultra Deep Opaque Crystal */
 .sidebar-glass {
-  background: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(32px) saturate(180%);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(8, 8, 8, 0.85) 0%, rgba(12, 12, 12, 0.85) 100%);
+  backdrop-filter: blur(40px) saturate(160%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    5px 0 30px -5px rgba(0, 0, 0, 0.5),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Animations */
