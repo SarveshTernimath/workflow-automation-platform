@@ -6,8 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from '@/lib/api';
-import { WorkflowNetworkBackground } from '@/components/ui/WorkflowNetworkBackground';
-import SystemTerminal from '@/components/ui/SystemTerminal';
 
 
 interface DashboardLayoutProps {
@@ -86,9 +84,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
     return (
         <div className="flex min-h-screen bg-background text-text-primary font-sans antialiased overflow-hidden relative">
-
-            {/* Animated Network Background */}
-            <WorkflowNetworkBackground />
 
             {/* Sidebar */}
             <motion.aside
@@ -229,9 +224,6 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </motion.div>
                 </div>
             </main>
-
-            {/* Automation Terminal Overlay */}
-            <SystemTerminal />
         </div>
     );
 }

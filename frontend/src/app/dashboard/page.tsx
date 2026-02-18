@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Plus } from "lucide-react";
 import Portal from "@/components/ui/Portal";
+import GraphWrapper from "@/components/workflow/GraphWrapper";
 import apiClient from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -135,61 +136,47 @@ export default function DashboardPage() {
 
     return (
         <DashboardLayout>
-            {/* Header Actions */}
-            <Portal targetId="header-actions">
-                <div className="flex items-center space-x-3">
-                    <Button
-                        onClick={handlePulse}
-                        disabled={pulsing}
-                        className="h-9 px-4 text-xs font-medium uppercase tracking-wider bg-surface-elevated border border-border hover:bg-surface-hover text-text-secondary hover:text-white transition-all"
-                    >
-                        {pulsing ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <Zap className="w-3 h-3 mr-2" />}
-                        {pulsing ? "Syncing" : "Pulse"}
-                    </Button>
-                    <Button
-                        onClick={() => setRequestModalOpen(true)}
-                        className="h-9 px-4 text-xs font-bold uppercase tracking-wider shadow-glow"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Request
-                    </Button>
+            <div className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold text-white tracking-tight">Mission Control</h1>
+                        <p className="text-text-secondary">System Status: <span className="text-accent-primary font-mono">ONLINE</span></p>
+                    </div>
+                    <div className="flex gap-3">
+                        <Button variant="outline" onClick={handlePulse} disabled={pulsing}>
+                            <Activity className={`w-4 h-4 mr-2 ${pulsing ? 'animate-pulse' : ''}`} />
+                            {pulsing ? "System Check..." : "Graph Pulse"}
+                        </Button>
+                        <Button onClick={() => setRequestModalOpen(true)} className="bg-accent-primary hover:bg-accent-primary/90 text-white">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Initialize Protocol
+                        </Button>
+                    </div>
                 </div>
-            </Portal>
 
-            <motion.div
-                variants={animations.staggerContainer}
-                initial="hidden"
-                animate="show"
-                className="space-y-8"
-            >
-
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {statCards.map((stat) => (
-                        <motion.div variants={animations.fadeInUp} key={stat.name}>
-                            <Card className="hover:-translate-y-1 hover:shadow-lg transition-all duration-300 relative overflow-hidden group">
-                                <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity ${stat.color}`}>
-                                    <stat.icon className="w-16 h-16" />
-                                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {statCards.map((stat, i) => (
+                        <motion.div
+                            key={stat.name}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                        >
+                            <Card className="hover:border-accent-primary/30 transition-colors relative overflow-hidden group">
+                                <div className={`absolute inset-0 bg-gradient-to-br ${stat.color.replace('text-', 'from-')}/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity`} />
                                 <CardContent className="p-6">
-                                    <div className="flex items-center justify-between mb-4 relative z-10">
-                                        <div className={`p-3 rounded-lg bg-surface-elevated/50 border border-border ${stat.color}`}>
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <p className="text-sm font-medium text-text-secondary uppercase tracking-wider">{stat.name}</p>
+                                            <h3 className="text-3xl font-bold text-white mt-2">{stat.value}</h3>
+                                        </div>
+                                        <div className={`p-3 rounded-lg bg-surface-elevated border border-white/5 ${stat.color} ${stat.glow}`}>
                                             <stat.icon className="w-6 h-6" />
                                         </div>
-                                        <div className="flex items-center space-x-1 text-xs font-medium text-text-secondary bg-surface-hover px-2 py-1 rounded-full">
-                                            <span>{stat.trend}</span>
-                                        </div>
                                     </div>
-                                    <div className="relative z-10">
-                                        <p className="text-xs font-medium text-text-tertiary uppercase tracking-wider mb-1">{stat.name}</p>
-                                        <motion.h3
-                                            key={stat.value}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className="text-3xl font-bold text-white tracking-tight"
-                                        >
-                                            {stat.value}
-                                        </motion.h3>
+                                    <div className="mt-4 flex items-center text-xs font-medium text-accent-success">
+                                        <Zap className="w-3 h-3 mr-1" />
+                                        {stat.trend} efficiency
                                     </div>
                                 </CardContent>
                             </Card>
@@ -197,10 +184,12 @@ export default function DashboardPage() {
                     ))}
                 </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    {/* Activity Feed */}
-                    <motion.div variants={animations.fadeInUp} className="lg:col-span-2">
+                <div className="w-full min-h-[500px]">
+                    <GraphWrapper />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <motion.div variants={animations.fadeInUp}>
                         <Card className="h-full">
                             <CardHeader className="flex flex-row items-center justify-between border-b border-border p-6">
                                 <div className="flex items-center space-x-2">
@@ -246,11 +235,11 @@ export default function DashboardPage() {
                                     )}
                                 </div>
                             </CardContent>
-                        </Card>
-                    </motion.div>
+                        </Card >
+                    </motion.div >
 
                     {/* Security Logs */}
-                    <motion.div variants={animations.fadeInUp}>
+                    < motion.div variants={animations.fadeInUp} >
                         <Card className="h-full">
                             <CardHeader className="border-b border-border p-6">
                                 <div className="flex items-center space-x-2">
@@ -285,109 +274,112 @@ export default function DashboardPage() {
                                 </div>
                             </CardContent>
                         </Card>
-                    </motion.div>
-                </div>
+                    </motion.div >
+                </div >
 
                 {/* Modals */}
                 <AnimatePresence>
-                    {requestModalOpen && (
-                        <Portal>
-                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                                <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    onClick={() => setRequestModalOpen(false)}
-                                    className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-                                />
-                                <motion.div
-                                    initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                                    exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                                    className="w-full max-w-lg glass-dark border border-border rounded-xl p-0 relative overflow-hidden shadow-2xl z-10"
-                                >
-                                    <div className="p-6 border-b border-border">
-                                        <h2 className="text-xl font-bold text-white">New Request</h2>
-                                        <p className="text-sm text-text-secondary mt-1">Initialize a new operational workflow.</p>
-                                    </div>
-
-                                    <div className="p-6 space-y-4">
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Protocol</label>
-                                            <select
-                                                className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-colors"
-                                                value={newRequestData.workflow_id}
-                                                onChange={(e) => setNewRequestData({ ...newRequestData, workflow_id: e.target.value })}
-                                            >
-                                                <option value="">Select Protocol</option>
-                                                {workflows.map(w => (
-                                                    <option key={w.id} value={w.id}>{w.name}</option>
-                                                ))}
-                                            </select>
+                    {
+                        requestModalOpen && (
+                            <Portal>
+                                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        onClick={() => setRequestModalOpen(false)}
+                                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                                    />
+                                    <motion.div
+                                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                        className="w-full max-w-lg glass-dark border border-border rounded-xl p-0 relative overflow-hidden shadow-2xl z-10"
+                                    >
+                                        <div className="p-6 border-b border-border">
+                                            <h2 className="text-xl font-bold text-white">New Request</h2>
+                                            <p className="text-sm text-text-secondary mt-1">Initialize a new operational workflow.</p>
                                         </div>
 
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Title</label>
-                                            <input
-                                                type="text"
-                                                className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-colors"
-                                                placeholder="e.g. System Provisioning"
-                                                value={newRequestData.title}
-                                                onChange={(e) => setNewRequestData({ ...newRequestData, title: e.target.value })}
-                                            />
-                                        </div>
+                                        <div className="p-6 space-y-4">
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Protocol</label>
+                                                <select
+                                                    className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-colors"
+                                                    value={newRequestData.workflow_id}
+                                                    onChange={(e) => setNewRequestData({ ...newRequestData, workflow_id: e.target.value })}
+                                                >
+                                                    <option value="">Select Protocol</option>
+                                                    {workflows.map(w => (
+                                                        <option key={w.id} value={w.id}>{w.name}</option>
+                                                    ))}
+                                                </select>
+                                            </div>
 
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Description</label>
-                                            <textarea
-                                                className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-colors h-24 resize-none"
-                                                placeholder="Operational context..."
-                                                value={newRequestData.description}
-                                                onChange={(e) => setNewRequestData({ ...newRequestData, description: e.target.value })}
-                                            />
-                                        </div>
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Title</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-colors"
+                                                    placeholder="e.g. System Provisioning"
+                                                    value={newRequestData.title}
+                                                    onChange={(e) => setNewRequestData({ ...newRequestData, title: e.target.value })}
+                                                />
+                                            </div>
 
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Priority</label>
-                                            <div className="flex gap-2">
-                                                {['low', 'medium', 'high'].map((p) => (
-                                                    <button
-                                                        key={p}
-                                                        onClick={() => setNewRequestData({ ...newRequestData, priority: p })}
-                                                        className={`flex-1 py-1.5 rounded-md border text-xs font-medium uppercase transition-all ${newRequestData.priority === p
-                                                            ? 'bg-accent-primary border-accent-primary text-white'
-                                                            : 'bg-transparent border-border text-text-secondary hover:text-white'
-                                                            }`}
-                                                    >
-                                                        {p}
-                                                    </button>
-                                                ))}
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Description</label>
+                                                <textarea
+                                                    className="w-full bg-surface-elevated border border-border rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-accent-primary transition-colors h-24 resize-none"
+                                                    placeholder="Operational context..."
+                                                    value={newRequestData.description}
+                                                    onChange={(e) => setNewRequestData({ ...newRequestData, description: e.target.value })}
+                                                />
+                                            </div>
+
+                                            <div className="space-y-2">
+                                                <label className="text-xs font-medium text-text-secondary uppercase tracking-wider">Priority</label>
+                                                <div className="flex gap-2">
+                                                    {['low', 'medium', 'high'].map((p) => (
+                                                        <button
+                                                            key={p}
+                                                            onClick={() => setNewRequestData({ ...newRequestData, priority: p })}
+                                                            className={`flex-1 py-1.5 rounded-md border text-xs font-medium uppercase transition-all ${newRequestData.priority === p
+                                                                ? 'bg-accent-primary border-accent-primary text-white'
+                                                                : 'bg-transparent border-border text-text-secondary hover:text-white'
+                                                                }`}
+                                                        >
+                                                            {p}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div className="p-6 pt-0 flex gap-3">
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() => setRequestModalOpen(false)}
-                                            className="flex-1"
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            onClick={handleStartRequest}
-                                            disabled={isStartingRequest}
-                                            className="flex-1"
-                                        >
-                                            {isStartingRequest ? <Loader2 className="w-4 h-4 animate-spin" /> : "Initialize"}
-                                        </Button>
-                                    </div>
-                                </motion.div>
-                            </div>
-                        </Portal>
-                    )}
-                </AnimatePresence>
-            </motion.div>
+                                        <div className="p-6 pt-0 flex gap-3">
+                                            <Button
+                                                variant="secondary"
+                                                onClick={() => setRequestModalOpen(false)}
+                                                className="flex-1"
+                                            >
+                                                Cancel
+                                            </Button>
+                                            <Button
+                                                onClick={handleStartRequest}
+                                                disabled={isStartingRequest}
+                                                className="flex-1"
+                                            >
+                                                {isStartingRequest ? <Loader2 className="w-4 h-4 animate-spin" /> : "Initialize"}
+                                            </Button>
+                                        </div>
+                                    </motion.div>
+                                </div>
+                            </Portal>
+                        )
+                    }
+                </AnimatePresence >
+            </div>
         </DashboardLayout>
+
     );
 }
