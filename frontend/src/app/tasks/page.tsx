@@ -102,14 +102,14 @@ export default function TasksPage() {
     return (
         <DashboardLayout>
             <div className="space-y-12 pb-20">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-10">
                     <div>
                         <div className="flex items-center space-x-2 mb-3">
                             <span className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Action Buffer</span>
+                            <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Action Buffer</span>
                         </div>
-                        <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Strategic Tasks</h1>
-                        <p className="text-slate-400 text-lg font-medium max-w-xl">Workflow nodes requiring high-privileged decision and operational action.</p>
+                        <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">Strategic Tasks</h1>
+                        <p className="text-text-secondary text-lg font-medium max-w-xl">Workflow nodes requiring high-privileged decision and operational action.</p>
                     </div>
                 </div>
 
@@ -118,11 +118,11 @@ export default function TasksPage() {
                         <div className="p-8 rounded-3xl bg-slate-900 border border-white/5 mb-8 animate-pulse shadow-2xl">
                             <CheckCircle2 className="w-16 h-16 text-emerald-500/50" />
                         </div>
-                        <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-[10px] mb-8">Strategic queue clear. All operational nodes stable.</p>
+                        <p className="text-text-secondary font-bold uppercase tracking-wider text-xs mb-8">Strategic queue clear. All operational nodes stable.</p>
 
                         <button
                             onClick={() => router.push('/workflows')}
-                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-10 py-5 rounded-2xl font-black tracking-widest uppercase text-xs shadow-2xl transition-all hover:scale-105 active:scale-95 flex items-center group"
+                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-8 py-4 rounded-xl font-bold tracking-wide uppercase text-xs shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center group"
                         >
                             <GitBranch className="w-4 h-4 mr-3" />
                             Initialize New Strategy
@@ -140,40 +140,40 @@ export default function TasksPage() {
                                 <Card className={`group glass-panel hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-2xl ${task.is_sla_breached ? 'border-rose-500/30' : 'border-white/10'}`}
                                     onClick={() => setSelectedTask(task)}
                                 >
-                                    <CardContent className="p-10 relative">
+                                    <CardContent className="p-8 relative">
                                         {task.is_sla_breached && (
-                                            <div className="absolute top-0 right-0 px-6 py-2 bg-rose-500 text-white text-[10px] font-black uppercase tracking-widest rounded-bl-2xl shadow-xl shadow-rose-500/20">
+                                            <div className="absolute top-0 right-0 px-4 py-1.5 bg-rose-500 text-white text-[10px] font-bold uppercase tracking-wider rounded-bl-xl shadow-lg shadow-rose-500/20">
                                                 SLA Incident Level 1
                                             </div>
                                         )}
-                                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-10">
+                                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8">
                                             <div className="flex-1">
-                                                <div className="flex items-center gap-6 mb-6">
-                                                    <div className={`p-5 rounded-2xl shadow-inner ${task.is_sla_breached ? 'bg-rose-500/10 border border-rose-500/20' : 'bg-indigo-500/10 border border-indigo-500/20'}`}>
+                                                <div className="flex items-center gap-5 mb-4">
+                                                    <div className={`p-4 rounded-xl shadow-inner ${task.is_sla_breached ? 'bg-rose-500/10 border border-rose-500/20' : 'bg-indigo-500/10 border border-indigo-500/20'}`}>
                                                         {task.is_sla_breached ? (
-                                                            <AlertCircle className="w-8 h-8 text-rose-500" />
+                                                            <AlertCircle className="w-6 h-6 text-rose-500" />
                                                         ) : (
-                                                            <GitBranch className="w-8 h-8 text-indigo-400" />
+                                                            <GitBranch className="w-6 h-6 text-indigo-400" />
                                                         )}
                                                     </div>
                                                     <div>
-                                                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] mb-1 opacity-50">
+                                                        <p className="text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1">
                                                             {task.workflow_name}
                                                         </p>
-                                                        <h3 className="text-3xl font-black text-white group-hover:text-indigo-400 transition-colors uppercase tracking-tight italic">
+                                                        <h3 className="text-2xl font-bold text-white group-hover:text-indigo-400 transition-colors tracking-tight">
                                                             {task.step_name}
                                                         </h3>
                                                     </div>
                                                 </div>
 
                                                 {task.step_description && (
-                                                    <p className="text-slate-400 mb-8 leading-relaxed max-w-3xl font-medium text-lg italic opacity-80">
+                                                    <p className="text-text-secondary mb-6 leading-relaxed max-w-2xl font-medium text-base">
                                                         &quot;{task.step_description}&quot;
                                                     </p>
                                                 )}
 
-                                                <div className="flex flex-wrap items-center gap-8 text-[10px] font-black uppercase tracking-widest">
-                                                    <div className="flex items-center gap-2 text-slate-500">
+                                                <div className="flex flex-wrap items-center gap-6 text-xs font-bold uppercase tracking-wide">
+                                                    <div className="flex items-center gap-2 text-text-secondary">
                                                         <Clock className="w-4 h-4 text-indigo-400" />
                                                         <span>
                                                             Deadline: {task.deadline
@@ -181,7 +181,7 @@ export default function TasksPage() {
                                                                 : "UNRESTRICTED"}
                                                         </span>
                                                     </div>
-                                                    <div className="text-slate-600">
+                                                    <div className="text-text-tertiary">
                                                         Initialized {formatDistanceToNow(new Date(task.created_at), { addSuffix: true })}
                                                     </div>
                                                 </div>
@@ -195,13 +195,13 @@ export default function TasksPage() {
                                                         e.stopPropagation();
                                                         setSelectedTask(task);
                                                     }}
-                                                    className="flex items-center justify-center space-x-4 px-10 py-5 rounded-2xl bg-indigo-500 text-white font-black tracking-widest uppercase text-xs shadow-2xl shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40 cursor-pointer"
+                                                    className="flex items-center justify-center space-x-3 px-8 py-4 rounded-xl bg-indigo-500 text-white font-bold tracking-wide uppercase text-xs shadow-lg shadow-indigo-500/20 transition-all duration-300 hover:bg-indigo-600 hover:scale-105 active:scale-95 group-hover:shadow-indigo-500/40 cursor-pointer"
                                                 >
                                                     <span>Review Request</span>
-                                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+                                                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                                                 </button>
-                                                <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    Advances protocol state for your assigned role
+                                                <p className="text-[10px] text-text-tertiary font-medium uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    Advances protocol state
                                                 </p>
                                             </div>
                                         </div>
@@ -235,50 +235,49 @@ export default function TasksPage() {
                                         <div>
                                             <div className="flex items-center space-x-2 mb-2">
                                                 <span className="w-2 h-2 bg-indigo-500 rounded-full" />
-                                                <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Execution Protocol</span>
+                                                <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Execution Protocol</span>
                                             </div>
-                                            <h2 className="text-3xl font-black text-white italic uppercase tracking-tighter">{selectedTask.workflow_name}</h2>
-                                            <p className="text-xl text-slate-400 mt-1">{selectedTask.step_name}</p>
+                                            <h2 className="text-2xl font-bold text-white tracking-tight">{selectedTask.workflow_name}</h2>
+                                            <p className="text-lg text-text-secondary mt-1">{selectedTask.step_name}</p>
                                         </div>
                                         <button
                                             onClick={() => setSelectedTask(null)}
-                                            className="p-4 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 transition-colors"
+                                            className="p-3 rounded-full bg-white/5 hover:bg-white/10 text-text-secondary hover:text-white transition-colors"
                                         >
                                             <span className="sr-only">Close</span>
                                             X
                                         </button>
                                     </div>
 
-                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-8 overflow-y-auto custom-scrollbar flex-1">
-                                        <div className="space-y-8">
-                                            <div className="bg-white/5 border border-white/5 p-6 rounded-3xl">
-                                                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Description</h3>
-                                                <p className="text-slate-300 leading-relaxed font-medium">
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 overflow-y-auto custom-scrollbar flex-1">
+                                        <div className="space-y-6">
+                                            <div className="bg-surface border border-border p-6 rounded-2xl">
+                                                <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-3">Description</h3>
+                                                <p className="text-text-primary leading-relaxed font-normal text-sm">
                                                     {selectedTask.step_description || "No description provided for this operational node."}
                                                 </p>
                                             </div>
 
                                             <div>
-                                                <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Request Context</h3>
-                                                <div className="bg-slate-900/50 border border-white/5 rounded-2xl p-6 font-mono text-xs text-indigo-400 overflow-x-auto">
-                                                    {/* Filter out sensitive keys if needed, for now just hiding raw JSON if explicitly requested, but request_data might be needed. User said "NEVER show JSON payload". I will render key-values cleanly. */}
+                                                <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-3">Request Context</h3>
+                                                <div className="bg-slate-950/50 border border-border rounded-2xl p-6 font-mono text-xs text-indigo-300 overflow-x-auto">
                                                     {selectedTask.request_data ? (
                                                         <div className="space-y-2">
                                                             {Object.entries(selectedTask.request_data).map(([key, value]) => (
-                                                                <div key={key} className="flex justify-between border-b border-white/5 pb-1">
-                                                                    <span className="text-slate-500 uppercase">{key}:</span>
+                                                                <div key={key} className="flex justify-between border-b border-border pb-1">
+                                                                    <span className="text-text-tertiary uppercase">{key}:</span>
                                                                     <span className="text-white">{String(value)}</span>
                                                                 </div>
                                                             ))}
                                                         </div>
-                                                    ) : <span className="text-slate-600">No context data available.</span>}
+                                                    ) : <span className="text-text-tertiary">No context data available.</span>}
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col h-full">
-                                            <h3 className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Timeline</h3>
-                                            <div className="flex-1 bg-white/5 border border-white/5 rounded-3xl p-6 relative overflow-y-auto">
+                                            <h3 className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-3">Timeline</h3>
+                                            <div className="flex-1 bg-surface border border-border rounded-2xl p-6 relative overflow-y-auto">
                                                 {!requestDetails ? (
                                                     <div className="flex items-center justify-center h-full">
                                                         <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
@@ -286,9 +285,9 @@ export default function TasksPage() {
                                                 ) : (
                                                     <div className="space-y-6 relative">
                                                         {/* Vertical Line */}
-                                                        <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-white/10" />
+                                                        <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-border" />
 
-                                                        {requestDetails.steps?.sort((a, b) => (a.step_order || 0) - (b.step_order || 0)).map((step, idx) => {
+                                                        {requestDetails?.steps?.sort((a, b) => (a.step_order || 0) - (b.step_order || 0)).map((step, idx) => {
                                                             const isCompleted = step.status === "COMPLETED" || step.status === "APPROVED";
                                                             const isCurrent = step.status === "PENDING" || step.status === "IN_PROGRESS";
                                                             return (
@@ -297,7 +296,7 @@ export default function TasksPage() {
                                                                     <p className={`text-sm font-bold ${isCurrent ? 'text-indigo-400' : isCompleted ? 'text-emerald-400' : 'text-slate-600'}`}>
                                                                         {step.step_name || `Step ${idx + 1}`}
                                                                     </p>
-                                                                    <p className="text-[10px] text-slate-500 uppercase tracking-wider">{step.status}</p>
+                                                                    <p className="text-[10px] text-text-tertiary uppercase tracking-wider">{step.status}</p>
                                                                 </div>
                                                             );
                                                         })}
@@ -309,30 +308,30 @@ export default function TasksPage() {
 
                                     <div className="space-y-4">
                                         <div>
-                                            <label htmlFor="task-comment" className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Executive Commentary</label>
+                                            <label htmlFor="task-comment" className="text-xs font-bold text-text-tertiary uppercase tracking-wider mb-2 block">Executive Commentary</label>
                                             <textarea
                                                 id="task-comment"
                                                 name="task_comment"
                                                 value={comment}
                                                 onChange={(e) => setComment(e.target.value)}
-                                                className="w-full bg-slate-900/80 border border-white/10 rounded-2xl p-4 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors h-24 resize-none"
+                                                className="w-full bg-slate-950/50 border border-border rounded-xl p-4 text-white placeholder-text-tertiary focus:outline-none focus:border-indigo-500/50 transition-colors h-24 resize-none"
                                                 placeholder="Provide strategic context for your decision..."
                                             />
                                         </div>
 
                                         <div className="flex gap-4 pt-4">
-                                            <div className="flex gap-4 pt-4">
+                                            <div className="flex gap-4 pt-4 w-full">
                                                 <button
                                                     onClick={() => handleDecision("reject")}
                                                     disabled={processing}
-                                                    className="flex-1 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/20 py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all"
+                                                    className="flex-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/20 py-4 rounded-xl font-bold uppercase tracking-wider text-xs transition-all"
                                                 >
                                                     REJECT
                                                 </button>
                                                 <button
                                                     onClick={() => handleDecision("approve")}
                                                     disabled={processing}
-                                                    className="flex-[2] bg-emerald-500 hover:bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center group hover:scale-[1.02]"
+                                                    className="flex-[2] bg-emerald-500 hover:bg-emerald-600 text-white py-4 rounded-xl font-bold uppercase tracking-wider text-xs shadow-lg shadow-emerald-500/20 transition-all flex items-center justify-center group hover:scale-[1.02]"
                                                 >
                                                     {processing ? (
                                                         <Loader2 className="w-5 h-5 animate-spin" />

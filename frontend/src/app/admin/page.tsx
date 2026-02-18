@@ -108,7 +108,12 @@ export default function AdminDashboard() {
                                     <p className="text-xs text-text-secondary uppercase tracking-wider mt-0.5">Node Authority & Access Controls</p>
                                 </div>
                             </div>
-                            <Button variant="ghost" size="icon" className="text-text-tertiary hover:text-white">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => alert("Global System Settings module is restricted to Super Admin.")}
+                                className="text-text-tertiary hover:text-white"
+                            >
                                 <Settings className="w-5 h-5" />
                             </Button>
                         </CardHeader>

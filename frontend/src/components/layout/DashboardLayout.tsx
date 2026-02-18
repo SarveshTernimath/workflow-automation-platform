@@ -162,10 +162,13 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute bottom-full left-4 right-4 mb-2 glass-panel rounded-xl p-4 z-[60]"
+                                className="absolute bottom-full left-4 right-4 mb-2 glass-panel rounded-xl p-4 z-[100]"
                             >
                                 <button
-                                    onClick={handleLogout}
+                                    onClick={() => {
+                                        localStorage.removeItem("access_token");
+                                        window.location.href = "/";
+                                    }}
                                     className="w-full flex items-center space-x-2 text-accent-error hover:text-red-400 transition-colors text-xs font-medium px-2 py-1.5 rounded hover:bg-surface-hover"
                                 >
                                     <LogOut className="w-3 h-3" />

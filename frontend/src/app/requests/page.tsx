@@ -66,39 +66,39 @@ export default function RequestsPage() {
     return (
         <DashboardLayout>
             <div className="space-y-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-border pb-8">
                     <div>
-                        <div className="flex items-center space-x-2 mb-3">
+                        <div className="flex items-center space-x-2 mb-2">
                             <span className="w-2 h-2 bg-indigo-500 rounded-full" />
-                            <span className="text-[10px] font-black text-indigo-400 uppercase tracking-[0.3em]">Operational Ledger</span>
+                            <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">Operational Ledger</span>
                         </div>
-                        <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Request Audit</h1>
-                        <p className="text-slate-400 text-lg font-medium max-w-xl">Track, monitor, and audit every strategic workflow instance across the infrastructure.</p>
+                        <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">Request Audit</h1>
+                        <p className="text-text-secondary text-lg font-medium max-w-xl">Track, monitor, and audit every strategic workflow instance across the infrastructure.</p>
                     </div>
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-6">
                     <div className="relative flex-1 group">
-                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-text-tertiary group-focus-within:text-indigo-400 transition-colors" />
                         <input
                             id="search-requests"
                             name="search_requests"
                             aria-label="Search requests"
                             type="text"
                             placeholder="Search instance hash..."
-                            className="w-full bg-slate-900 border border-white/5 rounded-2xl py-5 pl-14 pr-5 text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all font-medium"
+                            className="w-full bg-slate-950/50 border border-border rounded-xl py-4 pl-14 pr-5 text-white placeholder:text-text-tertiary focus:outline-none focus:ring-1 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all font-medium"
                         />
                     </div>
 
-                    <div className="flex items-center gap-3 bg-slate-900 border border-white/5 rounded-2xl px-6 py-5 group">
-                        <Filter className="w-4 h-4 text-slate-600 group-hover:text-indigo-400 transition-colors" />
+                    <div className="flex items-center gap-3 bg-slate-950/50 border border-border rounded-xl px-5 py-4 group">
+                        <Filter className="w-4 h-4 text-text-tertiary group-hover:text-indigo-400 transition-colors" />
                         <select
                             id="status-filter"
                             name="status_filter"
                             aria-label="Filter requests by status"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="bg-transparent text-white focus:outline-none font-bold uppercase tracking-widest text-[10px] cursor-pointer"
+                            className="bg-transparent text-white focus:outline-none font-bold uppercase tracking-wider text-xs cursor-pointer"
                         >
                             <option value="" className="bg-slate-900">All Nodes</option>
                             <option value="IN_PROGRESS" className="bg-slate-900">Active</option>
@@ -114,8 +114,8 @@ export default function RequestsPage() {
                         <div className="p-8 rounded-3xl bg-slate-900 border border-white/5 mb-8">
                             <GitBranch className="w-16 h-16 text-slate-800" />
                         </div>
-                        <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] mb-2">No active sequences discovered</p>
-                        <p className="text-slate-600 font-medium text-sm italic opacity-60">Initialize a strategy from the inventory to begin tracking.</p>
+                        <p className="text-text-secondary font-bold uppercase tracking-wider text-xs mb-2">No active sequences discovered</p>
+                        <p className="text-text-tertiary font-medium text-sm">Initialize a strategy from the inventory to begin tracking.</p>
                     </Card>
                 ) : (
                     <div className="grid grid-cols-1 gap-4">
@@ -133,31 +133,31 @@ export default function RequestsPage() {
                                         className="group relative"
                                     >
                                         <Card
-                                            className="glass-panel border border-white/10 hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/5 p-8"
+                                            className="glass-panel border border-white/10 hover:border-indigo-500/50 transition-all duration-500 cursor-pointer overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-indigo-500/5 p-6"
                                         >
                                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 relative z-10">
-                                                <div className="flex items-center gap-8 flex-1">
-                                                    <div className="w-16 h-16 rounded-[1.5rem] bg-indigo-500/5 border border-indigo-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
-                                                        <GitBranch className="w-8 h-8 text-indigo-400" />
+                                                <div className="flex items-center gap-6 flex-1">
+                                                    <div className="w-14 h-14 rounded-xl bg-indigo-500/5 border border-indigo-500/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
+                                                        <GitBranch className="w-7 h-7 text-indigo-400" />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <div className="flex flex-wrap items-center gap-4 mb-3">
-                                                            <h3 className="text-2xl font-black text-white group-hover:text-indigo-400 transition-colors uppercase italic tracking-tighter">
+                                                        <div className="flex flex-wrap items-center gap-4 mb-2">
+                                                            <h3 className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors tracking-tight">
                                                                 Instance #{request.id.slice(0, 8).toUpperCase()}
                                                             </h3>
-                                                            <div className={`px-4 py-1.5 rounded-full ${statusStyle.bg} border ${statusStyle.border} ${statusStyle.text} text-[10px] font-black uppercase tracking-[0.2em] ${statusStyle.glow}`}>
+                                                            <div className={`px-3 py-1 rounded-md ${statusStyle.bg} border ${statusStyle.border} ${statusStyle.text} text-[10px] font-bold uppercase tracking-wider ${statusStyle.glow}`}>
                                                                 {request.status.replace(/_/g, ' ')}
                                                             </div>
                                                         </div>
-                                                        <div className="flex flex-wrap items-center gap-6 text-[10px] text-slate-500 font-black uppercase tracking-widest">
+                                                        <div className="flex flex-wrap items-center gap-6 text-xs text-text-tertiary font-bold uppercase tracking-wide">
                                                             <span className="flex items-center"><Clock className="w-3 h-3 mr-2" /> {formatDistanceToNow(new Date(request.created_at), { addSuffix: true })}</span>
-                                                            <span className="flex items-center opacity-40 italic font-medium">Core Blueprint: {request.workflow_id}</span>
+                                                            <span className="flex items-center opacity-60 font-medium">Core Blueprint: {request.workflow_id}</span>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button className="h-14 px-8 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-500 flex items-center gap-3 font-black uppercase text-[10px] tracking-widest shadow-lg">
+                                                <button className="h-12 px-6 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300 flex items-center gap-3 font-bold uppercase text-[10px] tracking-wider shadow-lg">
                                                     Analyze Trace
-                                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                                 </button>
                                             </div>
 
