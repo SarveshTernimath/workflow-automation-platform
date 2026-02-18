@@ -6,6 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from '@/lib/api';
+import { WorkflowNetworkBackground } from '@/components/ui/WorkflowNetworkBackground';
 
 
 interface DashboardLayoutProps {
@@ -83,7 +84,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     }
 
     return (
-        <div className="flex min-h-screen bg-background text-text-primary font-sans antialiased overflow-hidden">
+        <div className="flex min-h-screen bg-background text-text-primary font-sans antialiased overflow-hidden relative">
+
+            {/* Animated Network Background */}
+            <WorkflowNetworkBackground />
 
             {/* Sidebar */}
             <motion.aside
@@ -114,8 +118,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                                 key={item.path}
                                 href={item.path}
                                 className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden ${isActive
-                                    ? "bg-surface-active text-white shadow-inner"
-                                    : "text-text-secondary hover:text-white hover:bg-surface-hover"
+                                    ? "bg-surface-active/80 text-white shadow-inner backdrop-blur-sm"
+                                    : "text-text-secondary hover:text-white hover:bg-surface-hover/50"
                                     }`}
                             >
                                 {isActive && (
@@ -140,10 +144,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </nav>
 
                 {/* User Profile */}
-                <div className="p-4 mt-auto border-t border-border bg-surface/50">
+                <div className="p-4 mt-auto border-t border-border bg-surface/30 backdrop-blur-md">
                     <div
                         onClick={() => setShowProfile(!showProfile)}
-                        className="flex items-center space-x-3 cursor-pointer hover:bg-surface-hover p-2 rounded-lg transition-all"
+                        className="flex items-center space-x-3 cursor-pointer hover:bg-surface-hover/50 p-2 rounded-lg transition-all"
                     >
                         <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-surface-elevated to-surface border border-border flex items-center justify-center text-xs font-bold text-text-secondary">
                             {user?.full_name?.substring(0, 2).toUpperCase() || "US"}
@@ -177,7 +181,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </motion.aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col min-w-0 relative h-screen overflow-hidden bg-background">
+            <main className="flex-1 flex flex-col min-w-0 relative h-screen overflow-hidden bg-transparent z-10">
                 {/* Header */}
                 <header className="h-20 shrink-0 z-40 flex items-center justify-between px-8 pt-4">
                     <motion.div
@@ -190,7 +194,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                             <span className="text-border">/</span>
                             <span className="text-accent-primary">{pathname.replace('/', '')}</span>
                         </div>
-                        <h2 className="text-2xl font-bold text-white tracking-tight">
+                        <h2 className="text-2xl font-bold text-white tracking-tight text-glow">
                             {navItems.find(i => i.path === pathname)?.name || "Dashboard"}
                         </h2>
                     </motion.div>
@@ -199,12 +203,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         {/* Portal Target for Page Actions */}
                         <div id="header-actions" className="flex items-center space-x-2" />
 
-                        <div className="flex items-center px-3 py-1.5 rounded-full bg-surface border border-border">
+                        <div className="flex items-center px-3 py-1.5 rounded-full bg-surface/50 border border-border backdrop-blur-md">
                             <div className="w-1.5 h-1.5 rounded-full bg-accent-success mr-2 animate-pulse" />
                             <span className="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Online</span>
                         </div>
 
-                        <button onClick={() => router.push('/notifications')} className="relative p-2.5 rounded-full hover:bg-surface-hover transition-colors text-text-secondary hover:text-white">
+                        <button onClick={() => router.push('/notifications')} className="relative p-2.5 rounded-full hover:bg-surface-hover/50 transition-colors text-text-secondary hover:text-white">
                             <Bell className="w-5 h-5" />
                             <span className="absolute top-2 right-2.5 w-1.5 h-1.5 bg-accent-primary rounded-full ring-2 ring-background"></span>
                         </button>

@@ -14,8 +14,8 @@ export function Card({ className, glass = true, ...props }: CardProps) {
     return (
         <div
             className={cn(
-                "rounded-xl border border-border bg-surface transition-all duration-300",
-                glass && "glass-panel hover:glass-panel-hover",
+                "rounded-xl border border-border transition-all duration-300 relative overflow-hidden",
+                glass ? "glass-panel hover:glass-panel-hover" : "bg-surface",
                 className
             )}
             {...props}
