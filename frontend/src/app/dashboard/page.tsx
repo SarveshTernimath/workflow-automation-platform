@@ -6,7 +6,6 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Plus } from "lucide-react";
 import Portal from "@/components/ui/Portal";
-import GraphWrapper from "@/components/workflow/GraphWrapper";
 import apiClient from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -182,10 +181,6 @@ export default function DashboardPage() {
                             </Card>
                         </motion.div>
                     ))}
-                </div>
-
-                <div className="w-full min-h-[500px]">
-                    <GraphWrapper />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
