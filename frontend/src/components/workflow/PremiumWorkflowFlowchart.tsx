@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, Clock, AlertTriangle, XCircle, ArrowRight, Layers, Shield, Cpu, Activity } from "lucide-react";
+import React, { useMemo } from "react";
+import { motion } from "framer-motion";
+import { Check, Clock, AlertTriangle, XCircle, Layers, Shield, Cpu, Activity } from "lucide-react";
 
 // --- Types ---
 interface FlowNode {

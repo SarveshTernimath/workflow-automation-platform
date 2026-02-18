@@ -3,10 +3,21 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
-import { CheckCircle2, RotateCcw, XCircle, Layers, Loader2, Workflow, Activity } from "lucide-react";
+import { RotateCcw, XCircle, Loader2, Workflow, Activity, Box, GitGraph } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from "@/lib/api";
 import PremiumWorkflowFlowchart from "@/components/workflow/PremiumWorkflowFlowchart";
+import dynamic from "next/dynamic";
+
+// Dynamic import for the heavy 3D component
+const AdvancedGraph = dynamic(() => import("@/components/workflow/AdvancedWorkflowGraph3D"), {
+    ssr: false,
+    loading: () => (
+        <div className="w-full h-full min-h-[600px] flex items-center justify-center bg-black">
+            <div className="text-accent-primary animate-pulse">Initializing 3D Engine...</div>
+        </div>
+    )
+});
 
 // --- Types ---
 interface FlowNode {
@@ -26,6 +37,7 @@ interface GraphData {
 }
 
 export default function VisualizerPage() {
+    const [viewMode, setViewMode] = useState<"2D" | "3D">("2D");
     const [selectedNode, setSelectedNode] = useState<FlowNode | null>(null);
     const [filterStatus, setFilterStatus] = useState<string | null>(null);
     const [data, setData] = useState<GraphData>({ nodes: [], links: [] });
@@ -47,7 +59,7 @@ export default function VisualizerPage() {
                 const links: { source: string; target: string; active?: boolean }[] = [];
 
                 // 1. Workflows
-                workflows.forEach((wf: any, idx: number) => {
+                workflows.forEach((wf: any) => {
                     nodes.push({
                         id: `wf-${wf.id}`,
                         name: wf.name,
@@ -102,20 +114,37 @@ export default function VisualizerPage() {
         <DashboardLayout>
             <div className="relative h-[calc(100vh-140px)] w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-[#050505] group">
 
-                {/* 2D Premium Flowchart */}
-                {loading ? (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-                        <span className="ml-3 text-xs font-bold text-indigo-400 uppercase tracking-widest">Constructing Matrix...</span>
-                    </div>
-                ) : (
-                    <PremiumWorkflowFlowchart
-                        data={data}
-                        onNodeClick={(node) => setSelectedNode(node)}
-                    />
-                )}
+                {/* Main Canvas Area */}
+                <div className="absolute inset-0 z-0">
+                    <AnimatePresence mode="wait">
+                        {loading ? (
+                            <motion.div
+                                key="loading"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                            >
+                                <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+                                <span className="ml-3 text-xs font-bold text-indigo-400 uppercase tracking-widest">Constructing Matrix...</span>
+                            </motion.div>
+                        ) : viewMode === "2D" ? (
+                            <PremiumWorkflowFlowchart
+                                key="2d-flow"
+                                data={data}
+                                onNodeClick={(node) => setSelectedNode(node)}
+                            />
+                        ) : (
+                            <AdvancedGraph
+                                key="3d-graph"
+                                onNodeClick={(node: any) => setSelectedNode(node)}
+                                filterStatus={filterStatus}
+                            />
+                        )}
+                    </AnimatePresence>
+                </div>
 
-                {/* HUD: Top Controls */}
+                {/* HUD: Top Left Controls (Filters) */}
                 <div className="absolute top-6 left-6 z-20 flex gap-2">
                     <div className="glass-panel p-1 rounded-lg flex gap-1">
                         <Button
@@ -144,9 +173,29 @@ export default function VisualizerPage() {
                         </Button>
                     </div>
 
-                    <Button variant="outline" size="sm" onClick={handleReset} className="h-9 w-9 p-0 rounded-lg glass-panel border-white/10 hover:bg-white/10">
+                    <Button variant="outline" size="sm" onClick={handleReset} className="h-9 w-9 p-0 rounded-lg glass-panel border-white/10 hover:bg-white/10" title="Reset View">
                         <RotateCcw className="w-4 h-4 text-text-secondary" />
                     </Button>
+                </div>
+
+                {/* HUD: Top Right Controls (View Toggle) */}
+                <div className="absolute top-6 right-6 z-20 flex gap-2">
+                    <div className="glass-panel p-1 rounded-lg flex gap-1">
+                        <button
+                            onClick={() => setViewMode("2D")}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${viewMode === "2D" ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20" : "text-text-secondary hover:text-white hover:bg-white/5"}`}
+                        >
+                            <GitGraph className="w-3 h-3" />
+                            Flow Chart
+                        </button>
+                        <button
+                            onClick={() => setViewMode("3D")}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${viewMode === "3D" ? "bg-indigo-500 text-white shadow-lg shadow-indigo-500/20" : "text-text-secondary hover:text-white hover:bg-white/5"}`}
+                        >
+                            <Box className="w-3 h-3" />
+                            3D Matrix
+                        </button>
+                    </div>
                 </div>
 
                 {/* HUD: Node Details Side Panel */}
@@ -156,7 +205,7 @@ export default function VisualizerPage() {
                             initial={{ x: 300, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
                             exit={{ x: 300, opacity: 0 }}
-                            className="absolute top-6 right-6 bottom-6 w-96 glass-panel z-30 rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10"
+                            className="absolute top-20 right-6 bottom-6 w-96 glass-panel z-30 rounded-2xl overflow-hidden flex flex-col shadow-2xl border border-white/10"
                         >
                             {/* Header */}
                             <div className="p-6 border-b border-white/10 relative overflow-hidden bg-black/20">
