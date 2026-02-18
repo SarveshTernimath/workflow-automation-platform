@@ -7,6 +7,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from '@/lib/api';
 import { WorkflowNetworkBackground } from '@/components/ui/WorkflowNetworkBackground';
+import SystemTerminal from '@/components/ui/SystemTerminal';
 
 
 interface DashboardLayoutProps {
@@ -228,6 +229,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </motion.div>
                 </div>
             </main>
+
+            {/* Automation Terminal Overlay */}
+            <SystemTerminal />
         </div>
     );
 }
