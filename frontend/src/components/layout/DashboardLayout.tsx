@@ -48,10 +48,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         fetchUser();
     }, [router]);
 
-    const handleLogout = () => {
-        localStorage.removeItem("access_token");
-        router.push("/");
-    };
+
 
     interface NavItem {
         name: string;
