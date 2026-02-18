@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import { Loader2, ArrowRight, ArrowLeft, Save, Plus, Trash2, Check, Shield, Code, Cpu, Info, Search } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -309,11 +309,15 @@ export default function CreateWorkflowPage() {
                                         <div className="relative mb-6">
                                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500" />
                                             <input
+                                                id="search-authorities"
+                                                name="search_authorities"
+                                                aria-label="Search Authorities"
                                                 className="w-full bg-slate-900 border border-white/5 rounded-xl py-2 pl-8 pr-4 text-[10px] font-bold text-white focus:outline-none"
                                                 placeholder="Search Authorities..."
                                             />
                                         </div>
                                         <div className="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar">
+
                                             <p className="text-[9px] font-black text-slate-600 uppercase tracking-widest mb-2">Available Roles</p>
                                             {roles.map(r => (
                                                 <div key={r.id} className="p-3 rounded-xl bg-slate-900/50 border border-white/5 flex items-center justify-between group hover:border-indigo-500/30 transition-all">
@@ -324,6 +328,7 @@ export default function CreateWorkflowPage() {
                                                             setJsonSource(newJson);
                                                         }}
                                                         className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg bg-indigo-500 text-white transition-all"
+                                                        aria-label={`Insert role ${r.name}`}
                                                     >
                                                         <ArrowRight className="w-2 h-2" />
                                                     </button>
@@ -343,10 +348,13 @@ export default function CreateWorkflowPage() {
                         ) : (
                             <>
                                 {step === 1 && (
+
                                     <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-8">
                                         <div>
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 block">Protocol Identifier</label>
+                                            <label htmlFor="protocol-id" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 block">Protocol Identifier</label>
                                             <input
+                                                id="protocol-id"
+                                                name="protocol_id"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 className="w-full bg-slate-900 border border-white/10 rounded-2xl p-6 text-white text-xl font-bold focus:outline-none focus:border-indigo-500/50 transition-all placeholder:text-slate-700"
@@ -354,8 +362,10 @@ export default function CreateWorkflowPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 block">Strategy Description</label>
+                                            <label htmlFor="protocol-desc" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-3 block">Strategy Description</label>
                                             <textarea
+                                                id="protocol-desc"
+                                                name="protocol_desc"
                                                 value={description}
                                                 onChange={(e) => setDescription(e.target.value)}
                                                 className="w-full bg-slate-900 border border-white/10 rounded-2xl p-6 text-slate-300 font-medium h-40 focus:outline-none focus:border-indigo-500/50 transition-all placeholder:text-slate-700 resize-none"
@@ -381,8 +391,10 @@ export default function CreateWorkflowPage() {
                                                     </div>
                                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                         <div>
-                                                            <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Node Name</label>
+                                                            <label htmlFor={`step-name-${s.tempId}`} className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Node Name</label>
                                                             <input
+                                                                id={`step-name-${s.tempId}`}
+                                                                name={`step_name_${s.tempId}`}
                                                                 value={s.name}
                                                                 onChange={(e) => updateStep(idx, 'name', e.target.value)}
                                                                 className="w-full bg-transparent border-b border-white/10 py-2 text-white font-bold focus:outline-none focus:border-indigo-500 text-sm"
@@ -390,9 +402,11 @@ export default function CreateWorkflowPage() {
                                                             />
                                                         </div>
                                                         <div>
-                                                            <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Required Authority</label>
+                                                            <label htmlFor={`step-auth-${s.tempId}`} className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Required Authority</label>
                                                             <div className="relative">
                                                                 <select
+                                                                    id={`step-auth-${s.tempId}`}
+                                                                    name={`step_auth_${s.tempId}`}
                                                                     value={s.required_role_id || ""}
                                                                     onChange={(e) => updateStep(idx, 'required_role_id', e.target.value || undefined)}
                                                                     className="w-full bg-transparent border-b border-white/10 py-2 text-indigo-400 font-bold focus:outline-none focus:border-indigo-500 text-sm appearance-none cursor-pointer"
@@ -406,8 +420,10 @@ export default function CreateWorkflowPage() {
                                                             </div>
                                                         </div>
                                                         <div className="md:col-span-2">
-                                                            <label className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Description</label>
+                                                            <label htmlFor={`step-desc-${s.tempId}`} className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1 block">Description</label>
                                                             <input
+                                                                id={`step-desc-${s.tempId}`}
+                                                                name={`step_desc_${s.tempId}`}
                                                                 value={s.description}
                                                                 onChange={(e) => updateStep(idx, 'description', e.target.value)}
                                                                 className="w-full bg-transparent border-b border-white/10 py-2 text-slate-400 text-xs focus:outline-none focus:border-indigo-500"

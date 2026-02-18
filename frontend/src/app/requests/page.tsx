@@ -82,6 +82,9 @@ export default function RequestsPage() {
                     <div className="relative flex-1 group">
                         <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within:text-indigo-400 transition-colors" />
                         <input
+                            id="search-requests"
+                            name="search_requests"
+                            aria-label="Search requests"
                             type="text"
                             placeholder="Search instance hash..."
                             className="w-full bg-slate-900 border border-white/5 rounded-2xl py-5 pl-14 pr-5 text-white placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/10 transition-all font-medium"
@@ -91,6 +94,9 @@ export default function RequestsPage() {
                     <div className="flex items-center gap-3 bg-slate-900 border border-white/5 rounded-2xl px-6 py-5 group">
                         <Filter className="w-4 h-4 text-slate-600 group-hover:text-indigo-400 transition-colors" />
                         <select
+                            id="status-filter"
+                            name="status_filter"
+                            aria-label="Filter requests by status"
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
                             className="bg-transparent text-white focus:outline-none font-bold uppercase tracking-widest text-[10px] cursor-pointer"

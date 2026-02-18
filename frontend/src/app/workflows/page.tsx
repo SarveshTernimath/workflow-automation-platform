@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardContent } from "@/components/ui/Card";
-import { Plus, Play, Info, MoreVertical, Loader2, Cpu } from "lucide-react";
+import { Plus, Play, Info, Loader2, Cpu } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -310,10 +310,13 @@ export default function WorkflowsPage() {
                                     <div className="flex flex-col h-[400px]">
                                         {/* Wizard Inputs */}
                                         <div className="bg-white/5 border border-white/5 rounded-2xl p-4 mb-4">
-                                            <label className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-3 block">Add Evaluation Node</label>
+                                            <label htmlFor="step-name" className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-3 block">Add Evaluation Node</label>
                                             <div className="grid grid-cols-12 gap-2">
                                                 <div className="col-span-5">
                                                     <input
+                                                        id="step-name"
+                                                        name="step_name"
+                                                        aria-label="Step Name"
                                                         type="text"
                                                         placeholder="Step Name"
                                                         value={newStepName}
@@ -323,6 +326,9 @@ export default function WorkflowsPage() {
                                                 </div>
                                                 <div className="col-span-4">
                                                     <select
+                                                        id="step-role"
+                                                        name="step_role"
+                                                        aria-label="Select Role"
                                                         value={newStepRole}
                                                         onChange={e => setNewStepRole(e.target.value)}
                                                         className="w-full bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
@@ -333,6 +339,9 @@ export default function WorkflowsPage() {
                                                 </div>
                                                 <div className="col-span-2">
                                                     <input
+                                                        id="step-sla"
+                                                        name="step_sla"
+                                                        aria-label="SLA Hours"
                                                         type="number"
                                                         placeholder="SLA"
                                                         value={newStepSLA}
@@ -344,6 +353,7 @@ export default function WorkflowsPage() {
                                                     <button
                                                         onClick={handleAddStep}
                                                         className="w-full h-full bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg flex items-center justify-center transition-colors"
+                                                        aria-label="Add Step"
                                                     >
                                                         <Plus className="w-4 h-4" />
                                                     </button>
@@ -351,8 +361,10 @@ export default function WorkflowsPage() {
                                             </div>
                                         </div>
 
-                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Blueprint Definition (JSON)</label>
+                                        <label htmlFor="blueprint-json" className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 block">Blueprint Definition (JSON)</label>
                                         <textarea
+                                            id="blueprint-json"
+                                            name="blueprint_json"
                                             value={blueprintJson}
                                             onChange={(e) => setBlueprintJson(e.target.value)}
                                             className="flex-1 bg-slate-900/50 border border-white/5 rounded-2xl p-6 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500/40 transition-all leading-relaxed resize-none overflow-y-auto"
@@ -363,6 +375,7 @@ export default function WorkflowsPage() {
                                     <div className="flex flex-col h-[400px] bg-white/5 rounded-2xl border border-white/5 p-8">
                                         <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-6 block">Interface Logic</label>
                                         <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+                                            {/* ... content remains same ... */}
                                             <div className="space-y-2">
                                                 <h4 className="text-[10px] font-black text-indigo-400 uppercase tracking-wider italic">Role-Based Tiers</h4>
                                                 <p className="text-[9px] text-slate-400 leading-relaxed font-medium">Use the <code className="text-indigo-400 text-[10px] font-mono">role</code> key to assign authority. The system will auto-map to standard system nodes.</p>
@@ -439,8 +452,10 @@ export default function WorkflowsPage() {
                                 <div className="space-y-6 mb-10">
                                     <div className="p-6 rounded-2xl bg-white/5 border border-white/5 space-y-4">
                                         <div>
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Request Title *</label>
+                                            <label htmlFor="req-title" className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Request Title *</label>
                                             <input
+                                                id="req-title"
+                                                name="req_title"
                                                 type="text"
                                                 value={requestTitle}
                                                 onChange={(e) => setRequestTitle(e.target.value)}
@@ -449,8 +464,10 @@ export default function WorkflowsPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Description</label>
+                                            <label htmlFor="req-desc" className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Description</label>
                                             <textarea
+                                                id="req-desc"
+                                                name="req_desc"
                                                 value={payload}
                                                 onChange={(e) => setPayload(e.target.value)}
                                                 className="w-full bg-slate-900/50 border border-white/5 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all min-h-[120px] leading-relaxed"
@@ -458,8 +475,10 @@ export default function WorkflowsPage() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Priority</label>
+                                            <label htmlFor="req-priority" className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Priority</label>
                                             <select
+                                                id="req-priority"
+                                                name="req_priority"
                                                 value={requestPriority}
                                                 onChange={(e) => setRequestPriority(e.target.value)}
                                                 className="w-full bg-slate-900/50 border border-white/5 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-indigo-500/40 transition-all"
