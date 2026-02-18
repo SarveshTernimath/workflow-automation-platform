@@ -138,10 +138,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </nav>
 
                 {/* User Profile */}
-                <div className="p-4 mt-auto border-t border-border bg-black/20">
-                    <div
+                <div className="p-4 mt-auto border-t border-border bg-black/20 relative z-50">
+                    <button
                         onClick={() => setShowProfile(!showProfile)}
-                        className="flex items-center space-x-3 cursor-pointer hover:bg-surface-hover/50 p-2 rounded-lg transition-all"
+                        className="w-full flex items-center space-x-3 cursor-pointer hover:bg-surface-hover/50 p-2 rounded-lg transition-all focus:outline-none focus:ring-1 focus:ring-indigo-500/20 text-left"
                     >
                         <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-surface-elevated to-surface border border-border flex items-center justify-center text-xs font-bold text-text-secondary">
                             {user?.full_name?.substring(0, 2).toUpperCase() || "US"}
@@ -150,8 +150,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                             <p className="text-sm font-medium text-white truncate">{user?.full_name || "User"}</p>
                             <p className="text-[10px] text-text-tertiary uppercase tracking-wider">{user?.roles?.[0]?.name || "Staff"}</p>
                         </div>
-                        <ChevronRight className={`w-4 h-4 text-text-tertiary transition-transform ${showProfile ? "rotate-90" : ""}`} />
-                    </div>
+                        <ChevronRight className={`w-4 h-4 text-text-tertiary transition-transform duration-200 ${showProfile ? "rotate-90 text-indigo-400" : ""}`} />
+                    </button>
 
                     <AnimatePresence>
                         {showProfile && (
