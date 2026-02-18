@@ -12,6 +12,7 @@ interface FlowNode {
     type: "WORKFLOW" | "REQUEST" | "STEP";
     status?: "PENDING" | "APPROVED" | "REJECTED" | "COMPLETED" | "FAILED";
     role?: string;
+    color?: string;
     x?: number;
     y?: number;
     description?: string;

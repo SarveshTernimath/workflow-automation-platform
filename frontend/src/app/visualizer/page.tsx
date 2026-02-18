@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Button } from "@/components/ui/Button";
-import { CheckCircle2, RotateCcw, XCircle, Layers, Loader2, Workflow } from "lucide-react";
+import { CheckCircle2, RotateCcw, XCircle, Layers, Loader2, Workflow, Activity } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from "@/lib/api";
 import PremiumWorkflowFlowchart from "@/components/workflow/PremiumWorkflowFlowchart";
