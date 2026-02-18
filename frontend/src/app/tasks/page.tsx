@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { Card, CardTitle, CardContent } from "@/components/ui/Card";
 import { Clock, AlertCircle, CheckCircle2, Loader2, ArrowRight, GitBranch } from "lucide-react";
 import Portal from "@/components/ui/Portal";
 import apiClient from "@/lib/api";
@@ -297,8 +297,10 @@ export default function TasksPage() {
 
                                     <div className="space-y-4">
                                         <div>
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Executive Commentary</label>
+                                            <label htmlFor="task-comment" className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 block">Executive Commentary</label>
                                             <textarea
+                                                id="task-comment"
+                                                name="task_comment"
                                                 value={comment}
                                                 onChange={(e) => setComment(e.target.value)}
                                                 className="w-full bg-slate-900/80 border border-white/10 rounded-2xl p-4 text-white placeholder-slate-600 focus:outline-none focus:border-indigo-500/50 transition-colors h-24 resize-none"

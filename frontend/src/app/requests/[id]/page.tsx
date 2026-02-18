@@ -239,8 +239,10 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                         </div>
 
                                         <div className="space-y-3">
-                                            <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Strategic Justification</label>
+                                            <label htmlFor="execution-note" className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Strategic Justification</label>
                                             <textarea
+                                                id="execution-note"
+                                                name="execution_note"
                                                 value={note}
                                                 onChange={(e) => setNote(e.target.value)}
                                                 className="w-full bg-slate-900 border border-white/5 rounded-2xl p-6 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 transition-all placeholder:text-slate-700 min-h-[160px] font-medium text-sm leading-relaxed"
