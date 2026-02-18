@@ -3,20 +3,38 @@
 import React, { useEffect, useState, use } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { CheckCircle2, Clock, AlertCircle, ArrowLeft, Send, XCircle, Activity, Zap, Shield, Loader2 } from "lucide-react";
+import { CheckCircle2, Clock, ArrowLeft, Send, XCircle, Activity, Zap, Shield, Loader2 } from "lucide-react";
 import apiClient from "@/lib/api";
 import { format } from "date-fns";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+
+
+interface Step {
+    step_order: number;
+    step_name: string;
+    status: string;
+    completed_at?: string;
+    deadline?: string;
+    outcome?: string;
+}
+
+interface RequestDetail {
+    id: string;
+    status: string;
+    created_at: string;
+    steps: Step[];
+    workflow_id: string;
+    requester_id: string;
+    request_data: Record<string, unknown>;
+}
 
 export default function RequestExecutionPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const [request, setRequest] = useState<any>(null);
+    const [request, setRequest] = useState<RequestDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
     const [outcome, setOutcome] = useState("APPROVED");
     const [note, setNote] = useState("");
-    const router = useRouter();
 
     useEffect(() => {
         async function fetchRequest() {
@@ -64,7 +82,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
 
     if (!request) return <DashboardLayout><div className="text-center py-20 text-slate-500 uppercase font-black tracking-widest text-xs">Request sequence terminated or not found.</div></DashboardLayout>;
 
-    const currentStep = request.steps.find((s: any) => s.status === 'PENDING');
+    const currentStep = request.steps.find((s) => s.status === 'PENDING');
 
     return (
         <DashboardLayout>
@@ -76,21 +94,8 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                     <div className="h-px w-8 bg-white/10" />
                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Operational Tracker</span>
                 </div>
-
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
-                    <div>
-                        <div className="flex items-center space-x-3 mb-3">
-                            <div className={`w-2 h-2 rounded-full ${request.status === 'COMPLETED' ? 'bg-emerald-500 shadow-[0_0_8px_#10b981]' :
-                                request.status === 'REJECTED' ? 'bg-rose-500 shadow-[0_0_8px_#f43f5e]' :
-                                    'bg-indigo-500 shadow-[0_0_8px_#6366f1] animate-pulse'}`} />
-                            <span className={`text-[10px] font-black uppercase tracking-[0.3em] ${request.status === 'COMPLETED' ? 'text-emerald-400' :
-                                request.status === 'REJECTED' ? 'text-rose-400' : 'text-indigo-400'}`}>
-                                Protocol {request.status}
-                            </span>
-                        </div>
-                        <h1 className="text-5xl font-black text-white mb-3 tracking-tighter uppercase italic">Instance <span className="text-indigo-500 font-mono tracking-normal not-italic ml-2">#{request.id.slice(0, 8).toUpperCase()}</span></h1>
-                        <p className="text-slate-400 text-lg font-medium opacity-80 uppercase tracking-widest text-xs">Initialized {format(new Date(request.created_at), 'PPPp')}</p>
-                    </div>
+                    {/* ... */}
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
@@ -108,7 +113,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                 <div className="relative pl-12 space-y-16">
                                     <div className="absolute left-[23px] top-2 bottom-2 w-px bg-white/5" />
 
-                                    {request.steps.sort((a: any, b: any) => (a.step_order || 0) - (b.step_order || 0)).map((step: any, idx: number) => {
+                                    {request.steps.sort((a, b) => (a.step_order || 0) - (b.step_order || 0)).map((step, idx) => {
                                         const isCompleted = step.status === 'APPROVED' || step.status === 'REJECTED';
                                         const isPending = step.status === 'PENDING';
 
@@ -157,7 +162,7 @@ export default function RequestExecutionPage({ params }: { params: Promise<{ id:
                                                         {step.outcome && (
                                                             <div className="mt-6 pt-6 border-t border-white/5">
                                                                 <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-2">Decision Notes</p>
-                                                                <p className="text-xs text-slate-400 font-medium italic">"{step.outcome}"</p>
+                                                                <p className="text-xs text-slate-400 font-medium italic">&quot;{step.outcome}&quot;</p>
                                                             </div>
                                                         )}
                                                     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, User, Cpu, Lock, LucideIcon } from "lucide-react";
+import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, Cpu, Lock, LucideIcon } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -11,10 +11,20 @@ interface DashboardLayoutProps {
     children: React.ReactNode;
 }
 
+interface UserRole {
+    id: string;
+    name: string;
+}
+
+interface UserData {
+    full_name?: string;
+    roles?: UserRole[];
+}
+
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const router = useRouter();
     const pathname = usePathname();
-    const [user, setUser] = React.useState<any>(null);
+    const [user, setUser] = React.useState<UserData | null>(null);
     const [showProfile, setShowProfile] = React.useState(false);
 
     React.useEffect(() => {
@@ -33,18 +43,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 const res = await apiClient.get("users/me");
                 console.log("[DashboardLayout] User profile fetched:", res.data);
                 setUser(res.data);
-            } catch (err: any) {
-                console.error("[DashboardLayout] Auth check failed:", err);
-                console.error("[DashboardLayout] Error Status:", err.response?.status);
+            } catch (err) {
+                const error = err as { response?: { status?: number } };
+                console.error("[DashboardLayout] Auth check failed:", error);
+                console.error("[DashboardLayout] Error Status:", error.response?.status);
                 // If the error is 401, the interceptor in api.ts might have already redirected,
                 // but we double check here to be sure.
-                if (err.response?.status === 401 || err.response?.status === 403) {
+                if (error.response?.status === 401 || error.response?.status === 403) {
                     router.push("/");
                 }
             }
         }
         fetchUser();
-    }, []);
+    }, [router]);
 
     const handleLogout = () => {
         localStorage.removeItem("access_token");
@@ -66,10 +77,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     ];
 
     // RBAC: Filter Navigation Items
-    const userRoles = user?.roles?.map((r: any) => r.name.toLowerCase()) || [];
+    const userRoles = user?.roles?.map((r) => r.name.toLowerCase()) || [];
     const isAdmin = userRoles.includes("admin");
     const isManager = userRoles.includes("manager") || userRoles.includes("strategic_node");
-    const isUser = userRoles.includes("user") || userRoles.includes("operational_node");
 
     const filteredNavItems = navItems.filter(item => {
         if (isAdmin) return true; // Admin sees everything

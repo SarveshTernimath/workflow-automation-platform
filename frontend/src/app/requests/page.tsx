@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardContent } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card";
 import { Search, Loader2, GitBranch, ArrowRight, Filter, Clock } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
@@ -14,7 +14,7 @@ interface WorkflowRequest {
     workflow_id: string;
     requester_id: string;
     status: string;
-    request_data: any;
+    request_data: Record<string, unknown>;
     created_at: string;
     updated_at: string;
 }
@@ -35,20 +35,19 @@ export default function RequestsPage() {
     const router = useRouter();
 
     useEffect(() => {
+        async function fetchRequests() {
+            try {
+                const params = statusFilter ? `?status=${statusFilter}` : "";
+                const res = await apiClient.get(`requests/${params}`);
+                setRequests(res.data);
+            } catch (err) {
+                console.error("Failed to fetch requests", err);
+            } finally {
+                setLoading(false);
+            }
+        }
         fetchRequests();
     }, [statusFilter]);
-
-    async function fetchRequests() {
-        try {
-            const params = statusFilter ? `?status=${statusFilter}` : "";
-            const res = await apiClient.get(`requests/${params}`);
-            setRequests(res.data);
-        } catch (err) {
-            console.error("Failed to fetch requests", err);
-        } finally {
-            setLoading(false);
-        }
-    }
 
     if (loading) {
         return (

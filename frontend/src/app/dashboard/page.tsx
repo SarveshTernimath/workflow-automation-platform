@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
-import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Cpu, Plus } from "lucide-react";
+import { Activity, CheckCircle2, Clock, AlertCircle, ArrowUpRight, GitBranch, Loader2, Shield, Zap, Plus } from "lucide-react";
 import Portal from "@/components/ui/Portal";
 import apiClient from "@/lib/api";
 import { formatDistanceToNow } from "date-fns";
@@ -33,8 +33,25 @@ const item = {
     show: { opacity: 1, y: 0 }
 };
 
+interface Workflow {
+    id: string;
+    name: string;
+}
+
+interface Request {
+    id: string;
+    status: string;
+    created_at: string;
+}
+
+interface AuditLog {
+    id: string;
+    action: string;
+    timestamp: string;
+}
+
 export default function DashboardPage() {
-    const [workflows, setWorkflows] = useState<any[]>([]);
+    const [workflows, setWorkflows] = useState<Workflow[]>([]);
     const [stats, setStats] = useState<Stats>({
         active: 0,
         completed: 0,
@@ -42,8 +59,8 @@ export default function DashboardPage() {
         pending: 0
     });
     const [pulsing, setPulsing] = useState(false);
-    const [recentRequests, setRecentRequests] = useState<any[]>([]);
-    const [auditLogs, setAuditLogs] = useState<any[]>([]);
+    const [recentRequests, setRecentRequests] = useState<Request[]>([]);
+    const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
@@ -258,7 +275,7 @@ export default function DashboardPage() {
                                             <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-[10px]">Awaiting telemetry stream initialization...</p>
                                         </div>
                                     ) : (
-                                        recentRequests.map((req: any) => (
+                                        recentRequests.map((req) => (
                                             <Link href={`/instances/${req.id}`} key={req.id} className="flex items-center justify-between p-8 hover:bg-white/[0.03] transition-all group border-l-4 border-transparent hover:border-[#00ff80]">
                                                 <div className="flex items-center space-x-6">
                                                     <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:bg-[#00ff80]/20 group-hover:text-[#00ff80] transition-all duration-500 border border-white/5 shadow-inner">
@@ -303,7 +320,7 @@ export default function DashboardPage() {
                                             <p className="text-[10px] text-slate-600 font-black uppercase tracking-[0.3em]">Encrypted Buffer Verified</p>
                                         </div>
                                     ) : (
-                                        auditLogs.map((log: any, i) => (
+                                        auditLogs.map((log, i) => (
                                             <div key={log.id} className="flex space-x-6 group relative">
                                                 <div className="flex flex-col items-center">
                                                     <div className="w-4 h-4 rounded-full border-2 border-emerald-500/30 bg-background shadow-[0_0_10px_rgba(16,185,129,0.2)] mt-2 group-hover:scale-125 transition-all duration-500" />

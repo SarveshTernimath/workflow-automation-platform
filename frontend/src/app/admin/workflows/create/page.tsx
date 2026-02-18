@@ -15,10 +15,7 @@ interface Role {
     name: string;
 }
 
-interface Permission {
-    id: string;
-    name: string;
-}
+
 
 interface Step {
     tempId: string; // for frontend tracking
@@ -54,17 +51,17 @@ export default function CreateWorkflowPage() {
 
     // Metadata
     const [roles, setRoles] = useState<Role[]>([]);
-    const [permissions, setPermissions] = useState<Permission[]>([]);
+    // const [permissions, setPermissions] = useState<Permission[]>([]);
 
     useEffect(() => {
         const fetchMetadata = async () => {
             try {
-                const [rolesRes, permsRes] = await Promise.all([
+                const [rolesRes] = await Promise.all([
                     apiClient.get("roles/"),
-                    apiClient.get("permissions/")
+                    // apiClient.get("permissions/")
                 ]);
                 setRoles(rolesRes.data);
-                setPermissions(permsRes.data);
+                // setPermissions(permsRes.data);
 
                 // Set initial JSON template
                 const template = {
@@ -106,7 +103,7 @@ export default function CreateWorkflowPage() {
         setWorkflowSteps(newSteps);
     };
 
-    const updateStep = (index: number, field: keyof Step, value: any) => {
+    const updateStep = (index: number, field: keyof Step, value: string | number | boolean | undefined) => {
         const newSteps = [...workflowSteps];
         newSteps[index] = { ...newSteps[index], [field]: value };
         setWorkflowSteps(newSteps);
@@ -148,7 +145,7 @@ export default function CreateWorkflowPage() {
                 const data = JSON.parse(jsonSource);
 
                 // Map role names/IDs from JSON
-                const formattedSteps = data.steps.map((s: any) => {
+                const formattedSteps = data.steps.map((s: { role?: string; role_id?: string; name: string; description?: string; order: number; sla?: number }) => {
                     const role = roles.find(r =>
                         r.name.toLowerCase() === s.role?.toLowerCase() ||
                         r.id === s.role_id
@@ -289,13 +286,15 @@ export default function CreateWorkflowPage() {
                             <motion.div key="json-mode" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex-1 flex flex-col lg:flex-row gap-10">
                                 <div className="flex-1 flex flex-col">
                                     <div className="flex items-center justify-between mb-4">
-                                        <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Blueprint Definition</label>
+                                        <label htmlFor="json-source" className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Blueprint Definition</label>
                                         <div className="flex items-center space-x-2 text-[9px] text-indigo-400 font-black uppercase">
                                             <Info className="w-3 h-3" />
                                             <span>JSON Strict Schema</span>
                                         </div>
                                     </div>
                                     <textarea
+                                        id="json-source"
+                                        name="json_source"
                                         value={jsonSource}
                                         onChange={(e) => setJsonSource(e.target.value)}
                                         className="flex-1 bg-slate-900/50 border border-white/5 rounded-3xl p-8 text-indigo-400 font-mono text-xs focus:outline-none focus:border-indigo-500/40 transition-all leading-relaxed resize-none custom-scrollbar"
@@ -338,7 +337,7 @@ export default function CreateWorkflowPage() {
                                         <div className="mt-6 pt-6 border-t border-white/5">
                                             <div className="bg-indigo-500/10 border border-indigo-500/20 p-4 rounded-2xl">
                                                 <p className="text-[8px] text-indigo-400 font-bold leading-relaxed">
-                                                    Linear transitions are synthesized automatically. Ensure "order" keys are sequential.
+                                                    Linear transitions are synthesized automatically. Ensure &quot;order&quot; keys are sequential.
                                                 </p>
                                             </div>
                                         </div>
@@ -454,7 +453,7 @@ export default function CreateWorkflowPage() {
                                             <h3 className="text-2xl font-black text-white uppercase italic">Protocol Matrix Validated</h3>
                                             <p className="text-slate-400 text-sm max-w-lg mx-auto">
                                                 The system has automatically generated a linear execution logic for your {workflowSteps.length} nodes.
-                                                Standard "Approve" and "Reject" pathways have been synthesized.
+                                                Standard &quot;Approve&quot; and &quot;Reject&quot; pathways have been synthesized.
                                             </p>
                                         </div>
 

@@ -38,7 +38,7 @@ export default function NotificationsPage() {
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-black text-white uppercase italic tracking-tighter mb-1">{alert.title}</h3>
-                                        <p className="text-slate-400 text-sm font-medium italic opacity-70 group-hover:opacity-100 transition-opacity">"{alert.desc}"</p>
+                                        <p className="text-slate-400 text-sm font-medium italic opacity-70 group-hover:opacity-100 transition-opacity">&quot;{alert.desc}&quot;</p>
                                     </div>
                                 </div>
                                 <div className="text-right">

@@ -2,13 +2,25 @@
 
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { Card, CardTitle, CardContent } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Clock, AlertCircle, CheckCircle2, Loader2, ArrowRight, GitBranch } from "lucide-react";
 import Portal from "@/components/ui/Portal";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
+
+interface Step {
+    id: string;
+    step_order: number;
+    step_name: string;
+    status: string;
+}
+
+interface RequestDetail {
+    steps: Step[];
+    [key: string]: unknown; // Allow other props for now to be safe, or specify more if known
+}
 
 interface Task {
     request_id: string;
@@ -18,7 +30,7 @@ interface Task {
     step_description: string | null;
     deadline: string | null;
     is_sla_breached: boolean;
-    request_data: any;
+    request_data: Record<string, unknown>;
     created_at: string;
 }
 
@@ -42,7 +54,7 @@ export default function TasksPage() {
     }, []);
 
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-    const [requestDetails, setRequestDetails] = useState<any>(null);
+    const [requestDetails, setRequestDetails] = useState<RequestDetail | null>(null);
     const [comment, setComment] = useState("");
     const [processing, setProcessing] = useState(false);
 
@@ -156,7 +168,7 @@ export default function TasksPage() {
 
                                                 {task.step_description && (
                                                     <p className="text-slate-400 mb-8 leading-relaxed max-w-3xl font-medium text-lg italic opacity-80">
-                                                        "{task.step_description}"
+                                                        &quot;{task.step_description}&quot;
                                                     </p>
                                                 )}
 
@@ -276,7 +288,7 @@ export default function TasksPage() {
                                                         {/* Vertical Line */}
                                                         <div className="absolute left-2 top-2 bottom-2 w-0.5 bg-white/10" />
 
-                                                        {requestDetails.steps?.sort((a: any, b: any) => (a.step_order || 0) - (b.step_order || 0)).map((step: any, idx: number) => {
+                                                        {requestDetails.steps?.sort((a, b) => (a.step_order || 0) - (b.step_order || 0)).map((step, idx) => {
                                                             const isCompleted = step.status === "COMPLETED" || step.status === "APPROVED";
                                                             const isCurrent = step.status === "PENDING" || step.status === "IN_PROGRESS";
                                                             return (

@@ -8,19 +8,41 @@ import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface Role {
+    id: string;
+    name: string;
+}
+
+interface WorkflowStep {
+    id?: string;
+    name: string;
+    step_order?: number;
+}
+
+interface Workflow {
+    id: string;
+    name: string;
+    description?: string;
+    steps?: WorkflowStep[];
+}
+
+interface User {
+    roles?: Role[];
+}
+
 export default function WorkflowsPage() {
-    const [workflows, setWorkflows] = useState<any[]>([]);
+    const [workflows, setWorkflows] = useState<Workflow[]>([]);
     const [loading, setLoading] = useState(true);
     const [starting, setStarting] = useState<string | null>(null);
     const [payload, setPayload] = useState<string>("");
     const [requestTitle, setRequestTitle] = useState("");
     const [requestPriority, setRequestPriority] = useState("medium");
-    const [showPayloadModal, setShowPayloadModal] = useState<any>(null);
+    const [showPayloadModal, setShowPayloadModal] = useState<Workflow | null>(null);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [blueprintJson, setBlueprintJson] = useState<string>("");
-    const [roles, setRoles] = useState<any[]>([]);
-    const [user, setUser] = useState<any>(null);
+    const [roles, setRoles] = useState<Role[]>([]);
+    const [user, setUser] = useState<User | null>(null);
 
     // Wizard State
     const [newStepName, setNewStepName] = useState("");
@@ -67,7 +89,7 @@ export default function WorkflowsPage() {
             const data = JSON.parse(blueprintJson);
 
             // Map role names to IDs
-            const formattedSteps = data.steps.map((s: any) => {
+            const formattedSteps = data.steps.map((s: { name: string; description?: string; order: number; sla?: number; role: string }) => {
                 const role = roles.find(r => r.name.toLowerCase() === s.role.toLowerCase());
                 return {
                     name: s.name,
@@ -138,7 +160,7 @@ export default function WorkflowsPage() {
             setNewStepName("");
             setNewStepRole(roles[0]?.name || "");
             setNewStepSLA(24);
-        } catch (e) {
+        } catch {
             alert("Invalid JSON in editor. Please fix before adding steps.");
         }
     };
@@ -174,7 +196,7 @@ export default function WorkflowsPage() {
         }
     };
 
-    const isAdmin = user?.roles?.some((r: any) => r.name.toLowerCase() === "admin");
+    const isAdmin = user?.roles?.some((r) => r.name.toLowerCase() === "admin");
 
     if (loading) return (
         <DashboardLayout>
@@ -225,7 +247,7 @@ export default function WorkflowsPage() {
                             <p className="text-slate-500 font-black uppercase tracking-[0.3em] text-[10px]">No operational architectures deployed.</p>
                         </Card>
                     ) : (
-                        workflows.map((wf: any) => (
+                        workflows.map((wf) => (
                             <Card key={wf.id} className="group glass-dark border border-white/5 hover:border-indigo-500/50 transition-all duration-500 flex flex-col h-full shadow-2xl relative overflow-hidden rounded-[2.5rem]">
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-500/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
@@ -393,7 +415,7 @@ export default function WorkflowsPage() {
                                                     <Info className="w-3 h-3 text-indigo-500" />
                                                     <span>Pro Tip</span>
                                                 </div>
-                                                <p className="text-[8px] text-slate-500 mt-2 leading-relaxed italic">"Defining blueprints here bypasses the wizard. Use this for rapid deployment of complex logic."</p>
+                                                <p className="text-[8px] text-slate-500 mt-2 leading-relaxed italic">&quot;Defining blueprints here bypasses the wizard. Use this for rapid deployment of complex logic.&quot;</p>
                                             </div>
                                         </div>
                                     </div>

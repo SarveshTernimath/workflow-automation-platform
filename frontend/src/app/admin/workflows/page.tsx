@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Card } from "@/components/ui/Card";
-import { Plus, GitBranch, Trash2, Edit, Loader2 } from "lucide-react";
+import { Plus, GitBranch, Trash2, Loader2 } from "lucide-react";
 import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
@@ -12,7 +12,7 @@ interface Workflow {
     id: string;
     name: string;
     description: string;
-    steps: any[];
+    steps: Record<string, unknown>[];
     is_active: boolean;
     created_at: string;
 }

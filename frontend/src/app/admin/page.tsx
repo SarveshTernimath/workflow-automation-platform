@@ -8,9 +8,15 @@ import apiClient from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
+interface Stats {
+    users: number;
+    workflows: number;
+    requests: number;
+    sla_breaches: number;
+}
+
 export default function AdminDashboard() {
-    const [stats, setStats] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState<Stats | null>(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -20,8 +26,6 @@ export default function AdminDashboard() {
                 setStats(res.data);
             } catch (err) {
                 console.error("Failed to fetch admin stats", err);
-            } finally {
-                setLoading(false);
             }
         }
         fetchStats();

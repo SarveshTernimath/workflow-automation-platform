@@ -6,6 +6,15 @@ import { Lock, Mail, ArrowRight, Loader2, Shield, Eye, EyeOff, AlertCircle } fro
 import apiClient, { API_BASE_URL } from "@/lib/api";
 import { motion, AnimatePresence } from "framer-motion";
 
+interface ApiError {
+    response?: {
+        status: number;
+        data?: {
+            detail?: string;
+        };
+    };
+}
+
 export default function LoginPage() {
     const [email, setEmail] = useState("manager@example.com");
     const [password, setPassword] = useState("manager123");
@@ -43,14 +52,15 @@ export default function LoginPage() {
             setTimeout(() => {
                 router.push("/dashboard");
             }, 500);
-        } catch (err: any) {
-            console.error("Login Error:", err);
-            if (err.response?.status === 429) {
+        } catch (err) {
+            const errorObj = err as ApiError;
+            console.error("Login Error:", errorObj);
+            if (errorObj.response?.status === 429) {
                 setError("System Overload (Rate Limited). Please wait 60 seconds before retrying.");
-            } else if (err.response?.status === 401) {
+            } else if (errorObj.response?.status === 401) {
                 setError("Invalid Identity Matrix or Access Key.");
             } else {
-                setError(err.response?.data?.detail || "Connection Failed. Backend may be offline.");
+                setError(errorObj.response?.data?.detail || "Connection Failed. Backend may be offline.");
             }
         } finally {
             setLoading(false);
