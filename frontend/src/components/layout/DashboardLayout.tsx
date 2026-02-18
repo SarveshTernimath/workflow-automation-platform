@@ -196,6 +196,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     </motion.div>
 
                     <div className="flex items-center space-x-4">
+                        {/* Portal Target for Page Actions */}
+                        <div id="header-actions" className="flex items-center space-x-2" />
+
                         <div className="flex items-center px-3 py-1.5 rounded-full bg-surface border border-border">
                             <div className="w-1.5 h-1.5 rounded-full bg-accent-success mr-2 animate-pulse" />
                             <span className="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Online</span>

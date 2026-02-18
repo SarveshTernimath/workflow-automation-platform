@@ -135,50 +135,33 @@ export default function DashboardPage() {
 
     return (
         <DashboardLayout>
+            {/* Header Actions */}
+            <Portal targetId="header-actions">
+                <div className="flex items-center space-x-3">
+                    <Button
+                        onClick={handlePulse}
+                        disabled={pulsing}
+                        className="h-9 px-4 text-xs font-medium uppercase tracking-wider bg-surface-elevated border border-border hover:bg-surface-hover text-text-secondary hover:text-white transition-all"
+                    >
+                        {pulsing ? <Loader2 className="w-3 h-3 mr-2 animate-spin" /> : <Zap className="w-3 h-3 mr-2" />}
+                        {pulsing ? "Syncing" : "Pulse"}
+                    </Button>
+                    <Button
+                        onClick={() => setRequestModalOpen(true)}
+                        className="h-9 px-4 text-xs font-bold uppercase tracking-wider shadow-glow"
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Request
+                    </Button>
+                </div>
+            </Portal>
+
             <motion.div
                 variants={animations.staggerContainer}
                 initial="hidden"
                 animate="show"
                 className="space-y-8"
             >
-                {/* Hero Section */}
-                <motion.div variants={animations.fadeInUp} className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
-                    <div>
-                        <div className="flex items-center space-x-2 mb-2">
-                            <span className="w-2 h-2 bg-accent-primary rounded-full animate-pulse" />
-                            <span className="text-xs font-bold text-accent-primary tracking-widest uppercase">Operational Nexus</span>
-                        </div>
-                        <h1 className="text-4xl font-bold text-white tracking-tight mb-2">Dashboard</h1>
-                        <p className="text-text-secondary max-w-xl">Real-time orchestration monitoring and system telemetry.</p>
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <Button
-                            variant="secondary"
-                            onClick={() => setRequestModalOpen(true)}
-                            className="bg-surface border-border hover:bg-surface-hover"
-                        >
-                            <Plus className="w-4 h-4 mr-2" />
-                            Start New Request
-                        </Button>
-                        <Button
-                            onClick={handlePulse}
-                            disabled={pulsing}
-                            className={pulsing ? "opacity-80 cursor-wait" : ""}
-                        >
-                            {pulsing ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Syncing...
-                                </>
-                            ) : (
-                                <>
-                                    <Zap className="w-4 h-4 mr-2" />
-                                    Initialize Pulse
-                                </>
-                            )}
-                        </Button>
-                    </div>
-                </motion.div>
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
