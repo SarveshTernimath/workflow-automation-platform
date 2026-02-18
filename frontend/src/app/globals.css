@@ -2,9 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Selection Color */
+/* Professional Color Palette */
+:root {
+  --background: #0f1419;
+  --surface: #1a1f2e;
+  --surface-elevated: #252d3d;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.15);
+
+  --text-primary: #ffffff;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #2563eb;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-error: #ef4444;
+}
+
+/* Custom Selection */
 ::selection {
-  background: rgba(16, 185, 129, 0.3);
+  background: rgba(59, 130, 246, 0.2);
   color: #fff;
 }
 
@@ -13,83 +32,104 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: #0a0a0c;
-  color: #ecfdf5;
-  font-family: 'Outfit', sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ultra Premium Dark Theme with Neon Accents */
 body {
-  background-color: #0a0a0c;
-  background-image: radial-gradient(circle at 20% 50%, rgba(0, 255, 128, 0.03) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
   min-height: 100vh;
   position: relative;
-  font-feature-settings: "cv11", "ss01";
 }
 
-/* Global Layout Centering */
-body>div:first-child {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Sidebar Specific Glass - "The Monolith" */
+/* Sidebar - Professional Glass Effect */
 .sidebar-glass {
-  background-color: rgba(10, 10, 12, 0.95);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(60px) saturate(180%);
-  box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  background: linear-gradient(180deg,
+      rgba(26, 31, 46, 0.95) 0%,
+      rgba(26, 31, 46, 0.98) 100%);
+  border-right: 1px solid var(--border);
+  backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
 }
 
-/* Neon Active State */
+/* Navigation Active State */
 .nav-item-active {
-  background: rgba(0, 255, 128, 0.1);
-  border-left: 3px solid #00ff80;
-  color: #00ff80;
-  text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+  background: linear-gradient(90deg,
+      rgba(59, 130, 246, 0.15) 0%,
+      rgba(59, 130, 246, 0.05) 100%);
+  border-left: 3px solid var(--accent-primary);
+  color: var(--text-primary);
 }
 
-/* Utility Classes */
+/* Glass Card Effects */
 .glass {
-  background-color: rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(50px);
-  box-shadow:
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.1),
-    0 25px 50px -12px rgba(0, 0, 0, 0.9);
-  border-radius: 1rem;
+  background: rgba(26, 31, 46, 0.6);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
 }
 
 .glass-dark {
-  background-color: rgba(0, 0, 0, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(60px);
-  border-radius: 1.5rem;
+  background: rgba(15, 20, 25, 0.8);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(24px);
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2),
+    0 4px 6px -2px rgba(0, 0, 0, 0.1);
 }
 
+/* Gradient Text - Subtle */
 .gradient-text {
-  background-clip: text;
+  background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
   -webkit-background-clip: text;
-  color: transparent;
-  background-image: linear-gradient(to right, #00ff80, #ecfdf5);
-  text-shadow: 0 0 20px rgba(0, 255, 128, 0.3);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.gradient-primary {
-  background-image: linear-gradient(to bottom, white, #cbd5e1);
-  color: black;
-  font-weight: bold;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+/* Typography - Professional */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-.animate-premium {
-  animation: premiumFade 800ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
 }
 
+h2 {
+  font-size: 1.875rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+p {
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+/* Scrollbar - Minimal */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -99,31 +139,37 @@ body>div:first-child {
   display: none;
 }
 
-/* Typography Overrides */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: 'Outfit', sans-serif;
-  letter-spacing: -0.025em;
-  font-weight: 700;
-  text-transform: uppercase;
-  line-height: 1.1;
-  color: white;
-  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-p {
-  line-height: 1.625;
-  color: #cbd5e1;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-@keyframes premiumFade {
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+/* Focus States - Professional */
+.focus-glow {
+  outline: none !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* Animations - Smooth */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(10px);
   }
 
   to {
@@ -132,27 +178,80 @@ p {
   }
 }
 
-.focus-glow {
-  outline: none !important;
-  border-color: rgba(99, 255, 200, 0.5) !important;
-  box-shadow: 0 0 0 4px rgba(99, 255, 200, 0.1) !important;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
 
-/* Scrollbar Customization */
-::-webkit-scrollbar {
-  width: 6px;
+/* Button Styles - Professional */
+.btn-primary {
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+.btn-primary:hover {
+  background: var(--accent-primary-hover);
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
+.btn-secondary {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-hover);
+}
+
+/* Card Hover Effects - Subtle */
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.2);
+  border-color: var(--border-hover);
+}
+
+/* Status Indicators - Professional */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.success {
+  background: var(--accent-success);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.status-dot.warning {
+  background: var(--accent-warning);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+.status-dot.error {
+  background: var(--accent-error);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+.status-dot.info {
+  background: var(--accent-primary);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
 }

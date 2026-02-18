@@ -8,10 +8,13 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'neon-green': '#00ff80',
+                'accent-blue': '#3b82f6',
+                'accent-green': '#10b981',
+                'surface': '#1a1f2e',
+                'surface-elevated': '#252d3d',
             },
             fontFamily: {
-                sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
         },
     },
