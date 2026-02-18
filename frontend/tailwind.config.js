@@ -8,14 +8,23 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                'accent-blue': '#3b82f6',
-                'accent-green': '#10b981',
-                'surface': '#1a1f2e',
-                'surface-elevated': '#252d3d',
+                background: "var(--background)",
+                surface: "var(--surface)",
+                "surface-hover": "var(--surface-hover)",
+                "surface-active": "var(--surface-active)",
+                border: "var(--border)",
+                "border-hover": "var(--border-hover)",
+                primary: "var(--accent-primary)",
+                "primary-hover": "var(--accent-primary-hover)",
+                secondary: "var(--accent-secondary)",
             },
             fontFamily: {
                 sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             },
+            boxShadow: {
+                'glow': '0 0 20px var(--accent-primary-glow)',
+                'glow-secondary': '0 0 20px var(--accent-secondary-glow)',
+            }
         },
     },
     plugins: [],

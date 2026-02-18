@@ -1,11 +1,12 @@
 "use client";
 
 import React from 'react';
-import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, Cpu, Lock, LucideIcon } from "lucide-react";
+import { LogOut, LayoutDashboard, GitBranch, Shield, Bell, Cpu, Lock, LucideIcon, ChevronRight } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import apiClient from '@/lib/api';
+
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -31,24 +32,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         async function fetchUser() {
             try {
                 const token = localStorage.getItem("access_token");
-                console.log("[DashboardLayout] Checking auth token:", token ? "Exists" : "Missing");
-
                 if (!token) {
-                    console.log("[DashboardLayout] No token found, redirecting to login");
                     router.push("/");
                     return;
                 }
-
-                console.log("[DashboardLayout] Fetching user profile...");
                 const res = await apiClient.get("users/me");
-                console.log("[DashboardLayout] User profile fetched:", res.data);
                 setUser(res.data);
             } catch (err) {
                 const error = err as { response?: { status?: number } };
-                console.error("[DashboardLayout] Auth check failed:", error);
-                console.error("[DashboardLayout] Error Status:", error.response?.status);
-                // If the error is 401, the interceptor in api.ts might have already redirected,
-                // but we double check here to be sure.
                 if (error.response?.status === 401 || error.response?.status === 403) {
                     router.push("/");
                 }
@@ -82,14 +73,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     const isManager = userRoles.includes("manager") || userRoles.includes("strategic_node");
 
     const filteredNavItems = navItems.filter(item => {
-        if (isAdmin) return true; // Admin sees everything
-
-        if (isManager) {
-            // Manager/Strategic sees Dashboard, Tasks, Alerts
-            return ["/dashboard", "/tasks", "/notifications"].includes(item.path);
-        }
-
-        // Standard User/Operational sees Dashboard, Alerts (Requests initiated from Dashboard)
+        if (isAdmin) return true;
+        if (isManager) return ["/dashboard", "/tasks", "/notifications"].includes(item.path);
         return ["/dashboard", "/notifications"].includes(item.path);
     });
 
@@ -98,140 +83,142 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     }
 
     return (
-        <div className="flex min-h-screen bg-transparent text-slate-200 font-sans selection:bg-[#00ff80]/30 antialiased overflow-hidden">
+        <div className="flex min-h-screen bg-background text-text-primary font-sans antialiased overflow-hidden">
 
-            {/* LEVEL 1: Left Sidebar "Control Node" - Restored & Neon Enhanced */}
-            <aside className="w-72 sidebar-glass flex flex-col shrink-0 relative z-50">
-
+            {/* Sidebar */}
+            <motion.aside
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.5, ease: "circOut" }}
+                className="w-72 sidebar-glass flex flex-col shrink-0 relative z-50 h-screen"
+            >
                 {/* Brand */}
-                <div className="p-8 pb-10">
-                    <div className="flex items-center space-x-3 cursor-pointer" onClick={() => router.push('/dashboard')}>
-                        <div className="w-10 h-10 rounded-xl bg-black border border-[#00ff80]/30 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,128,0.2)]">
-                            <Shield className="w-5 h-5 text-[#00ff80]" />
+                <div className="p-8 pb-8">
+                    <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => router.push('/dashboard')}>
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent-primary to-accent-primary-hover flex items-center justify-center shadow-lg group-hover:shadow-glow transition-all duration-300">
+                            <Shield className="w-5 h-5 text-white" />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-2xl font-black gradient-text tracking-tighter uppercase italic leading-none">NexusFlow</h1>
-                            <span className="text-[9px] font-bold text-[#00ff80] tracking-[0.3em] uppercase opacity-80 pl-0.5">Control Node</span>
+                            <h1 className="text-xl font-bold tracking-tight text-white leading-none">NexusFlow</h1>
+                            <span className="text-[10px] font-medium text-accent-secondary tracking-widest uppercase mt-1">Enterprise</span>
                         </div>
                     </div>
                 </div>
 
-                {/* Navigation Items */}
-                <nav className="flex-1 px-4 space-y-2 mt-2">
+                {/* Navigation */}
+                <nav className="flex-1 px-4 space-y-1 mt-2">
                     {filteredNavItems.map((item) => {
                         const isActive = pathname === item.path;
                         return (
                             <Link
                                 key={item.path}
                                 href={item.path}
-                                className={`flex items-center px-6 py-4 rounded-xl transition-all duration-300 group relative ${isActive
-                                    ? "nav-item-active font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] bg-gradient-to-r from-[#00ff80]/10 to-transparent" // Added embossing/gradient
-                                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                                className={`flex items-center px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden ${isActive
+                                    ? "bg-surface-active text-white shadow-inner"
+                                    : "text-text-secondary hover:text-white hover:bg-surface-hover"
                                     }`}
                             >
-                                <item.icon className={`w-5 h-5 mr-4 transition-all duration-300 ${isActive ? "text-[#00ff80]" : "text-slate-600 group-hover:text-white"}`} />
-                                <span className="text-sm tracking-wide uppercase">{item.name}</span>
                                 {isActive && (
-                                    <div className="absolute right-4 w-1.5 h-1.5 rounded-full bg-[#00ff80] shadow-[0_0_10px_#00ff80]" />
+                                    <motion.div
+                                        layoutId="activeNav"
+                                        className="absolute left-0 top-0 bottom-0 w-1 bg-accent-primary"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.3 }}
+                                    />
+                                )}
+                                <item.icon className={`w-5 h-5 mr-3 transition-colors ${isActive ? "text-accent-primary" : "text-text-tertiary group-hover:text-text-primary"}`} />
+                                <span className="text-sm font-medium tracking-wide">{item.name}</span>
+
+                                {/* Hover Effect */}
+                                {isActive && (
+                                    <div className="absolute inset-0 bg-accent-primary opacity-[0.03] pointer-events-none" />
                                 )}
                             </Link>
                         );
                     })}
                 </nav>
 
-                {/* Bottom Profile Section */}
-                <div className="p-6 mt-auto border-t border-white/5 bg-black/40 relative">
+                {/* User Profile */}
+                <div className="p-4 mt-auto border-t border-border bg-surface/50">
                     <div
                         onClick={() => setShowProfile(!showProfile)}
-                        className="flex items-center space-x-4 cursor-pointer group hover:bg-white/5 p-3 rounded-xl transition-all"
+                        className="flex items-center space-x-3 cursor-pointer hover:bg-surface-hover p-2 rounded-lg transition-all"
                     >
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00ff80] to-emerald-900 flex items-center justify-center text-black font-black shadow-lg">
-                            {user?.full_name?.substring(0, 2).toUpperCase() || "SY"}
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-surface-elevated to-surface border border-border flex items-center justify-center text-xs font-bold text-text-secondary">
+                            {user?.full_name?.substring(0, 2).toUpperCase() || "US"}
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-white leading-none group-hover:text-[#00ff80] transition-colors">{user?.full_name || "Identity Node"}</p>
-                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none mt-1.5">{user?.roles?.[0]?.name || "Strategic"} Access</p>
+                            <p className="text-sm font-medium text-white truncate">{user?.full_name || "User"}</p>
+                            <p className="text-[10px] text-text-tertiary uppercase tracking-wider">{user?.roles?.[0]?.name || "Staff"}</p>
                         </div>
+                        <ChevronRight className={`w-4 h-4 text-text-tertiary transition-transform ${showProfile ? "rotate-90" : ""}`} />
                     </div>
 
-                    {/* Profile Popover - Bottom Left */}
                     <AnimatePresence>
                         {showProfile && (
                             <motion.div
                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                className="absolute bottom-full left-4 mb-4 w-64 bg-black/90 backdrop-blur-xl border border-[#00ff80]/30 rounded-2xl p-6 shadow-2xl z-[60]"
+                                className="absolute bottom-full left-4 right-4 mb-2 glass-panel rounded-xl p-4 z-[60]"
                             >
-                                <div className="flex flex-col space-y-4">
-                                    <div className="flex items-center space-x-3 mb-2">
-                                        <div className="w-8 h-8 rounded-full bg-[#00ff80] flex items-center justify-center text-black font-bold text-xs">
-                                            {user?.full_name?.substring(0, 2).toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <p className="text-white text-xs font-bold">{user?.full_name}</p>
-                                            <p className="text-[9px] text-[#00ff80] uppercase tracking-wider">{user?.roles?.[0]?.name}</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="h-px bg-white/10" />
-
-                                    <button
-                                        onClick={handleLogout}
-                                        className="flex items-center space-x-2 text-red-400 hover:text-red-300 transition-colors text-xs font-bold uppercase tracking-wider"
-                                    >
-                                        <LogOut className="w-3 h-3" />
-                                        <span>Terminate Session</span>
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="w-full flex items-center space-x-2 text-accent-error hover:text-red-400 transition-colors text-xs font-medium px-2 py-1.5 rounded hover:bg-surface-hover"
+                                >
+                                    <LogOut className="w-3 h-3" />
+                                    <span>Sign Out</span>
+                                </button>
                             </motion.div>
                         )}
                     </AnimatePresence>
                 </div>
-            </aside>
+            </motion.aside>
 
-            {/* LEVEL 2: Main Content Area */}
-            <main className="flex-1 flex flex-col min-w-0 relative h-screen overflow-hidden">
-
-                {/* Header Bar - Floating & Minimal */}
-                <header className="h-24 shrink-0 z-40 flex items-center justify-between px-10 pt-6">
-                    <div className="flex flex-col">
-                        <div className="flex items-center space-x-2 text-[10px] text-[#00ff80] font-black uppercase tracking-widest mb-1 opacity-70">
-                            <Cpu className="w-3 h-3" />
-                            <span>System Path: {pathname}</span>
+            {/* Main Content */}
+            <main className="flex-1 flex flex-col min-w-0 relative h-screen overflow-hidden bg-background">
+                {/* Header */}
+                <header className="h-20 shrink-0 z-40 flex items-center justify-between px-8 pt-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                    >
+                        <div className="flex items-center space-x-2 text-[10px] text-text-tertiary font-medium uppercase tracking-widest mb-1">
+                            <span>System</span>
+                            <span className="text-border">/</span>
+                            <span className="text-accent-primary">{pathname.replace('/', '')}</span>
                         </div>
-                        <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter text-shadow-lg">
+                        <h2 className="text-2xl font-bold text-white tracking-tight">
                             {navItems.find(i => i.path === pathname)?.name || "Dashboard"}
                         </h2>
-                    </div>
+                    </motion.div>
 
-                    <div className="flex items-center space-x-6">
-                        <div className="flex items-center px-4 py-2 rounded-lg bg-black/60 border border-[#00ff80]/20 backdrop-blur-md">
-                            <div className="w-2 h-2 rounded-full bg-[#00ff80] mr-3 animate-pulse shadow-[0_0_10px_#00ff80]" />
-                            <span className="text-[10px] font-black text-[#00ff80] uppercase tracking-widest">System Online</span>
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center px-3 py-1.5 rounded-full bg-surface border border-border">
+                            <div className="w-1.5 h-1.5 rounded-full bg-accent-success mr-2 animate-pulse" />
+                            <span className="text-[10px] font-medium text-text-secondary uppercase tracking-wider">Online</span>
                         </div>
 
-                        <button onClick={() => router.push('/notifications')} className="relative p-3 rounded-lg bg-black/40 hover:bg-[#00ff80]/10 border border-white/10 hover:border-[#00ff80]/30 transition-all group">
-                            <Bell className="w-5 h-5 text-slate-400 group-hover:text-[#00ff80]" />
-                            <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#00ff80] rounded-full shadow-[0_0_5px_#00ff80]"></span>
+                        <button onClick={() => router.push('/notifications')} className="relative p-2.5 rounded-full hover:bg-surface-hover transition-colors text-text-secondary hover:text-white">
+                            <Bell className="w-5 h-5" />
+                            <span className="absolute top-2 right-2.5 w-1.5 h-1.5 bg-accent-primary rounded-full ring-2 ring-background"></span>
                         </button>
                     </div>
                 </header>
 
-                {/* Content Viewport */}
-                <div className="flex-1 overflow-y-auto scrollbar-hide relative px-10 pb-10 pt-4">
-                    {/* Glass Container for Content */}
-                    <div className="w-full min-h-full">
-                        <motion.div
-                            key={pathname}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.4, ease: "circOut" }}
-                            className="relative z-10"
-                        >
-                            {children}
-                        </motion.div>
-                    </div>
+                {/* Content Area */}
+                <div className="flex-1 overflow-y-auto scrollbar-hide p-8 pt-4">
+                    <motion.div
+                        key={pathname}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="w-full max-w-7xl mx-auto"
+                    >
+                        {children}
+                    </motion.div>
                 </div>
             </main>
         </div>
