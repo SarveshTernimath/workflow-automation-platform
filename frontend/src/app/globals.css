@@ -75,31 +75,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ultra 3D Monochrome with Neon Accents */
+/* Ultra Premium Dark Theme with Neon Accents */
 /* Using standard CSS to avoid @apply issues with v4 in global scope */
 body {
-  background-image: url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=3840&auto=format&fit=crop");
-  background-color: #050505;
-  background-size: cover;
-  background-attachment: fixed;
-  background-position: center bottom;
+  background-color: #0a0a0c;
+  background-image: radial-gradient(circle at 20% 50%, rgba(0, 255, 128, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
   min-height: 100vh;
   position: relative;
   font-feature-settings: "cv11", "ss01";
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(4px);
-  background: rgba(0, 0, 0, 0.4);
-  /* Darker overlay to make Neon POP */
-  pointer-events: none;
-  z-index: -1;
 }
 
 /* Global Layout Centering */
@@ -112,10 +96,10 @@ body>div:first-child {
 
 /* Sidebar Specific Glass - "The Monolith" */
 .sidebar-glass {
-  background-color: var(--sidebar-bg);
-  border-right: 1px solid var(--sidebar-border);
-  backdrop-filter: blur(60px);
-  box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8);
+  background-color: rgba(10, 10, 12, 0.95);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(60px) saturate(180%);
+  box-shadow: 5px 0 30px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Neon Active State */
